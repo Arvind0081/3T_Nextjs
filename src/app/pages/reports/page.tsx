@@ -35,6 +35,7 @@ import {
   SettingEmpReqParams,
   reportAttendenceFormValue,
   MonthlyReportByManagerReq,
+  ClientReqParam,
 } from '@/utils/types';
 import getUser from '@/utils/getUserServerSide';
 import SelectTabs from '@/components/reports/selectTabs';
@@ -255,9 +256,14 @@ console.log('monthlyReportRes',  monthlyReportRes);
   try {
     projects = await projectDetail();
   } catch (error) {}
-
+ 
   try {
-    clients = await getCLients();
+
+    const params: ClientReqParam = {
+      departmentID: user.departmentId,
+    };
+    
+    clients = await getCLients(params);
   } catch (error) {}
 
   try {

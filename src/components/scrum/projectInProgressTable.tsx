@@ -1,15 +1,53 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import ProgressDetails from '@/components/scrum/progressDetails';
 import ModuleDetailsButton from '@/components/scrum/ModuleDetailsButton';
 import ScrumDateFilter from '@/components/dashboard/scrumDateFilter';
 import Link from 'next/link';
 import { ScrumTeamProjectsResponseModel } from '@/utils/types';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
+import { scrumTeamProjects } from '@/utils/publicApi';
+import {Pagination} from 'semantic-ui-react';
 
-const ProgressInProjectTable = ({ payLoad, teamProjects }: any) => {
+const ProgressInProjectTable = ({ payLoad }: any) => {
 
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' |string}>({ key: '', direction: '' });
+  const [teamProjects,setTeamProjects]=useState<ScrumTeamProjectsResponseModel[]>([]);
+  const [pageNumber,setPageNumber]=useState(1);
+  const pageSize=10;
+  const state = {
+    showEllipsis: true,
+    showFirstAndLastNav: true,
+    showPreviousAndNextNav: true,
+};
+
+
+const totalPages = () => {
+
+  let totalPagesCount =teamProjects? teamProjects.length / pageSize:0;
+  totalPagesCount = totalPagesCount % 1 === 0 ? totalPagesCount : Math.ceil(totalPagesCount);
+
+  return totalPagesCount;
+};
+
+const handlePaginationChange = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,{ activePage }:any) =>{
+ 
+  setPageNumber(activePage);
+
+};  
+
+  const fetchTeamProjects=async()=>{
+    try {
+      const response = await scrumTeamProjects(payLoad);
+      setTeamProjects(response);
+  } catch (error) {}
+  };
+
+
+  useEffect(()=>{
+    fetchTeamProjects();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[payLoad]);
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
@@ -58,7 +96,7 @@ const ProgressInProjectTable = ({ payLoad, teamProjects }: any) => {
       const { key, direction } = sortConfig;
   
       if (key) {
-        sortedData.sort((a, b) => {
+        sortedData.sort((a:any, b:any) => {
           const aValue = a[key];
           const bValue = b[key];
   
@@ -72,13 +110,15 @@ const ProgressInProjectTable = ({ payLoad, teamProjects }: any) => {
           return 0;
         });
       }
-  
-      return sortedData;
-
+      const startIndex = (pageNumber - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      return sortedData.slice(startIndex, endIndex)
+     
     }
   
   };
 
+ 
   const requestSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -86,6 +126,9 @@ const ProgressInProjectTable = ({ payLoad, teamProjects }: any) => {
     }
     setSortConfig({ key, direction });
   };
+
+  const startRecord = (pageNumber - 1) * pageSize + 1;
+  const endRecord = Math.min(pageNumber * pageSize, teamProjects?.length);
 
   return (
     <div className="col-xl-9">
@@ -169,9 +212,21 @@ const ProgressInProjectTable = ({ payLoad, teamProjects }: any) => {
         </div>
         <div className="card-footer">
           <div className="d-flex align-items-center">
-            <div> Showing {teamProjects?.length} Entries </div>
+            <div>   Showing {startRecord} to {endRecord} of {teamProjects?.length} Entries </div>
             <div className="ms-auto">
               {/* Pagination controls can be added here if needed */}
+              <Pagination
+            activePage={pageNumber}
+            onPageChange={handlePaginationChange}
+            size='mini'
+            totalPages={totalPages()}
+            // Heads up! All items are powered by shorthands, if you want to hide one of them, just pass `null` as value
+            ellipsisItem={state.showEllipsis ? undefined : null}
+            firstItem={state.showFirstAndLastNav ? undefined : null}
+            lastItem={state.showFirstAndLastNav ? undefined : null}
+            prevItem={state.showPreviousAndNextNav ? undefined : null}
+            nextItem={state.showPreviousAndNextNav ? undefined : null}
+          />
             </div>
           </div>
         </div>
