@@ -12,6 +12,8 @@ export const rolePaths: any = {
   'Admin': ['/adminDepartment','/dashBoard','/managerToDo','/allUsers','/employees/:id','/dashBoard/:id','/projects/:id','/employeesProfile/:id','/assignTeam' ],
 };
 
+
+
 const getPath = (user: any, currentPath: any) => {
   if (!user || !user.role) {
     return '/'; // Default path if user or role is not defined
