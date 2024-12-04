@@ -11,6 +11,7 @@ import {
 } from '@/utils/publicApi';
 import { AdminProductivityParam, DepartmentModel } from '@/utils/types';
 const AdminDepartment = async ({ searchParams }: any) => {
+    
     const date = new Date();
     let year = date.getFullYear();
     let month = String(date.getMonth() + 1).padStart(2, '0');
