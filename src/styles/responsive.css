@@ -1,0 +1,186 @@
+@media only screen and (min-width:576px){
+    .team-member-card .team-member-details {padding-inline-start: 4.75rem;}
+ 
+}
+
+@media only screen and (min-width:992px){
+    .side-header{
+   width:240px;
+    }
+    .app-content {
+        margin-inline-start: 240px;
+    }
+}
+
+@media only screen and (min-width:1299px){
+    .login_wrapper  .login_content .login_left {
+        width: calc(100% - 640px);
+    }
+   
+}
+
+@media only screen and (min-width:1680px){
+    .employee_list .card {
+        width: 18.76%;
+    }
+}
+
+
+
+@media only screen and (max-width:1679px){
+    .employee_list .card {
+        width: 23.83%;
+    }
+}
+
+@media only screen and (max-width:1380px){
+    .employee_list .card {
+        width: 32.3%;
+    }
+}
+
+@media only screen and (max-width:1299px){
+    .login_wrapper  .login_content .login_left {
+        width: 65%;
+    }
+    .one-fourthBox .col-fourth {
+        width: 33.33%;
+        flex: inherit;
+        max-width: inherit;
+    }
+    .team_colorBox ul li {
+        width: 50%;
+    }
+    .clients_layout .clientList_box .status-card {
+        width: 47.33% !important;
+    }
+   body .settings_layout .settings_checkBox {
+        width: 19.2%;
+    }
+    /* .filter-right {
+        flex-wrap: wrap;
+    } */
+    .filter-right .selectbox {
+        margin: 0!important;
+    }
+}
+
+
+@media only screen and (max-width:1099px){
+    .employee_list .card {
+        width: 48.5%;
+    }
+    .employee_list {
+        gap: 3%;
+    }
+    .login_wrapper  .login_content .login_left {
+        width: 55%;
+    }
+}
+@media only screen and (max-width:992px){
+    .login_wrapper .login_content .login_right .login_flex_box{
+        max-width: 100%;
+    } 
+    .login_wrapper  .login_content .login_left {
+        width: 50%;
+    }
+    body .settings_layout .settings_checkBox {
+        width: 32.6%;
+    }
+    .sidebar-mini .responsive-navbar .navbar-collapse, .responsive-navbar .navbar-collapse {
+        margin-block-start: 57px !important;
+    }
+    .modal-dialog {
+        max-width: 80%;
+        margin: 15px auto;
+    }
+}
+@media only screen and (max-width:767px){
+    .clients_layout .clientLeft_Box{
+        width: 100%;
+    }
+    .clients_layout{
+        flex-wrap: wrap;
+    }
+    .btn-list {
+        margin-top: 0 !important;
+    }
+    .clients_layout .clientRight_Box,
+    .clients_layout .clientLeft_Box {
+        width: 100%!important;
+    }
+}
+@media only screen and (max-width:649px){
+    .employee_list .card {
+        width: 100%;
+    }
+    .login_wrapper  .login_content .login_left {
+        width: 100%;
+    }
+    body .settings_layout .settings_checkBox{
+        width: 100%;
+    }
+    .filter-right .card-title{
+        width: 100%;
+    }
+    .filter-right{
+        margin-top:5px;
+    }
+  
+    /* .filter-right, .card-header{
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .filter-right .search_box, .filter-right .selectbox {
+        width: 100%;
+    }
+    .filter-right{
+        gap:0;
+    } */
+}
+
+@media only screen and (max-width:575px){
+    .login_wrapper .login_flex_box .form-row.form_fields .form-group {
+        width: 100%;
+        flex: inherit;
+        margin-bottom: 10px;
+    }
+    .btn-list.btn-list-right {
+        flex-wrap: wrap;
+    }
+    .selectbox {
+        flex-wrap: wrap;
+        gap: 0;
+    }
+    
+    .selectbox > p {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .input-group {
+        width: 100%;
+    }
+    .filter-right, .card-header{
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .filter-left {
+        width:100%!important;
+    }
+    .filter-right .search_box, .filter-right .selectbox,
+    .filter-left .selectbox{
+        width: 100% !important;
+    }
+    .filter-right .selectbox,
+    .filter-left .selectbox{
+        gap: 0!important;
+    }
+    .input-group.date-selectbox {
+        width: 100%;
+    }
+    .modal-dialog {
+        max-width: 95%;
+        margin: 20px auto;
+    }
+}

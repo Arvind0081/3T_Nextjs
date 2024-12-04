@@ -1,0 +1,509 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './custom.css';
+@import './responsive.css';
+ @import './styles.css'; 
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+
+.upload input[type="file"] {
+  appearance: none;
+  background-color: initial;
+  cursor: default;
+  align-items: baseline;
+  color: inherit;
+  text-overflow: ellipsis;
+  text-align: start !important;
+  padding: initial;
+  border: initial;
+  white-space: pre;
+  overflow: hidden !important;
+  display: none;
+}
+.upload-area {
+  margin-bottom: 0;
+}
+.upload-area {
+  background-color: #e9e9f1;
+  border-color: #e9e9f1;
+  padding: 5px 8.5px;
+  border-radius: 4px;
+}
+
+.sidenav-toggled .main-content {
+  z-index: -1;
+}
+.modal {
+  color: #333;
+
+}
+.z-index-9 {
+  z-index: 9;
+}
+.header-right-icons .collapse {
+  visibility: inherit !important;
+}
+
+.custom-modal-width .modal-dialog {
+  max-width: 60%; /* Adjust this value as needed */
+}
+.MuiTimePickerToolbar-ampmSelection {
+  display: none!important;
+}
+
+/*Attendance*/
+/* .hours-table td.present {
+  background: rgb(185 229 185 / 29%);
+}
+.attendance_status.Present_status {
+  background: #fff;
+}
+._BM_attendance {
+  display: flex;
+  width: 100%;
+}
+.attendance_status_3t {
+  width: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #e9f8fc;
+  padding: 2px 0 0px 0;
+} */
+/* .threeT_info {
+  position: absolute;
+  background: #85b6ca;
+  top: -9px;
+  padding: 0 3px;
+  margin-left: 0;
+  color: #FFF !important;
+  border-radius: 0 0 2px 2px;
+  font-size: 10px;
+}
+.threeT_info:before {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 0px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-right: 10px solid #7999ad;
+  border-top: 10px solid transparent;
+  transform: rotate(90deg);
+} */
+/* .attendance_layout .attendance_status_3t .threeT__attendance {
+  font-weight: 700;
+  font-size: 12px;
+  color: #3c8dbc;
+}
+.threeT-time {
+  font-size: 9px;
+  color: #3c8dbc !important;
+}
+.attendance_status_bm {
+  width: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #b1e5f2;
+  padding: 6px 0 0 0;
+}
+.BM_info {
+  position: absolute;
+  background: #85b6ca;
+  top: -9px;
+  padding: 0 3px;
+  margin-left: 0;
+  color: #FFF;
+  border-radius: 0 0 2px 2px;
+  font-size: 10px;
+}
+.BM_info:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 10px solid #7999ad;
+  border-left: 10px solid transparent;
+  transform: rotate(90deg);
+  right: -8px;
+  left: inherit;
+}
+.hours-table td.holiday {
+  background: rgb(17 28 67 / 18%);
+  min-width: 60px;
+}
+.hours-table.table td, .hours-table.table th {
+  text-align: center;
+  font-weight: 400;
+  font-size: 11px;
+  text-transform: none;
+  vertical-align: middle;
+}
+.attendance_layout tbody tr td {
+  padding: 0px;
+  min-width: 105px;
+}
+.hours-table td.absent {
+  background: rgb(217 81 81 / 28%);
+}
+.attendance_status.halfDay_status {
+  color: #cc932c;
+  background: rgb(244 173 45 / 25%);
+}
+.attendance_status {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding: 7px 0;
+  color: #3c8dbc;
+}
+.attendance_status.Leave_status {
+  background: rgb(64 157 146 / 23%);
+  color: #15b532;
+}
+.attendance_layout.table thead th {
+  position: sticky;
+  top: -1px;
+  z-index: 2;
+}
+
+.attendance_layout.table tbody th:first-child {
+  position: sticky;
+  left: -1px;
+  background: var(--white);
+  z-index: 1;
+}
+
+.attendance_layout.table thead th:first-child {
+  left: -1px;
+  z-index: 11;
+}
+
+.attendance_status.absent_status {
+  background-color: #ffcdcd;
+  color: #940e0e;
+}
+.hours-table td.holiday {
+  background: rgb(17 28 67 / 18%);
+  min-width: 60px;
+}
+.attendance_layout .attendance_status_bm .BM__attendance {
+  font-weight: 700;
+  font-size: 12px;
+  color: #3c8dbc;
+}
+
+.table-bordered, .text-wrap table, .table-bordered th, .text-wrap table th, .table-bordered td, .text-wrap table td {
+  border: 1px solid #e9edf4;
+}
+
+.attendance_status.red {
+  color: red;
+} */
+
+.status_table .mainuser td:first-child, .status_table .mainuser td:last-child{visibility: visible;}
+.status_table  tr td:first-child, .status_table  tr td:last-child {
+    visibility: hidden;
+}
+
+.employeeStatus_table .mainuser td:first-child, .employeeStatus_table .mainuser td:nth-child(2){visibility: visible;}
+.employeeStatus_table  tr td:first-child,.employeeStatus_table  tr td:nth-child(2) {
+    visibility: hidden;
+}
+.lastStatus_table.employeeStatus_table tr td:last-child {visibility: hidden;}
+
+.lastStatus_table.employeeStatus_table .mainuser td:last-child {
+    visibility: visible;
+}
+.star-img{
+  position: relative;
+}
+.star-img .count {
+  position: absolute;
+  left: -4px;
+  top: -7px;
+  background: #858585;
+  width: 16px;
+  line-height: 16px;
+  border-radius: 50px;
+  color: #fff;
+  height: 16px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.select_Department p {white-space: nowrap;}
+.select_Department {padding-left: 10px;}
+/*AttendanceRow Color*/
+.absent_row {
+  background: #f8ccd3 !important;
+  border-color: #f8ccd3;
+  color: #f5334f !important;
+}
+
+  .absent_row:hover {
+      background: #f4bfc7 !important;
+  }
+
+      .absent_row:hover td {
+          color: #f5334f !important;
+      }
+
+.leave_row {
+  border-color: rgb(132 90 223 / 30%) !important;
+  background: var(--primary02) !important;
+  color: var(--primary-bg-color) !important;
+}
+
+  .leave_row:hover {
+      background: var(--primary03) !important;
+  }
+
+      .leave_row:hover td {
+          color: var(--primary-bg-color) !important;
+      }
+
+.halfday_row {
+  background: #f8e8c6 !important;
+  border-color: #f8e8c6;
+  color: #ad780b !important;
+}
+
+  .halfday_row:hover {
+      background: #f5dfb1 !important;
+  }
+
+      .halfday_row:hover td {
+          color: #e0a01b !important;
+      }
+
+.halfDayLeave_row {
+  border-color: #b3c5db !important;
+  color: #1170e4 !important;
+  background: #d0e2f7 !important;
+}
+
+  .halfDayLeave_row:hover {
+      background: #bbd5f4 !important;
+  }
+
+      .halfDayLeave_row:hover td {
+          color: #1170e4 !important;
+      }
+      .ShortLeave_row,.btn-ltBlue-light  {
+          background-color: rgb(224 245 251) !important;
+          color: #1c95bb!important;
+      }
+      .ShortLeave_row:hover {
+          background: rgb(210, 237, 244) !important
+      }
+  
+          .ShortLeave_row:hover td {
+              color: #1c95bb!important;
+          }
+
+
+          .workInHand_table .mainuser td:first-child {
+            visibility: visible;
+          }
+          
+          .theme_table .table_member_request tr td {
+            padding: 8px !important;
+            border-color: #e9edf4 !important;
+            border-style: dashed !important;
+            background: #fff;
+          }
+          
+          .theme_table .table_member_request .btn-group .btn-sm.btn-wave {
+            padding: 4px 5px;
+            font-size: 10px;
+            border-radius: 5px !important;
+          }
+          
+          
+          
+          .theme_table .table_member_request .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+          }
+          
+          .Billing_profileBox {
+            max-width: 1050px;
+            width: 100%;
+          }
+          
+          .employee_status table tr[scope=mainusers] .maindate {
+            padding: 0;
+            border: none;
+            line-height: inherit;
+            font-size: 0;
+          }
+          
+          .employee_status tr[scope=mainusers] {
+            border: none;
+          }
+          
+          .employee_status tr[scope=mainusers] .maindate .badge {
+            text-align: left;
+            border-radius: 0;
+            background: #f0ebfb;
+            font-size: 12px;
+            width: 100%;
+            padding: 5px 10px;
+            font-weight: 600;
+            border-bottom: 1px dashed #845adf;
+            color: #333;
+          }
+          
+          .theme_table.theme_table_sm .table td {
+            padding: 0.3rem 0.75rem;
+          }
+          
+          .theme_table.theme_table_sm td .form-select {
+            height: auto;
+          }
+          
+          table.table_simple tr {
+            background: transparent;
+          }
+          
+          .ProjectProductivity img {
+            opacity: 0.8;
+            max-width: 460px;
+            margin: auto;
+            display: block;
+          }
+          
+          .card_sm .card-header {
+            padding: 10px 15px;
+          }
+          
+          .card_sm .card-header .filter-right,
+          .card_sm .card-header .card-title {
+            margin: 0;
+          }
+          
+          .module-filter .search_box i {
+            top: 8px;
+          }
+          
+          .card-header.projectName .btn-list .btn {
+            padding: 5px 7px;
+          }
+          
+          .card-header.projectName .btn-list {
+            margin: 0;
+          }
+          
+          table.table_simple thead th {
+            padding-top: 0;
+          }
+          
+          .icon-delete {
+            color: var(--danger09) !important;
+          }
+          
+          .icon-edit {
+            color: #1fc11f;
+          }
+          
+          .total_hours {
+            background: #ebebeb;
+          
+          }
+          
+          .total_hours td {
+            border-color: #ddd !important;
+            font-weight: 600 !important;
+          }
+          
+          
+          .department_Header .ProjectManager_control {
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            color: #333;
+            padding: 5px 12px !important;
+            height: 37px;
+            font-size: 16px;
+            min-width: 230px;
+            border-left: 1px solid #ddd;
+            font-weight: 500;
+          }
+          
+          .department_Header {
+            gap: 30px;
+          }
+          
+          .dropdown.d-flex.profile-1 {
+            min-width: 200px;
+          }
+
+          .hidden {
+            display: none;
+          }
+
+          .blurphoneNumber {
+            filter: blur(2px);
+          }
+          
+
+.tenYear_bgColor { background: #C0504E;}
+.Eight_tenbgColor { background: #BF8351;}
+.six_eightbgColor{background: #e47302;}
+.four_sixbgColor{background: #9CBA58;}
+.Two_fourbgColor{background: #C0B156;}
+.traineerbgColor{background: #F7C600;}
+.OtherbgColor{background: #605b5b;}
+
+.tenYear_Color { color: #C0504E;}
+.Eight_tenColor { color: #BF8351;}
+.six_eightColor{color: #e47302;}
+.four_sixColor{color: #9CBA58;}
+.Two_fourColor{color: #C0B156;}
+.traineerColor{color: #F7C600;}
+.OtherColor{color: #605b5b;}
+
+
+/* for invoices*/
+.disabled-div {
+  pointer-events: none; /* Disables interactions */
+  opacity: 0.5; /* Makes the content appear dimmed */
+  color: #6c757d; /* Muted text color */
+}
+
