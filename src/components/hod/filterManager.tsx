@@ -1,3 +1,4 @@
+
 'use client';
 import React,{useState,useEffect} from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
@@ -9,9 +10,10 @@ const FilterManager = ({ list }: any) => {
   const router = useRouter();
   const url = usePathname();
   const searchParams = useSearchParams();
-
+  const currentParams = new URLSearchParams(searchParams);
  
-  const cookieValue = getCookie('manager')?.toString();
+  //const cookieValue = getCookie('manager')?.toString();
+  const cookieValue =currentParams.get('teamAdminId') ?? getCookie('manager')?.toString();
   const [manager, setManager] = useState(cookieValue??'');
 
 
@@ -22,9 +24,8 @@ const FilterManager = ({ list }: any) => {
 
   const handleChangeManager = () => {
    
-    
    // const manager = event.target.value;
-    const currentParams = new URLSearchParams(searchParams);
+   
     setManager(manager);
     if (manager) {
       setCookie('manager', manager);

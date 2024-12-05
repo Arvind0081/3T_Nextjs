@@ -3,21 +3,14 @@ import React from 'react';
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 import * as XLSX from 'xlsx';
-import { hrReports } from '@/utils/publicApi';
+import { attendanceReports } from '@/utils/publicApi';
 import { useSearchParams } from 'next/navigation';
-import { AttendenceFormValue } from '@/utils/types';
+import {  reportAttendenceFormValue } from '@/utils/types';
 
-import getUser from '@/utils/getUserClientSide';
 
-const ExportExcel = () => {
-  let user: any = getUser();
+const ExportExcel = ({param}:any) => {
+
   const searchParams = useSearchParams();
-  const date = new Date();
-  const currentYear = date.getFullYear();
-  const currentMonth = String(date.getMonth() + 1).padStart(2, '0');
-  const hrDepSelected = searchParams?.get('departmentId');
-  let roleDepartmentID =
-    hrDepSelected != null ? hrDepSelected : user?.departmentId;
   let dateStr = searchParams.get('month');
 
   if (dateStr == undefined) {
@@ -30,19 +23,19 @@ const ExportExcel = () => {
 
   const handleExportToExcel = async () => {
     try {
-      const attendence: AttendenceFormValue = {
-        Month: Number(month) ?? currentMonth,
-        Year: Number(year) ?? currentYear,
-        designations: '',
-        IsActive: 0,
-        DepartmentId: roleDepartmentID,
-        PageNumber: 0,
-        PageSize: 0,
-        SearchValue: '',
-        TeamAdminId: '',
+      const attendence: reportAttendenceFormValue = {
+        departmentId: param.departmentId,
+        month: param.month,
+        year: param.year,
+        pageNo: param.pageNo,
+        pageSize: param.pageSize,
+        searchValue: param.searchValue,
+        teamAdminId: param.teamAdminId,
+        date:param.date
       };
 
-      const response = await hrReports(attendence);
+     
+      const response = await attendanceReports(attendence);
 
       // Check for successful response
       if (response.results != null) {

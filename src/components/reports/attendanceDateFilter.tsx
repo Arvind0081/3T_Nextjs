@@ -13,7 +13,7 @@ const DateFilter = ({param}:any) => {
         const month = e.target.value;
         setCurrentMonth(e.target.value);
          router.push(
-            `${url}/?tab=${activeTab}&pageNumber=${1}&pageSize=${param.pageSize}&month=${month}&search=${param.searchValue}`
+            `${url}/?tab=${activeTab}&pageNumber=${1}&pageSize=${param.pageSize}&month=${month}&search=${param.searchValue}&teamAdminId=${param.teamAdminId}&departmentId=${param.departmentId}`
           );
     };
     useEffect(() => {
