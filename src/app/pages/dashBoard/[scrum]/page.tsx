@@ -2,8 +2,8 @@ import React from 'react';
 import SideNav from '@/components/common/SideBar/sidebar';
 import Footer from '@/components/common/Footer/footer';
 import Header from '@/components/common/Header/header';
-import { AttendanceListModel, EmployeeProfileDetailsResponse, EmpProfileReqParams, ScrumPayLoadModel, ScrumTeamPerFormanceResponseModel, ScrumTeamProjectsResponseModel, ScrumTeamStatusResponseModel, TeamProductivityResponseModel } from '@/utils/types';
-import { attendanceListFromDB, EmpProfileDetailsById, performanceBadges, scrumTeamAttendance, scrumTeamBioMetric, scrumTeamPerformance, scrumTeamProjects, scrumTeamStatus, teamProductivitySummaryByManager } from '@/utils/publicApi';
+import { AttendanceListModel, EmployeeProfileDetailsResponse, EmpProfileReqParams, ScrumPayLoadModel, ScrumTeamPerFormanceResponseModel, ScrumTeamStatusResponseModel, TeamProductivityResponseModel } from '@/utils/types';
+import { attendanceListFromDB, EmpProfileDetailsById, performanceBadges, scrumTeamAttendance, scrumTeamBioMetric, scrumTeamPerformance,  scrumTeamStatus, teamProductivitySummaryByManager } from '@/utils/publicApi';
 import ScrumTeamStatus from '@/components/scrum/teamStatus';
 import { format } from 'date-fns';
 import ProjectInProgress from '@/components/scrum/projectInProgressTable';
@@ -63,7 +63,6 @@ const selectedMonth = searchParams.month ?? `${year}-${month}`;
 
  const selectedDate = searchParams.date ?? format(new Date(), 'yyyy-MM-dd');
  let teamPerformance:ScrumTeamPerFormanceResponseModel[]=[];
- let teamProjects:ScrumTeamProjectsResponseModel[]=[];
  let teamStatus:ScrumTeamStatusResponseModel[]=[];
  let attendanceList:AttendanceListModel[]=[];
  let teamMonthlyAttendance:any[]=[];
@@ -91,9 +90,7 @@ let payLoad:ScrumPayLoadModel={
         performanceBadgesList= await performanceBadges();
     } catch (error) {}
 
-    try {
-        teamProjects= await scrumTeamProjects(payLoad);
-    } catch (error) {}
+   
 
     try {
         teamStatus= await scrumTeamStatus(payLoad);
@@ -141,7 +138,7 @@ let payLoad:ScrumPayLoadModel={
                             <div className="main-container container-fluid profile-page">
 
                         <div className="row">
-                            <ProjectInProgress payLoad={payLoad} teamProjects={teamProjects} />
+                            <ProjectInProgress payLoad={payLoad}  />
                             <div className="col-xl-3">
                         <div className="card custom-card card_sm">
                            <div className="card-header justify-content-between items-center">

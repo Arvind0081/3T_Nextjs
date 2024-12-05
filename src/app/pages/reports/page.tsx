@@ -35,6 +35,7 @@ import {
   SettingEmpReqParams,
   reportAttendenceFormValue,
   MonthlyReportByManagerReq,
+  ClientReqParam,
 } from '@/utils/types';
 import getUser from '@/utils/getUserServerSide';
 import SelectTabs from '@/components/reports/selectTabs';
@@ -108,8 +109,8 @@ const Reports = async ({ searchParams }: any) => {
     departmentId: Number(user?.departmentId),
     month: Number(month),
     year: Number(year),
-    pageNo: pageNumber,
-    pageSize: pageSize,
+    pageNo: Number(pageNumber),
+    pageSize: Number(pageSize),
     searchValue: searchQuery,
     teamAdminId: user?.id,
     date: dateStr,
@@ -255,9 +256,14 @@ console.log('monthlyReportRes',  monthlyReportRes);
   try {
     projects = await projectDetail();
   } catch (error) {}
-
+ 
   try {
-    clients = await getCLients();
+
+    const params: ClientReqParam = {
+      departmentID: user.departmentId,
+    };
+    
+    clients = await getCLients(params);
   } catch (error) {}
 
   try {
