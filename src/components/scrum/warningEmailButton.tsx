@@ -4,7 +4,7 @@ import { WarningEmailModel } from '@/utils/types';
 import React,{useState} from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-const WarningEmailButton=({data,setCheckedEmployes}:any)=>{
+const WarningEmailButton=({data,setCheckedEmployes,buttonStatus}:any)=>{
 
     const [canvas,setCanvas]=useState(false);
     const [description,setDescription]=useState('');
@@ -33,7 +33,7 @@ const WarningEmailButton=({data,setCheckedEmployes}:any)=>{
 
     return(
         <>
-        <button type="button" className="btn btn-primary btn-wave" onClick={()=>setCanvas(true)}><i
+        <button type="button" disabled={buttonStatus} className="btn btn-primary btn-wave" onClick={()=>setCanvas(true)}><i
                                         className="ri-send-plane-line me-2 align-middle"></i>Send Warning
                                     Mail</button>
                                     <Offcanvas show={canvas} onHide={() => handleHideCanvas()} placement='end'>

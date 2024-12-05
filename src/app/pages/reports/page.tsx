@@ -90,8 +90,9 @@ const Reports = async ({ searchParams }: any) => {
   let billingType: any;
   let projectsHiringFilters: any;
   let projectStatusFilter: any;
-  let monthlyReportRes:any;;
+  let monthlyReportRes:any;
 
+  
   const pageNumber = searchParams?.pageNumber ?? 1;
   const pageSize = searchParams?.pageSize ?? 10;
   const searchQuery = searchParams?.search ?? '';
@@ -112,7 +113,7 @@ const Reports = async ({ searchParams }: any) => {
     pageNo: Number(pageNumber),
     pageSize: Number(pageSize),
     searchValue: searchQuery,
-    teamAdminId: user?.id,
+    teamAdminId: teamAdminId ?? user?.id,
     date: dateStr,
   };
   try {
@@ -242,8 +243,6 @@ const Reports = async ({ searchParams }: any) => {
   try {
     monthlyReportRes = await monthlyHoursReport(monthlyReportReq);
   } catch (error) {}
-
-console.log('monthlyReportRes',  monthlyReportRes);
 
   let reqParams: SettingEmpReqParams = {
     departmentID: user.departmentId,
