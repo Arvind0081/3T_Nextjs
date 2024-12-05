@@ -256,14 +256,16 @@ console.log('monthlyReportRes',  monthlyReportRes);
   try {
     projects = await projectDetail();
   } catch (error) {}
- 
-  try {
 
-    const params: ClientReqParam = {
-      departmentID: user.departmentId,
-    };
-    
-    clients = await getCLients(params);
+
+  const param: ClientReqParam = {
+  
+    departmentID: user.departmentId,
+  
+  };
+
+  try {
+    clients = await getCLients(param);
   } catch (error) {}
 
   try {

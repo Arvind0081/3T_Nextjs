@@ -10,7 +10,7 @@ const Designation = ({ desg,payload }: any) => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const desg = event.target.value;
-    router.push(`${url}?page=${payload.pagenumber}&size=${payload.pageSize}&empStatus=${payload.isActive}&departmentId=${payload.departmentID}&designation=${desg}&searchValue=${payload.searchValue}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}`);
+    router.push(`${url}?page=${payload.pagenumber}&size=${payload.pageSize}&empStatus=${payload.isActive}&departmentId=${payload.departmentID}&designation=${desg}&searchValue=${payload.searchValue}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}&teamAdminId=${payload.TeamAdminId}`);
   };
 
   return (

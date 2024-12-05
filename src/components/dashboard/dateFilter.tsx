@@ -29,9 +29,6 @@ const DateFilter = ({ month }: any) => {
                             value={currentMonth}
                             onChange={handleDate}
                         />
-                        <div className='input-group-text'>
-                            <i className='ri-calendar-line'></i>
-                        </div>
                     </div>
                 </div>
             </div>

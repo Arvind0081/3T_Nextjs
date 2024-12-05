@@ -87,21 +87,21 @@ const ProjectReport = ({ projectsReports, param }: any) => {
     setSortConfig({ key, direction });
 
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${searchInput}&sortColumn=${key}&sortOrder=${direction}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${searchInput}&sortColumn=${key}&sortOrder=${direction}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
     );
   };
 
   const handleEntries = (e: any) => {
     const showValue = e.target.value;
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${searchInput}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${searchInput}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
     );
   };
   const handleSearch = (e: any) => {
     const search = e.target.value;
     setSearchInput(search);
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
     );
   };
   return (

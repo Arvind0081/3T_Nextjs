@@ -15,7 +15,7 @@ const Search = ({ payload }: any) => {
       const trimmedQuery = searchQuery.trim();
  
       router.push(
-        `${url}?page=${payload?.pagenumber}&size=${payload.pageSize}&empStatus=${payload.isActive}&departmentId=${payload.departmentID}&designation=${payload.designation}&searchValue=${trimmedQuery}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}`
+        `${url}?page=${payload?.pagenumber}&size=${payload.pageSize}&empStatus=${payload.isActive}&departmentId=${payload.departmentID}&designation=${payload.designation}&searchValue=${trimmedQuery}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}&teamAdminId=${payload.TeamAdminId}`
       );
     }, 500);
  
