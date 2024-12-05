@@ -136,7 +136,7 @@ const bioMetricAttendanceStatus=(bioMetricAttendance:any,item:any,index:number)=
                 </div>
               </div>
               <div className='btn-list mt-md-0 mt-2'>
-                <ExportExcel />
+                <ExportExcel param={param}/>
               </div>
             </div>
           </div>
@@ -156,7 +156,7 @@ const bioMetricAttendanceStatus=(bioMetricAttendance:any,item:any,index:number)=
                   </tr>
                 </thead>
                 <tbody>
-                  {attendance.map((item: any) => (
+                  {attendance?.map((item: any) => (
                     <tr key={item.employeeNumber}>
                         <th><h3 className='userName'>{item.employeeName}</h3> <h3 className='EMP_no'>{item.employeeNumber}</h3> </th>
                      
