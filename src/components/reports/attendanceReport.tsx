@@ -49,7 +49,7 @@ const attendanceFormat=()=>{
 useEffect(()=>{
   attendanceFormat();
    // eslint-disable-next-line react-hooks/exhaustive-deps
-},[param.year, param.month]);
+},[param.year, param.month,param.pageNo]);
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
