@@ -7,7 +7,7 @@ const PageSizeHandler = ({ payload }: any) => {
   const handleEntries = (e: any) => {
     const showValue = e.target.value;
     router.push(
-      `${url}?page=${payload.pagenumber}&size=${showValue}&empStatus=${payload.isActive}&departmentId=${payload.departmentID}&designation=${payload.designation}&searchValue=${payload.searchValue}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}`
+      `${url}?page=${payload.pagenumber}&size=${showValue}&empStatus=${payload.isActive}&departmentId=${payload.departmentID}&designation=${payload.designation}&searchValue=${payload.searchValue}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}&teamAdminId=${payload.TeamAdminId}`
     );
   };
   return (
