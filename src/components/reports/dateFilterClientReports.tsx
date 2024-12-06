@@ -20,14 +20,14 @@ const DateFilterClientReports = ({param}:any) => {
 
         setCurrentHoursFrom(e.target.value);
         router.push(
-            `${url}?tab=${activeTab}&from=${months}&to=${param.To}`
+            `${url}?tab=${activeTab}&from=${months}&to=${param.To}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
         );
     };
     const handleHoursTo = (e: any) => {
         const hours = e.target.value;
         setCurrentHoursTo(e.target.value);
         router.push(
-            `${url}?tab=${activeTab}&from=${param.From}&to=${hours}`
+            `${url}?tab=${activeTab}&from=${param.From}&to=${hours}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
         );
     };
 

@@ -15,6 +15,7 @@ const PaymentPending = ({
   hiringStatus,
   projectsHiringFilters,
   // projectStatusFilter,
+  param
 }: any) => {
   const [selectedBillingType, setSelectedBillingType] = useState('');
   const [selectedHiringType, setSelectedHiringType] = useState('');
@@ -174,7 +175,7 @@ const sortedReports = [...filteredReports].sort((a: any, b: any) => {
                 </select>
               </div>
             </div>
-            <PaymentDateFilter/>
+            <PaymentDateFilter  param={param}/>
           </div>
         </div>
         {sortedReports?.map((item: any, index: number) => (
