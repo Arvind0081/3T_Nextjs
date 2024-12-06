@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
+import getUser from '@/utils/getUserClientSide';
 const SelectTabs = ({ activeTabName }: any) => {
-    //Initialize hook
+    let user: any = getUser();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -15,10 +15,16 @@ const SelectTabs = ({ activeTabName }: any) => {
         setActiveTab('');
     }
 
+    const teamAdminId = searchParams.get('teamAdminId');
+
     const switchTab = (e: any) => {
         const buttonText = e.target.innerText;
         setActiveTab(buttonText);
-        router.push(`/reports?tab=${buttonText}`);
+        if (user.role === 'HOD') {
+            router.push(`/reports?tab=${buttonText}&teamAdminId=${teamAdminId}`);
+        } else {
+            router.push(`/reports?tab=${buttonText}`);
+        }
     };
 
     return (

@@ -12,7 +12,7 @@ const EmployeeStatus = ({ empStatusList,payload }: any) => {
         event: React.ChangeEvent<HTMLSelectElement>
     ) => {
         const empStatus = event.target.value;
-        router.push(`${url}?page=${payload.pagenumber}&size=${payload.pageSize}&empStatus=${empStatus}&departmentId=${payload.departmentID}&designation=${payload.designation}&searchValue=${payload.searchValue}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}`);
+        router.push(`${url}?page=${payload.pagenumber}&size=${payload.pageSize}&empStatus=${empStatus}&departmentId=${payload.departmentID}&designation=${payload.designation}&searchValue=${payload.searchValue}&sortColumn=${payload.SortColumn}&sortOrder=${payload.SortOrder}&teamAdminId=${payload.TeamAdminId}`);
   
     };
 

@@ -30,7 +30,7 @@ const ReportPagination = ({ totalRecords, data }: any) => {
 
         if (data?.PageNumber > totalPagesCount) {
             router.replace(
-                `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? data.PageNumber - 1 : data?.PageNumber}&pageSize=${data.PageSize}&projectStartDate=${data.StartDate}&from=${data.From}&to=${data.To}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}`
+                `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? data.PageNumber - 1 : data?.PageNumber}&pageSize=${data.PageSize}&projectStartDate=${data.StartDate}&from=${data.From}&to=${data.To}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&departmentId=${data.DepartmentId}&teamAdminId=${data.TeamAdminId}`
             );
         }
         return totalPagesCount;
@@ -42,11 +42,11 @@ const ReportPagination = ({ totalRecords, data }: any) => {
     ) => {
         if (data?.PageNumber > totalPagesCountCheck) {
             router.replace(
-                `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? 1 : data?.PageNumber}&pageSize=${data.PageSize}&projectStartDate=${data.StartDate}&from=${data.From}&hoursTo=${data.To}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}`
+                `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? 1 : data?.PageNumber}&pageSize=${data.PageSize}&projectStartDate=${data.StartDate}&from=${data.From}&hoursTo=${data.To}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&departmentId=${data.DepartmentId}&teamAdminId=${data.TeamAdminId}`
             );
         } else {
             return router.push(
-                `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.PageNumber}&projectStartDate=${data.StartDate}&hoursFrom=${data.From}&hoursTo=${data.To}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}`
+                `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.PageSize}&projectStartDate=${data.StartDate}&hoursFrom=${data.From}&hoursTo=${data.To}&from=${data.From}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&departmentId=${data.DepartmentId}&teamAdminId=${data.TeamAdminId}`
             );
         }
     };

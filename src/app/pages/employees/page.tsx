@@ -30,7 +30,7 @@ const EmployeeComponent = async ({ searchParams }: any) => {
 
   let pageSize = searchParams?.size ?? 10;
   let currentPage = searchParams?.page ?? 1;
-  let teamAdminId: string = searchParams.teamAdminId ?? '';
+  let teamAdminId: string = searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined || searchParams.teamAdminId==='undefined' ? '': searchParams.teamAdminId ;
   let sortColumn: any = searchParams?.sortColumn;
   let sortOrder: any = searchParams?.sortOrder;
   const empStatusList = await employeeStatus();

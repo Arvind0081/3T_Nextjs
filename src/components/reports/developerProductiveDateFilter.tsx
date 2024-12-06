@@ -20,14 +20,14 @@ const DateFilter = ({param}:any) => {
 
         setCurrentHoursFrom(e.target.value);
         router.push(
-            `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${months}&to=${param.To}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+            `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${months}&to=${param.To}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
         );
     };
     const handleHoursTo = (e: any) => {
         const hours = e.target.value;
         setCurrentHoursTo(e.target.value);
         router.push(
-            `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${param.From}&to=${hours}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+            `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${param.From}&to=${hours}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
         );
     };
 

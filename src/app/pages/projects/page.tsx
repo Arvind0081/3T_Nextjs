@@ -23,7 +23,7 @@ const Projects = async({searchParams}:any) => {
     let currentPage:number= searchParams.page ?? 1;
     let hiringStatusId:number= searchParams.hiringStatus ?? 0;
     let bilingTypeId:number= searchParams.bilingType ?? 0;
-    let teamAdminId:string= searchParams.teamAdminId ?? '';
+    let teamAdminId:string= searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined || searchParams.teamAdminId==='undefined' ? '': searchParams.teamAdminId ;
     let sortColumn:string=searchParams.sortColumn??'';
     let sortOrder:string =searchParams.sortOrder??'';
     let today=new Date();
