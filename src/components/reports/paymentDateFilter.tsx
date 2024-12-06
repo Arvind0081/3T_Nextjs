@@ -5,7 +5,7 @@ import { PaymentPendingReport } from '@/utils/types';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import * as XLSX from 'xlsx';
-const PaymentDateFilter = () => {
+const PaymentDateFilter = ({param}:any) => {
   const router = useRouter();
   const url = usePathname();
   const searchParams = useSearchParams();
@@ -13,7 +13,7 @@ const PaymentDateFilter = () => {
   let paymentPendingReports: any;
   const handleSearch = (e: any) => {
     const search = e.target.value;
-    router.push(`${url}?tab=${activeTab}&search=${search}`);
+    router.push(`${url}?tab=${activeTab}&search=${search}&teamAdminId=${param.teamAdminId}&departmentId=${param.departmentId}`);
   };
   const handleExportToExcel = async ({}) => {
     try {
