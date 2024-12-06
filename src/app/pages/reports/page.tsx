@@ -154,6 +154,7 @@ const Reports = async ({ searchParams }: any) => {
    
   } catch (error) {}
 
+  
   const projectReq: ProjectsReport = {
     PageNumber: Number(pageNumber),
     PageSize: Number(pageSize),
@@ -386,6 +387,7 @@ const Reports = async ({ searchParams }: any) => {
                               billingType={billingType}
                               projectsHiringFilters={projectsHiringFilters}
                               projectStatusFilter={projectStatusFilter}
+                              param={paymentPendingReportReq}
                             />
                           )}
                           {activeTab == 'Client Report' && (

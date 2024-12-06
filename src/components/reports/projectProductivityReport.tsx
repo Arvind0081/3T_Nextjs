@@ -98,7 +98,6 @@ const ProjectReport = ({ projectsReports, param }: any) => {
     );
   };
   const handleSearch = (e: any) => {
-    debugger;
     const search = e.target.value;
     setSearchInput(search);
     router.push(
