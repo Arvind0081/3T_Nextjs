@@ -23,7 +23,7 @@ import CustomLinearProgress from '@/components/dashboard/customLinearProgress';
 
 const Dashboard = async ({ searchParams }: any) => {
    const user: any = getUser();
-   let teamAdminId: string = searchParams.teamAdminId ?? '';
+   let teamAdminId: string =searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined || searchParams.teamAdminId==='undefined' ? '': searchParams.teamAdminId ;
    let managerId = searchParams.managerId??'';
   let departmentID = searchParams?.departmentId ?? 1;
   let teamProductivity: TeamProductivityResponseModel[] = [];

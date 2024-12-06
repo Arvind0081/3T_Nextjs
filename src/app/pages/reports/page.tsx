@@ -104,7 +104,7 @@ const Reports = async ({ searchParams }: any) => {
 
  
   const pageNumber = searchParams?.pageNumber ?? 1;
-  const pageSize = searchParams?.pageSize ?? 5;
+  const pageSize = searchParams?.pageSize ?? 10;
   const searchQuery = searchParams?.search ?? '';
   const clientID = searchParams?.clientId ?? 0;
 
@@ -127,12 +127,12 @@ const Reports = async ({ searchParams }: any) => {
         pageNo: Number(pageNumber),
         pageSize: Number(pageSize),
         searchValue: searchQuery,
-        teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ? '':teamAdminId,
+        teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
         date: dateStr,
       };
 
       attendanceReportList = await attendanceReports(reportsAttendencePayload);
-
+     
     }
     else{
 
