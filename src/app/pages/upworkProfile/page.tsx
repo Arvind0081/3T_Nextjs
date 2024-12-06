@@ -23,6 +23,7 @@ const upworkProfile = async ({ searchParams }: any) => {
   let teamAdminId: string = searchParams.teamAdminId ?? '';
   let sortColumn: any = searchParams?.sortColumn;
   let sortOrder: any = searchParams?.sortOrder;
+
   const reqParams: UpworkReqParams = {
     departmentID: user.departmentId,
     pageSize: pageSize,
@@ -31,9 +32,8 @@ const upworkProfile = async ({ searchParams }: any) => {
     sortColumn: sortColumn,
     sortOrder: sortOrder,
     teamAdminId: teamAdminId,
-    profileType: 0
+    profileType: 0,
   };
-
   const upworkprofilerecords = await UpworkProfile(reqParams);
 
   const totalCount = upworkprofilerecords?.model?.totalCount || 0;
@@ -42,34 +42,32 @@ const upworkProfile = async ({ searchParams }: any) => {
 
   return (
     <>
-      <div className='app sidebar-mini ltr light-mode'>
-        <div className='page-main'>
+      <div className="app sidebar-mini ltr light-mode">
+        <div className="page-main">
           <Header />
           <SideNav />
-          <div className='main-content app-content mt-0'>
-            <div className='side-app'>
-              <div className='main-container container-fluid'>
-                <div className='row'>
-                  <div className='col-sm-12 col-xl-6'>
+          <div className="main-content app-content mt-0">
+            <div className="side-app">
+              <div className="main-container container-fluid">
+                <div className="row">
+                  <div className="col-sm-12 col-xl-6">
                     <CreateProfile
                       getDepartment={getDepartment}
                       profileList={profileList}
-                     
                     />
                   </div>
                 </div>
-                <div className='row'>
-                <ProfileTable params={reqParams} 
-                profileList={profileList}
-                upworkprofilerecords={upworkprofilerecords}
-                getDepartment={getDepartment}
-                data={reqParams}
-                totalEntries={totalEntries}
-                />
+                <div className="row">
+                  <ProfileTable
+                    params={reqParams}
+                    profileList={profileList}
+                    upworkprofilerecords={upworkprofilerecords}
+                    getDepartment={getDepartment}
+                    data={reqParams}
+                    totalEntries={totalEntries}
+                  />
                 </div>
-              
               </div>
-          
             </div>
           </div>
         </div>

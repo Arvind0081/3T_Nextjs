@@ -32,16 +32,27 @@ const DeveloperReport = ({ developersReports, param }: any) => {
     );
   };
 
-  const showingRecordCount = () => {
-    const Count =
-      (param.PageNumber - 1) * param.PageSize +
-        Math.ceil(developersReports?.results?.length) <=
-      developersReports?.totalCount
-        ? (param.PageNumber - 1) * param.PageSize +
-          Math.ceil(developersReports?.results?.length)
-        : developersReports?.totalCount;
+  // const showingRecordCount = () => {
+  //   const Count =
+  //     (param.PageNumber - 1) * param.PageSize +
+  //       Math.ceil(developersReports?.results?.length) <=
+  //     developersReports?.totalCount
+  //       ? (param.PageNumber - 1) * param.PageSize +
+  //         Math.ceil(developersReports?.results?.length)
+  //       : developersReports?.totalCount;
 
-    return Count;
+  //   return Count;
+  // };
+
+  const showingRecordCount = () => {
+    const totalCount = developersReports?.totalCount || 0;
+    const currentPage = param.PageNumber || 1;
+    const pageSize = param.PageSize || 10;
+
+    const pageStart = (currentPage - 1) * pageSize + 1;
+    const pageEnd = Math.min(currentPage * pageSize, totalCount);
+
+    return { pageStart, pageEnd, totalCount };
   };
 
   const numberToTimeConversion = (decimalTime: any) => {
@@ -107,41 +118,41 @@ const DeveloperReport = ({ developersReports, param }: any) => {
   };
   return (
     <>
-      <div id='DeveloperReport' role='tabpanel'>
-        <div className='card custom-card team_card'>
-          <div className='card-header justify-content-between awards_card_header'>
-            <div className='card-title'>Developer Productivity Report</div>
-            <div className='filter-right d-flex gap-x-2'>
+      <div id="DeveloperReport" role="tabpanel">
+        <div className="card custom-card team_card">
+          <div className="card-header justify-content-between awards_card_header">
+            <div className="card-title">Developer Productivity Report</div>
+            <div className="filter-right d-flex gap-x-2">
               <DateFilter param={param} />
             </div>
           </div>
-          <div className='card-body'>
-            <div className='table-responsive theme_table'>
-              <div className='d-flex flex-wrap justify-content-between dataTable_filterBox'>
-                <div className='d-flex gap-x-2 align-items-center mb-4'>
+          <div className="card-body">
+            <div className="table-responsive theme_table">
+              <div className="d-flex flex-wrap justify-content-between dataTable_filterBox">
+                <div className="d-flex gap-x-2 align-items-center mb-4">
                   Show
-                  <select className='form-control w70' onChange={handleEntries}>
-                    <option value='10'>10</option>
-                    <option value='25'>25</option>
-                    <option value='50'>50</option>
-                    <option value='100'>100</option>
-                    <option value='200'>200</option>
+                  <select className="form-control w70" onChange={handleEntries}>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
                   </select>
                   entries
                 </div>
-                <div className='search_box mb-4'>
-                  <i className='ri-search-line'></i>
+                <div className="search_box mb-4">
+                  <i className="ri-search-line"></i>
                   <input
-                    className='form-control'
-                    type='text'
-                    placeholder='Search Here'
+                    className="form-control"
+                    type="text"
+                    placeholder="Search Here"
                     value={searchInput}
                     onChange={handleSearch}
                   />
                 </div>
               </div>
-              <div className='table-responsive theme_table'>
-                <table className='table text-nowrap table-hover border table-bordered'>
+              <div className="table-responsive theme_table">
+                <table className="table text-nowrap table-hover border table-bordered">
                   <thead>
                     <tr>
                       <th onClick={() => handleSort('fullName')}>
@@ -230,7 +241,7 @@ const DeveloperReport = ({ developersReports, param }: any) => {
                           <tr key={index}>
                             <Link
                               href={`/employees/${item.employeeID}`}
-                              className='btn btn-link text-primary'
+                              className="btn btn-link text-primary"
                             >
                               {item.fullName}
                             </Link>
@@ -241,15 +252,15 @@ const DeveloperReport = ({ developersReports, param }: any) => {
                             <td>
                               {numberToTimeConversion(item.totalFixedHours)}
                             </td>
-                            <td className='text-success text-bold'>
+                            <td className="text-success text-bold">
                               <b>
                                 {numberToTimeConversion(item.totalBillingHours)}
                               </b>
                             </td>
-                            <td className='text-danger'>
+                            <td className="text-danger">
                               {numberToTimeConversion(item.totalOfflineHours)}
                             </td>
-                            <td className='worked_status'>
+                            <td className="worked_status">
                               {item.projectNames}
                             </td>
                             <td>
@@ -265,13 +276,13 @@ const DeveloperReport = ({ developersReports, param }: any) => {
                   {developersReports != undefined && (
                     <tfoot>
                       <tr>
-                        <td className='text-bold'>Total </td>
+                        <td className="text-bold">Total </td>
                         <td>{totalUpworkHours}</td>
                         <td>{totalFixedHours}</td>
-                        <td className='text-success text-bold'>
+                        <td className="text-success text-bold">
                           {totalBillingHours}
                         </td>
-                        <td className='text-danger'>{totalOfflineHours}</td>
+                        <td className="text-danger">{totalOfflineHours}</td>
                         <td></td>
                         <td></td>
                       </tr>
@@ -282,17 +293,17 @@ const DeveloperReport = ({ developersReports, param }: any) => {
               </div>
             </div>
           </div>
-          <div className='card-footer'>
-            <div className='d-flex align-items-center pagination_layout'>
+          <div className="card-footer">
+            <div className="d-flex align-items-center pagination_layout">
               {developersReports?.totalCount > 0 && (
                 <div>
-                  Total Showing Entries {showingRecordCount()} out of{' '}
-                  {developersReports?.totalCount ?? 0}
-                  <i className='bi bi-arrow-right ms-2 fw-semibold'></i>
+                  Showing {showingRecordCount().pageStart} to{' '}
+                  {showingRecordCount().pageEnd} of{' '}
+                  {showingRecordCount().totalCount} Entries
                 </div>
               )}
 
-              <div className='ms-auto'>
+              <div className="ms-auto">
                 <nav>
                   {developersReports?.totalCount > 0 && (
                     <ReportPagination
