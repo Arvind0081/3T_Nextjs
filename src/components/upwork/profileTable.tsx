@@ -20,8 +20,19 @@ const ProfileTable = ({
     direction: params.sortOrder || 'asc',
   });
 
+  const showingRecordCount = () => {
+    debugger;
+    const totalCount = totalEntries || 0; // totalEntries ko use kar rahe hain
+    const currentPage = params.pageNumber || 1;
+    const pageSizeValue = params.pageSize || 10;
+
+    const pageStart = (currentPage - 1) * pageSizeValue + 1;
+    const pageEnd = Math.min(currentPage * pageSizeValue, totalCount);
+
+    return { pageStart, pageEnd, totalCount };
+  };
+
   const handleSort = (key: string) => {
- 
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc';
@@ -35,20 +46,20 @@ const ProfileTable = ({
 
   return (
     <>
-      <div className='col-sm-12 col-xl-6'>
-        <div className='card custom-card'>
-          <div className='card-header justify-content-between awards_card_header'>
-            <div className='card-title'>Upwork Profile</div>
-            <div className='filter-right d-flex gap-x-2'>
-              <div className='search_box'>
-                <i className='ri-search-line' />
+      <div className="col-sm-12 col-xl-6">
+        <div className="card custom-card">
+          <div className="card-header justify-content-between awards_card_header">
+            <div className="card-title">Upwork Profile</div>
+            <div className="filter-right d-flex gap-x-2">
+              <div className="search_box">
+                <i className="ri-search-line" />
                 <UpworkSearch params={params} />
               </div>
             </div>
           </div>
-          <div className='card-body'>
-            <div className='table-responsive theme_table'>
-              <table className='table text-nowrap table-hover border table-bordered'>
+          <div className="card-body">
+            <div className="table-responsive theme_table">
+              <table className="table text-nowrap table-hover border table-bordered">
                 <thead>
                   <tr>
                     <th onClick={() => handleSort('name')}>
@@ -63,9 +74,9 @@ const ProfileTable = ({
                         <FaSort />
                       )}
                     </th>
-                    <th scope='col'>Department</th>
-                    <th scope='col'>Profile Type</th>
-                    <th scope='col'>Action</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">Profile Type</th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -94,10 +105,13 @@ const ProfileTable = ({
                   )}
                 </tbody>
               </table>
-              <div className='card-footer'>
-                <div className='d-flex align-items-center'>
-                  Total Showing Entries {totalEntries} {''}
-                  out of {upworkprofilerecords?.model.totalCount ?? 0}
+              <div className="card-footer">
+                <div className="d-flex align-items-center">
+                  <div>
+                    Showing {showingRecordCount().pageStart} to{' '}
+                    {showingRecordCount().pageEnd} of{' '}
+                    {showingRecordCount().totalCount} Entries
+                  </div>
                   &nbsp;
                   <Paginator
                     totalRecords={upworkprofilerecords?.model.totalCount}
