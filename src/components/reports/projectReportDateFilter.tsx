@@ -34,7 +34,7 @@ const DateFilter = ({ param }:any) => {
   const handleSearch = () => {
     // Trigger the URL update with the current state
     router.push(
-      `${url}/?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&projectStartDate=${currentProjectDate}&from=${from}&to=${to}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+      `${url}/?tab=${activeTab}&pageNumber=1&pageSize=${param.PageSize}&projectStartDate=${currentProjectDate}&from=${from}&to=${to}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
   );
 }
 

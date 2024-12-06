@@ -25,13 +25,15 @@ const FilterManager = ({ list }: any) => {
   const handleChangeManager = () => {
    
    // const manager = event.target.value;
-   
+  
     setManager(manager);
     if (manager) {
+   
       setCookie('manager', manager);
       currentParams.set('teamAdminId',manager);//`${url}?tab=${activeTab}&teamAdminId=${manager}`;
     }
     else{
+
       deleteCookie('manager');
      currentParams.delete('teamAdminId');
     }

@@ -46,7 +46,7 @@ const ReportPagination = ({ totalRecords, data }: any) => {
             );
         } else {
             return router.push(
-                `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.PageNumber}&projectStartDate=${data.StartDate}&hoursFrom=${data.From}&hoursTo=${data.To}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&departmentId=${data.DepartmentId}&teamAdminId=${data.TeamAdminId}`
+                `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.PageSize}&projectStartDate=${data.StartDate}&hoursFrom=${data.From}&hoursTo=${data.To}&from=${data.From}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&departmentId=${data.DepartmentId}&teamAdminId=${data.TeamAdminId}`
             );
         }
     };

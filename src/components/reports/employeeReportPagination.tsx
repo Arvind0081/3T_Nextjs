@@ -26,7 +26,7 @@ const EmployeeReportPagination = ({ totalRecords, data }: any) => {
 
     if (data?.PageNumber > totalPagesCount) {
       router.replace(
-        `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? data.PageNumber - 1 : data?.PageNumber}&pageSize=${data.PageSize}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}`
+        `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? data.PageNumber - 1 : data?.PageNumber}&pageSize=${data.PageSize}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&teamAdminId=${data.TeamAdminId}&departmentId=${data.DepartmentId}`
       );
     }
     return totalPagesCount;
@@ -38,11 +38,11 @@ const EmployeeReportPagination = ({ totalRecords, data }: any) => {
   ) => {
     if (data?.PageNumber > totalPagesCountCheck) {
       router.replace(
-        `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? 1 : data?.PageNumber}&pageSize=${data.PageSize}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}`
+        `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? 1 : data?.PageNumber}&pageSize=${data.PageSize}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&teamAdminId=${data.TeamAdminId}&departmentId=${data.DepartmentId}`
       );
     } else {
       return router.push(
-        `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.PageSize}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}`
+        `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.PageSize}&search=${data.SearchValue}&sortColumn=${data.SortColumn}&sortOrder=${data.SortOrder}&teamAdminId=${data.TeamAdminId}&departmentId=${data.DepartmentId}`
       );
     }
   };

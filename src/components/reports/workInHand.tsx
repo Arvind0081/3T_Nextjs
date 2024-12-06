@@ -8,12 +8,14 @@ type WorkInHandProps = {
   workInHandRes: any;
   projectModuleStatus: any;
   departmentId: string;
+  workInHandReq:any
 };
 
 const WorkInHand = ({
   workInHandRes,
   projectModuleStatus,
   departmentId,
+  workInHandReq,
 }: WorkInHandProps) => {
   const numberToTimeConversion = (decimalTime: number) => {
     const hours = Math.floor(decimalTime);
@@ -84,7 +86,7 @@ const WorkInHand = ({
       <div className='card custom-card team_card'>
         <div className='card-header justify-content-between awards_card_header'>
           <div className='card-title'>Work In Hand Report</div>
-          <WorkHandDateFilter />
+          <WorkHandDateFilter param={workInHandReq} />
         </div>
         <div className='card-body'>
           <div className='table-responsive theme_table'>

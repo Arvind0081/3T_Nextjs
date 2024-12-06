@@ -60,7 +60,7 @@ const FullReport = ({
         newParamKey === 'clientId' ? newValue : param.ClientId
       }&from=${newParamKey === 'from' ? newValue : param.From}&to=${
         newParamKey === 'to' ? newValue : param.To
-      }`
+      }&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
   };
 
