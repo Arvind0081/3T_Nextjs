@@ -6,20 +6,21 @@ import * as XLSX from 'xlsx';
 import { employeesAttendanceReport } from '@/utils/publicApi';
 import { EmployeesAttendanceReport } from '@/utils/types';
 
-const EmployeeExcel = () => {
+const EmployeeExcel = ({param}:any) => {
 
     const handleExportToExcel = async ({}) => {
    
         try {
             const projectReq: EmployeesAttendanceReport = {
-                PageNumber: 0,
-                PageSize: 0,
-                DepartmentId: 0,
-                SearchValue: '',
-                TeamAdminId: '',
-                SortColumn: '',
-                SortOrder: ''
+                PageNumber: param.PageNumber,
+                PageSize: param.PageSize,
+                DepartmentId: param.DepartmentId,
+                SearchValue: param.SearchValue,
+                TeamAdminId: param.TeamAdminId,
+                SortColumn: param.SortColumn,
+                SortOrder: param.SortOrder,
             };
+           
 
             const response = await employeesAttendanceReport(projectReq);
 

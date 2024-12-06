@@ -4,7 +4,7 @@ import { workInHand } from '@/utils/publicApi';
 import { WorkInHandReq } from '@/utils/types';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import * as XLSX from 'xlsx';
-const WorkHandDateFilter = () => {
+const WorkHandDateFilter = ({param}:any) => {
   const router = useRouter();
   const url = usePathname();
   const searchParams = useSearchParams();
@@ -12,14 +12,14 @@ const WorkHandDateFilter = () => {
 
   const handleSearch = (e: any) => {
     const search = e.target.value;
-    router.push(`${url}?tab=${activeTab}&search=${search}`);
+    router.push(`${url}?tab=${activeTab}&search=${search}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`);
   };
   const handleExportToExcel = async () => {
 
     try {
       const workInHandReq: WorkInHandReq = {
-        TeamAdminId: '',
-        DepartmentId: 0,
+        TeamAdminId: param.TeamAdminId,
+        DepartmentId: param.DepartmentId,
         SearchText: '',
       };
 

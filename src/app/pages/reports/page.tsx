@@ -65,8 +65,8 @@ const Reports = async ({ searchParams }: any) => {
   let emp: any = searchParams?.employeeId;
   let projectID: any = searchParams?.projectId;
 
-  let sortColumn:any=searchParams?.sortColumn;
-  let sortOrder:any=searchParams?.sortOrder;
+  let sortColumn: any = searchParams?.sortColumn;
+  let sortOrder: any = searchParams?.sortOrder;
 
   let dateStr = searchParams?.month;
   let activeTab = searchParams?.tab ?? 'Attendance Report';
@@ -104,7 +104,7 @@ const Reports = async ({ searchParams }: any) => {
 
  
   const pageNumber = searchParams?.pageNumber ?? 1;
-  const pageSize = searchParams?.pageSize ?? 10;
+  const pageSize = searchParams?.pageSize ?? 5;
   const searchQuery = searchParams?.search ?? '';
   const clientID = searchParams?.clientId ?? 0;
 
@@ -179,15 +179,12 @@ const Reports = async ({ searchParams }: any) => {
     projectsReports = await projectsReport(projectReq);
   } catch (error) {}
 
-
-
-  const developersReportReq: DevelopersReport = 
-  {
+  const developersReportReq: DevelopersReport = {
     From: fromDate ?? '',
     To: toDate ?? '',
     PageNumber: pageNumber,
     PageSize: pageSize,
-    DepartmentId: 0,
+    DepartmentId:Number(user.departmentId),
     SearchValue: searchQuery ?? '',
     TeamAdminId: teamAdminId ?? '',
     SortColumn: sortColumn ?? '',
@@ -200,7 +197,7 @@ const Reports = async ({ searchParams }: any) => {
   const empReportReq: EmployeesAttendanceReport = {
     PageNumber: pageNumber,
     PageSize: pageSize,
-    DepartmentId: 0,
+    DepartmentId: Number(user.departmentId),
     SearchValue: searchQuery ?? '',
     TeamAdminId: teamAdminId ?? '',
     SortColumn: sortColumn ?? '',
@@ -212,7 +209,7 @@ const Reports = async ({ searchParams }: any) => {
 
   const paymentPendingReportReq: PaymentPendingReport = {
     teamAdminId: teamAdminId ?? '',
-    departmentId: 0,
+    departmentId:Number(user.departmentId),
     searchText: searchQuery ?? '',
   };
   try {
@@ -233,7 +230,7 @@ const Reports = async ({ searchParams }: any) => {
   const clientReportReq: ClientReportReq = {
     From: fromDate ?? '',
     To: toDate ?? '',
-    DepartmentId: 0,
+    DepartmentId: Number(user.departmentId),
     TeamAdminId: teamAdminId ?? '',
   };
   try {
@@ -243,7 +240,7 @@ const Reports = async ({ searchParams }: any) => {
   //Work In Hand API Call
   const workInHandReq: WorkInHandReq = {
     SearchText: searchQuery ?? '',
-    DepartmentId: 0,
+    DepartmentId:Number(user.departmentId),
     TeamAdminId: teamAdminId ?? '',
   };
   try {
@@ -264,7 +261,6 @@ const Reports = async ({ searchParams }: any) => {
     fullReportRes = await fullReport(fullReportReq);
   } catch (error) {}
 
-
   const monthlyReportReq: MonthlyReportByManagerReq = {
     EmployeeId: emp ?? '',
     ProjectId: projectID ?? 0,
@@ -272,7 +268,6 @@ const Reports = async ({ searchParams }: any) => {
     From: fromDate,
     To: toDate,
   };
-
 
   try {
     monthlyReportRes = await monthlyHoursReport(monthlyReportReq);
@@ -290,11 +285,8 @@ const Reports = async ({ searchParams }: any) => {
     projects = await projectDetail();
   } catch (error) {}
 
-
   const param: ClientReqParam = {
-  
     departmentID: user.departmentId,
-  
   };
 
   try {
@@ -380,6 +372,7 @@ const Reports = async ({ searchParams }: any) => {
                               workInHandRes={workInHandRes}
                               projectModuleStatus={projectModuleStatus}
                               departmentId={user?.departmentId}
+                              workInHandReq={workInHandReq}
                             />
                           )}
                           {activeTab == 'Payment Pending' && (
@@ -409,7 +402,6 @@ const Reports = async ({ searchParams }: any) => {
                               fullReportRes={fullReportRes}
                               param={fullReportReq}
                               monthlyReportRes={monthlyReportRes}
-                             
                             />
                           )}
                         </div>
@@ -426,5 +418,3 @@ const Reports = async ({ searchParams }: any) => {
   );
 };
 export default Reports;
-
-

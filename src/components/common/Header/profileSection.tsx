@@ -33,6 +33,7 @@ const ProfileSection = ({ profileDetails }: any) => {
     const handleSignOut = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
         deleteCookie('user');
+        deleteCookie('manager');
         router.push('/');
     };
 
