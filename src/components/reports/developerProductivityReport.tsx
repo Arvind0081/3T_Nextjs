@@ -28,7 +28,7 @@ const DeveloperReport = ({ developersReports, param }: any) => {
     setSortConfig({ key, direction });
 
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${param.From}&to=${param.To}&search=${param.SearchValue}&sortColumn=${key}&sortOrder=${direction}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${param.From}&to=${param.To}&search=${param.SearchValue}&sortColumn=${key}&sortOrder=${direction}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
   };
 
@@ -106,14 +106,14 @@ const DeveloperReport = ({ developersReports, param }: any) => {
     const showValue = e.target.value;
 
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&from=${param.From}&to=${param.To}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&from=${param.From}&to=${param.To}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
   };
   const handleSearch = (e: any) => {
     const search = e.target.value;
     setSearchInput(search);
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${param.From}&to=${param.To}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${param.From}&to=${param.To}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
   };
   return (

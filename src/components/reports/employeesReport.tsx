@@ -47,7 +47,7 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
     // Update URL for other columns
     if (key !== 'srNo') {
       router.push(
-        `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&search=${param.SearchValue}&sortColumn=${key}&sortOrder=${direction}`
+        `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&search=${param.SearchValue}&sortColumn=${key}&sortOrder=${direction}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
       );
     }
   };
@@ -78,7 +78,7 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
   const handleEntries = (e: any) => {
     const showValue = e.target.value;
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
   };
 
@@ -86,19 +86,19 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
     const search = e.target.value;
     setSearchInput(search);
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}`
+      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
   };
 
   return (
     <>
-      <div id="EmployeesReport" role="tabpanel">
-        <div className="card custom-card team_card">
-          <div className="card-header justify-content-between awards_card_header">
-            <div className="card-title">Employees Profile Report</div>
-            <div className="filter-right d-flex gap-x-2">
-              <div className="btn-list mt-md-0 mt-2">
-                <EmployeeExcel />
+      <div id='EmployeesReport' role='tabpanel'>
+        <div className='card custom-card team_card'>
+          <div className='card-header justify-content-between awards_card_header'>
+            <div className='card-title'>Employees Profile Report</div>
+            <div className='filter-right d-flex gap-x-2'>
+              <div className='btn-list mt-md-0 mt-2'>
+              <EmployeeExcel param={param} />
               </div>
             </div>
           </div>
