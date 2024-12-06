@@ -90,8 +90,19 @@ const Reports = async ({ searchParams }: any) => {
   let billingType: any;
   let projectsHiringFilters: any;
   let projectStatusFilter: any;
-  let monthlyReportRes: any;
+  let monthlyReportRes:any;
+  let reportsAttendencePayload: reportAttendenceFormValue={
+    departmentId: 0,
+    month: 0,
+    year: 0,
+    pageNo: 0,
+    pageSize: 0,
+    searchValue: '',
+    teamAdminId: '',
+    date: ''
+  };
 
+ 
   const pageNumber = searchParams?.pageNumber ?? 1;
   const pageSize = searchParams?.pageSize ?? 5;
   const searchQuery = searchParams?.search ?? '';
@@ -105,18 +116,42 @@ const Reports = async ({ searchParams }: any) => {
   }
   let [year, month] = dateStr.split('-');
 
-  const reportsAttendencePayload: reportAttendenceFormValue = {
-    departmentId: Number(user?.departmentId),
-    month: Number(month),
-    year: Number(year),
-    pageNo: Number(pageNumber),
-    pageSize: Number(pageSize),
-    searchValue: searchQuery,
-    teamAdminId: user?.id,
-    date: dateStr,
-  };
+
   try {
-    attendanceReportList = await attendanceReports(reportsAttendencePayload);
+
+    if(user.role==='HOD'){
+       reportsAttendencePayload= {
+        departmentId: Number(user?.departmentId),
+        month: Number(month),
+        year: Number(year),
+        pageNo: Number(pageNumber),
+        pageSize: Number(pageSize),
+        searchValue: searchQuery,
+        teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ? '':teamAdminId,
+        date: dateStr,
+      };
+
+      attendanceReportList = await attendanceReports(reportsAttendencePayload);
+
+    }
+    else{
+
+      reportsAttendencePayload = {
+        departmentId: Number(user?.departmentId),
+        month: Number(month),
+        year: Number(year),
+        pageNo: Number(pageNumber),
+        pageSize: Number(pageSize),
+        searchValue: searchQuery,
+        teamAdminId: user?.id,
+        date: dateStr,
+      };
+
+      attendanceReportList = await attendanceReports(reportsAttendencePayload);
+
+    }
+ 
+   
   } catch (error) {}
 
   const projectReq: ProjectsReport = {

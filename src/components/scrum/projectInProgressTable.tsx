@@ -207,10 +207,10 @@ const handlePaginationChange = (e: React.MouseEvent<HTMLAnchorElement, MouseEven
                 </tfoot>
               )}
             </table>
-            {teamProjects?.length === 0 && <p>No record found.</p>}
+            {!teamProjects?.length && <p>No record found.</p>}
           </div>
         </div>
-        <div className="card-footer">
+        {teamProjects?.length && <div className="card-footer">
           <div className="d-flex align-items-center">
             <div>   Showing {startRecord} to {endRecord} of {teamProjects?.length} Entries </div>
             <div className="ms-auto">
@@ -229,7 +229,7 @@ const handlePaginationChange = (e: React.MouseEvent<HTMLAnchorElement, MouseEven
           />
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

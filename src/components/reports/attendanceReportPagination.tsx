@@ -28,7 +28,7 @@ const AttendanceReportPagination = ({ totalRecords, data }: any) => {
     if (data?.pageNo > totalPagesCount) {
      
       router.replace(
-        `${url}/?tab=${activeTab}&pageNumber=${data?.pageNo > totalPagesCountCheck ? data.pageNo - 1 : data?.pageNo}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}`
+        `${url}/?tab=${activeTab}&pageNumber=${data?.pageNo > totalPagesCountCheck ? data.pageNo - 1 : data?.pageNo}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}&teamAdminId=${data.teamAdminId}`
       );
     }
     return totalPagesCount;
@@ -41,11 +41,11 @@ const AttendanceReportPagination = ({ totalRecords, data }: any) => {
     
     if (data?.pageNo > totalPagesCountCheck) {
       router.replace(
-        `${url}/?tab=${activeTab}&pageNumber=${data?.pageNo > totalPagesCountCheck ? 1 : data?.pageNo}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}`
+        `${url}/?tab=${activeTab}&pageNumber=${data?.pageNo > totalPagesCountCheck ? 1 : data?.pageNo}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}&teamAdminId=${data.teamAdminId}`
       );
     } else {
       return router.push(
-        `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}`
+        `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}&teamAdminId=${data.teamAdminId}`
       );
     }
   };
