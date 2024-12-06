@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import SideBarSettings from './sideBarSetting';
+import { getCookie} from 'cookies-next';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 const SideBarMenu = ({ user }: any) => {
@@ -9,7 +10,7 @@ const SideBarMenu = ({ user }: any) => {
   const searchParams = useSearchParams();
   const tabName = 'Attendance Report';
   const tab = 'Search Invoice';
-  const teamAdminId = searchParams.get('teamAdminId');
+  const teamAdminId = searchParams.get('teamAdminId')??  getCookie('manager')?.toString();
   const compairRole = (array: string[]) => {
     if (user) {
       if (array.includes(user.role)) {
@@ -138,7 +139,7 @@ const SideBarMenu = ({ user }: any) => {
             <Link
               className={`side-menu__item has-link ${pathName == '/reports' ? 'active' : ''} `}
               data-bs-toggle='slide'
-              href={`/reports?tab=${tabName}&teamAdminId=${teamAdminId}`}
+              href={compairRole(['HOD'])?`/reports?tab=${tabName}&teamAdminId=${teamAdminId}`:`/reports?tab=${tabName}`}
             >
               <i className='side-menu__icon bx bx-archive-in'></i>
               <span className='side-menu__label'>Reports</span>
@@ -150,7 +151,7 @@ const SideBarMenu = ({ user }: any) => {
             <Link
               className={`side-menu__item has-link ${pathName == '/employees' ? 'active' : ''} `}
               data-bs-toggle='slide'
-              href='/employees'
+              href={compairRole(['HOD'])?`/employees?teamAdminId=${teamAdminId}`:'/employees'}
             >
               <i className='side-menu__icon bx bx-user'></i>
               <span className='side-menu__label'>Team Members</span>
@@ -212,7 +213,7 @@ const SideBarMenu = ({ user }: any) => {
             <Link
               className={`side-menu__item has-link ${pathName == '/managerToDo' ? 'active' : ''} `}
               data-bs-toggle='slide'
-              href='/managerToDo'
+              href={compairRole(['HOD'])?`/managerToDo?teamAdminId=${teamAdminId}`:'/managerToDo'}
             >
               <i className='side-menu__icon bx bx-briefcase-alt-2'></i>
               <span className='side-menu__label'>{'Team`s To-Do`s'}</span>
@@ -237,7 +238,7 @@ const SideBarMenu = ({ user }: any) => {
             <Link
               className={`side-menu__item has-link ${pathName == '/projects' ? 'active' : ''} `}
               data-bs-toggle='slide'
-              href={`/projects?teamAdminId=${teamAdminId}`}
+              href={compairRole(['HOD'])?`/projects?teamAdminId=${teamAdminId}`:'/projects'}
             >
               <i className='side-menu__icon bx bx-briefcase-alt-2'></i>
               <span className='side-menu__label'>Projects</span>
@@ -261,7 +262,7 @@ const SideBarMenu = ({ user }: any) => {
             <Link
               className={`side-menu__item has-link ${pathName == '/upworkprofile' ? 'active' : ''} `}
               data-bs-toggle='slide'
-              href='/upworkprofile'
+              href={'/upworkprofile'}
             >
               <i className='side-menu__icon bx bxs-user-detail'></i>
               <span className='side-menu__label'>Billing Profile</span>
@@ -273,7 +274,7 @@ const SideBarMenu = ({ user }: any) => {
             <Link
               className={`side-menu__item has-link ${pathName == '/clients' ? 'active' : ''} `}
               data-bs-toggle='slide'
-              href='/clients'
+              href={'/clients'}
             >
               <i className='side-menu__icon bx bx-home'></i>
               <span className='side-menu__label'>Clients</span>
@@ -308,7 +309,7 @@ const SideBarMenu = ({ user }: any) => {
               className={`side-menu__item has-link ${pathName == '/allUsers' ? 'active' : ''} `}
               data-bs-toggle='slide'
            
-              href='/allUsers'
+              href={'/allUsers'}
             >
               <i className='side-menu__icon bx bx-video'></i>
               <span className='side-menu__label'>All Users</span>

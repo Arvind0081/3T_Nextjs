@@ -127,12 +127,12 @@ const Reports = async ({ searchParams }: any) => {
         pageNo: Number(pageNumber),
         pageSize: Number(pageSize),
         searchValue: searchQuery,
-        teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ? '':teamAdminId,
+        teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
         date: dateStr,
       };
 
       attendanceReportList = await attendanceReports(reportsAttendencePayload);
-
+     
     }
     else{
 
