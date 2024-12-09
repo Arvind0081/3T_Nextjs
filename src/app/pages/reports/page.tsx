@@ -163,7 +163,7 @@ const Reports = async ({ searchParams }: any) => {
     To: toDate ?? '',
     DepartmentId: Number(user.departmentId),
     SearchValue: searchQuery ?? '',
-    TeamAdminId: teamAdminId ?? '',
+    TeamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
     SortColumn: sortColumn ?? '',
     SortOrder: sortOrder ?? '',
   };
@@ -187,7 +187,7 @@ const Reports = async ({ searchParams }: any) => {
     PageSize: pageSize,
     DepartmentId:Number(user.departmentId),
     SearchValue: searchQuery ?? '',
-    TeamAdminId: teamAdminId ?? '',
+    TeamAdminId:  teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
     SortColumn: sortColumn ?? '',
     SortOrder: sortOrder ?? '',
   };
@@ -200,7 +200,7 @@ const Reports = async ({ searchParams }: any) => {
     PageSize: pageSize,
     DepartmentId: Number(user.departmentId),
     SearchValue: searchQuery ?? '',
-    TeamAdminId: teamAdminId ?? '',
+    TeamAdminId:teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
     SortColumn: sortColumn ?? '',
     SortOrder: sortOrder ?? '',
   };
@@ -209,7 +209,7 @@ const Reports = async ({ searchParams }: any) => {
   } catch (error) {}
 
   const paymentPendingReportReq: PaymentPendingReport = {
-    teamAdminId: teamAdminId ?? '',
+    teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
     departmentId:Number(user.departmentId),
     searchText: searchQuery ?? '',
   };
@@ -232,7 +232,7 @@ const Reports = async ({ searchParams }: any) => {
     From: fromDate ?? '',
     To: toDate ?? '',
     DepartmentId: Number(user.departmentId),
-    TeamAdminId: teamAdminId ?? '',
+    TeamAdminId:  teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
   };
   try {
     clientReportResonse = await clientReport(clientReportReq);
@@ -242,7 +242,7 @@ const Reports = async ({ searchParams }: any) => {
   const workInHandReq: WorkInHandReq = {
     SearchText: searchQuery ?? '',
     DepartmentId:Number(user.departmentId),
-    TeamAdminId: teamAdminId ?? '',
+    TeamAdminId:teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
   };
   try {
     workInHandRes = await workInHand(workInHandReq);
@@ -252,7 +252,7 @@ const Reports = async ({ searchParams }: any) => {
   const fullReportReq: FullReportByManagerReq = {
     EmployeeId: emp ?? '',
     DepartmentId: user.departmentId,
-    TeamAdminId: teamAdminId ?? '',
+    TeamAdminId:teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
     ProjectId: projectID ?? 0,
     ClientId: clientID ?? 0,
     From: fromDate,
@@ -347,7 +347,7 @@ const Reports = async ({ searchParams }: any) => {
                           )}
                           {activeTab == 'Project Report' && (
                             <ProjectReport
-                              projectsReports={projectsReports}
+                              projectsReport={projectsReports}
                               param={projectReq}
                             />
                           )}

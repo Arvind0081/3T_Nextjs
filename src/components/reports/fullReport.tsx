@@ -206,6 +206,7 @@ const FullReport = ({
                     ))}
                   </tbody>
                 </table>
+                {!monthlyReportRes && <span>No Record Found.</span>}
               </div>
             </div>
           ) : (
@@ -274,8 +275,11 @@ const FullReport = ({
                         )}
                       </>
                     ))}
+                   
                   </tbody>
+                
                 </table>
+                {!fullReportRes && <span>No Record Found.</span>}
               </div>
             </div>
           )}

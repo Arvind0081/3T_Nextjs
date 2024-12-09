@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import DateFilter from './developerProductiveDateFilter';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import ReportPagination from './developerReportPagination';
@@ -13,6 +13,8 @@ const DeveloperReport = ({ developersReports, param }: any) => {
   const url = usePathname();
 
   const [searchInput, setSearchInput] = useState(param.SearchValue);
+  const [debounceSearchValue,setDebounceSearchValue]=useState('');
+  const [pageSize,setPageSize]=useState(param.PageSize);
   const activeTab = searchParams?.get('tab');
 
   const [sortConfig, setSortConfig] = useState({
@@ -104,7 +106,7 @@ const DeveloperReport = ({ developersReports, param }: any) => {
   );
   const handleEntries = (e: any) => {
     const showValue = e.target.value;
-
+    setPageSize(showValue);
     router.push(
       `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&from=${param.From}&to=${param.To}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
@@ -112,10 +114,26 @@ const DeveloperReport = ({ developersReports, param }: any) => {
   const handleSearch = (e: any) => {
     const search = e.target.value;
     setSearchInput(search);
-    router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&from=${param.From}&to=${param.To}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
-    );
+    
   };
+
+
+  useEffect(()=>{
+    const delayDebounceFn = setTimeout(() => {
+      setDebounceSearchValue(searchInput);
+     
+  }, 500);
+
+  return () => clearTimeout(delayDebounceFn); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[searchInput]);
+
+  useEffect(()=>{
+    router.push(
+      `${url}?tab=${activeTab}&pageNumber=${1}&pageSize=${param.PageSize}&from=${param.From}&to=${param.To}&search=${debounceSearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[debounceSearchValue]);
   return (
     <>
       <div id="DeveloperReport" role="tabpanel">
@@ -131,7 +149,7 @@ const DeveloperReport = ({ developersReports, param }: any) => {
               <div className="d-flex flex-wrap justify-content-between dataTable_filterBox">
                 <div className="d-flex gap-x-2 align-items-center mb-4">
                   Show
-                  <select className="form-control w70" onChange={handleEntries}>
+                  <select className="form-control w70" value={pageSize} onChange={handleEntries}>
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -289,7 +307,7 @@ const DeveloperReport = ({ developersReports, param }: any) => {
                     </tfoot>
                   )}
                 </table>
-                {developersReports == undefined && <p>No record found</p>}
+                {developersReports == undefined && <p>No Record Found</p>}
               </div>
             </div>
           </div>

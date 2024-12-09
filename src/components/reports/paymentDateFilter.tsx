@@ -1,5 +1,5 @@
 'use client';
-
+import React,{useState,useEffect} from 'react';
 import { paymentPendingReport } from '@/utils/publicApi';
 import { PaymentPendingReport } from '@/utils/types';
 
@@ -11,10 +11,34 @@ const PaymentDateFilter = ({param}:any) => {
   const searchParams = useSearchParams();
   const activeTab = searchParams.get('tab');
   let paymentPendingReports: any;
+
+  const [searchInput, setSearchInput] = useState(param.searchText);
+  const [debounceSearchValue,setDebounceSearchValue]=useState('');
+
+
   const handleSearch = (e: any) => {
     const search = e.target.value;
-    router.push(`${url}?tab=${activeTab}&search=${search}&teamAdminId=${param.teamAdminId}&departmentId=${param.departmentId}`);
+    setSearchInput(search);
+    
   };
+
+
+  useEffect(()=>{
+    const delayDebounceFn = setTimeout(() => {
+      setDebounceSearchValue(searchInput);
+     
+  }, 500);
+
+  return () => clearTimeout(delayDebounceFn); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[searchInput]);
+
+  useEffect(()=>{
+    router.push(`${url}?tab=${activeTab}&search=${debounceSearchValue}&teamAdminId=${param.teamAdminId}&departmentId=${param.departmentId}`);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[debounceSearchValue]);
+
+
   const handleExportToExcel = async ({}) => {
     try {
       const paymentPendingReportReq: PaymentPendingReport = {
@@ -69,6 +93,7 @@ const PaymentDateFilter = ({param}:any) => {
         <i className='ri-search-line'></i>
         <input
           className='form-control form-control-sm'
+          value={searchInput}
           type='text'
           placeholder='Search Here'
           onChange={handleSearch}

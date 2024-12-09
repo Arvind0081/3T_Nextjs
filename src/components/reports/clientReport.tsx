@@ -21,9 +21,10 @@ const ClientReport = ({ clientReports,param}: any) => {
                     <div className="card-body">
                         <div className="client_report">
                             {/* <Image src={''} alt="img" height={20} width={20} /> */}
-                            <ClientProductivityReport
+                            {clientReports.length > 0 &&<ClientProductivityReport
                                 clientReports={clientReports}
-                            />
+                            />}
+                            {clientReports.length ===0 &&<span>No Record Found.</span>}
                         </div>
                     </div>
                 </div>

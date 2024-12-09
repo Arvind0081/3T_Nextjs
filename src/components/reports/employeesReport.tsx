@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import EmployeeExcel from './employeesReportExcel';
@@ -12,6 +12,8 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
   const searchParams = useSearchParams();
   const url = usePathname();
   const [searchInput, setSearchInput] = useState(param.SearchValue);
+  const [debounceSearchValue,setDebounceSearchValue]=useState('');
+  const [pageSize,setPageSize]=useState(param.PageSize);
 
   //Get Params
   const activeTab = searchParams?.get('tab');
@@ -77,6 +79,7 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
 
   const handleEntries = (e: any) => {
     const showValue = e.target.value;
+    setPageSize(showValue);
     router.push(
       `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
     );
@@ -85,10 +88,26 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
   const handleSearch = (e: any) => {
     const search = e.target.value;
     setSearchInput(search);
-    router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
-    );
+    
   };
+
+
+  useEffect(()=>{
+    const delayDebounceFn = setTimeout(() => {
+      setDebounceSearchValue(searchInput);
+     
+  }, 500);
+
+  return () => clearTimeout(delayDebounceFn); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[searchInput]);
+
+  useEffect(()=>{
+    router.push(
+      `${url}?tab=${activeTab}&pageNumber=${1}&pageSize=${param.PageSize}&search=${debounceSearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[debounceSearchValue]);
 
   return (
     <>
@@ -107,7 +126,7 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
               <div className="d-flex flex-wrap justify-content-between dataTable_filterBox">
                 <div className="d-flex gap-x-2 align-items-center mb-4">
                   Show
-                  <select className="form-control w70" onClick={handleEntries}>
+                  <select className="form-control w70" value={pageSize} onChange={handleEntries}>
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -250,12 +269,12 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
                         <td>
                           <div className="d-flex align-items-center fw-semibold">
                             <span className="avatar avatar-sm me-2 avatar-rounded">
-                              <Image
+                              {item?.profileImage ?<Image
                                 src={`https://3t-api.csdevhub.com/images/${item?.profileImage}`}
                                 alt="img"
                                 height={20}
                                 width={20}
-                              />
+                              />: item?.userName?.split(' ').map((name: any[]) =>name[0]?.toUpperCase()).join('')}
                             </span>
                             {item?.userName}
                           </div>
@@ -274,9 +293,10 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
                   })}
                 </tbody>
               </table>
+              {!employeesReport?.results && <p>No Record Found</p>}
             </div>
           </div>
-          <div className="card-footer">
+           <div className="card-footer">
             <div className="d-flex align-items-center pagination_layout">
               {employeesReport?.totalCount > 0 && (
                 <div>
@@ -288,10 +308,10 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
 
               <div className="ms-auto">
                 <nav>
-                  <EmployeeReportPagination
+                 {employeesReport?.results && <EmployeeReportPagination
                     totalRecords={employeesReport?.totalCount}
                     data={param}
-                  />
+                  />}
                 </nav>
               </div>
             </div>

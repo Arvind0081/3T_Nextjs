@@ -3,6 +3,7 @@ import { useState } from 'react';
 import PaymentModuleStatusDropdown from './paymentModuleStatusDropdown';
 import PaymentStatusDropdown from './paymentStatusDropdown';
 import Link from 'next/link';
+import { format } from 'date-fns';
 import PaymentDateFilter from './paymentDateFilter';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 const PaymentPending = ({
@@ -219,9 +220,9 @@ const sortedReports = [...filteredReports].sort((a: any, b: any) => {
                           <span key={value.text}>{value.text}</span>
                         ))}
                       </td>
-                      <td>{moduleItem.deadlineDate}</td>
-                      <td className='text-success'>{moduleItem.approvedHours}</td>
-                      <td className='text-success text-bold'><b>{moduleItem.billingHours}</b></td>
+                      <td>{format(new Date(moduleItem.deadlineDate), 'yyyy-MM-dd')}</td>
+                      <td className='text-success'>{numberToTimeConversion(moduleItem.approvedHours)}</td>
+                      <td className='text-success text-bold'><b>{numberToTimeConversion(moduleItem.billingHours)}</b></td>
                       <td>
                         <PaymentModuleStatusDropdown
                           projectModuleStatus={projectModuleStatus}
@@ -255,6 +256,7 @@ const sortedReports = [...filteredReports].sort((a: any, b: any) => {
             </div>
           </div>
         ))}
+        {paymentPendingReports.length===0 && <span>No Record Found.</span>}
       </div>
     </div>
   );

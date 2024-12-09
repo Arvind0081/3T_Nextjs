@@ -1,19 +1,40 @@
 'use client';
-
+import React,{useState,useEffect} from 'react';
 import { workInHand } from '@/utils/publicApi';
 import { WorkInHandReq } from '@/utils/types';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import * as XLSX from 'xlsx';
 const WorkHandDateFilter = ({param}:any) => {
+
   const router = useRouter();
   const url = usePathname();
   const searchParams = useSearchParams();
   const activeTab = searchParams.get('tab');
+  const [searchInput, setSearchInput] = useState(param.SearchText);
+  const [debounceSearchValue,setDebounceSearchValue]=useState('');
 
+  
   const handleSearch = (e: any) => {
     const search = e.target.value;
-    router.push(`${url}?tab=${activeTab}&search=${search}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`);
+    setSearchInput(search);
+    
   };
+
+
+  useEffect(()=>{
+    const delayDebounceFn = setTimeout(() => {
+      setDebounceSearchValue(searchInput);
+     
+  }, 500);
+
+  return () => clearTimeout(delayDebounceFn); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[searchInput]);
+
+  useEffect(()=>{
+    router.push(`${url}?tab=${activeTab}&search=${debounceSearchValue}&teamAdminId=${param.TeamAdminId}&departmentId=${param.DepartmentId}`);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[debounceSearchValue]);
   const handleExportToExcel = async () => {
 
     try {
@@ -96,6 +117,7 @@ const WorkHandDateFilter = ({param}:any) => {
         <input
           className='form-control form-control-sm'
           type='text'
+          value={searchInput}
           placeholder='Search Here'
           onChange={handleSearch}
         />

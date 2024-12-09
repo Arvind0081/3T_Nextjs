@@ -1,23 +1,37 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DateFilter from './projectReportDateFilter';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import ReportPagination from './projectProductivityPagination';
 import Link from 'next/link';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
-const ProjectReport = ({ projectsReports, param }: any) => {
+const ProjectReport = ({ projectsReport, param }: any) => {
+ 
   //Initialize hook
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = usePathname();
 
    const [searchInput, setSearchInput] = useState(param.SearchValue);
+   const [debounceSearchValue,setDebounceSearchValue]=useState('');
+   const [projectsReports,setProjectsReports]=useState<any>();
+   const [pageSize,setPageSize]=useState(param.PageSize)
+
+   useEffect(()=>{
+    if(projectsReport){
+      setProjectsReports(projectsReport);
+    }else{
+      setProjectsReports([]);
+    }
+   
+   },[projectsReport]);
 
   //Get Params
   const activeTab = searchParams?.get('tab');
 
   const showingRecordCount = () => {
-    const Count =
+
+      const Count =
       (param.PageNumber - 1) * param.PageSize +
         Math.ceil(projectsReports?.results?.length) <=
       projectsReports?.totalCount
@@ -26,6 +40,9 @@ const ProjectReport = ({ projectsReports, param }: any) => {
         : projectsReports?.totalCount;
 
     return Count;
+
+    
+   
   };
 
   const numberToTimeConversion = (decimalTime: any) => {
@@ -38,25 +55,25 @@ const ProjectReport = ({ projectsReports, param }: any) => {
     return formattedTime;
   };
   const calculateTotalUpworkHours = (data: any) => {
-    return data?.results.reduce(
+    return data?.results?.reduce(
       (total: any, item: any) => total + item.totalUpworkHours,
       0
     );
   };
   const calculateTotalOfflineHours = (data: any) => {
-    return data?.results.reduce(
+    return data?.results?.reduce(
       (total: any, item: any) => total + item.totalOfflineHours,
       0
     );
   };
   const calculateTotalFixedHours = (data: any) => {
-    return data?.results.reduce(
+    return data?.results?.reduce(
       (total: any, item: any) => total + item.totalFixedHours,
       0
     );
   };
   const calculateTotalBillingHours = (data: any) => {
-    return data?.results.reduce(
+    return data?.results?.reduce(
       (total: any, item: any) => total + item.totalBillingHours,
       0
     );
@@ -93,6 +110,7 @@ const ProjectReport = ({ projectsReports, param }: any) => {
 
   const handleEntries = (e: any) => {
     const showValue = e.target.value;
+    setPageSize(showValue);
     router.push(
       `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${showValue}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${param.SearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
     );
@@ -100,10 +118,24 @@ const ProjectReport = ({ projectsReports, param }: any) => {
   const handleSearch = (e: any) => {
     const search = e.target.value;
     setSearchInput(search);
+   };
+
+  useEffect(()=>{
+    const delayDebounceFn = setTimeout(() => {
+      setDebounceSearchValue(searchInput);
+     
+  }, 500);
+
+  return () => clearTimeout(delayDebounceFn); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[searchInput]);
+
+  useEffect(()=>{
     router.push(
-      `${url}?tab=${activeTab}&pageNumber=${param.PageNumber}&pageSize=${param.PageSize}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${search}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
+      `${url}?tab=${activeTab}&pageNumber=${1}&pageSize=${param.PageSize}&projectStartDate=${param.StartDate}&from=${param.From}&to=${param.To}&search=${debounceSearchValue}&sortColumn=${param.SortColumn}&sortOrder=${param.SortOrder}&departmentId=${param.DepartmentId}&teamAdminId=${param.TeamAdminId}`
     );
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[debounceSearchValue]);
   return (
     <>
       <div id='ProjectReport' role='tabpanel'>
@@ -119,7 +151,7 @@ const ProjectReport = ({ projectsReports, param }: any) => {
               <div className='d-flex flex-wrap justify-content-between dataTable_filterBox'>
                 <div className='d-flex gap-x-2 align-items-center mb-4'>
                   Show
-                  <select className='form-control w70' onChange={handleEntries}>
+                  <select value={pageSize} className='form-control w70' onChange={handleEntries}>
                     <option value='10'>10</option>
                     <option value='25'>25</option>
                     <option value='50'>50</option>
@@ -222,9 +254,9 @@ const ProjectReport = ({ projectsReports, param }: any) => {
                       </th>
                     </tr>
                   </thead>
-                  {projectsReports != undefined && (
+                   
                     <tbody>
-                      {projectsReports?.results.map((item: any, index: any) => (
+                      {projectsReports?.results?.map((item: any, index: any) => (
                         <tr key={index}>
                           <Link
                             href={`/projects/${item.projectId}`}
@@ -251,8 +283,8 @@ const ProjectReport = ({ projectsReports, param }: any) => {
                         </tr>
                       ))}
                     </tbody>
-                  )}
-                  {projectsReports != undefined && (
+                 
+                  {projectsReports?.results && (
                     <tfoot>
                       <tr>
                         <td className='text-bold'>Total </td>
@@ -268,7 +300,7 @@ const ProjectReport = ({ projectsReports, param }: any) => {
                     </tfoot>
                   )}
                 </table>
-                {projectsReports == undefined && <p>No record found</p>}
+                {!projectsReports?.results && <p>No Record Found</p>}
               </div>
             </div>
           </div>
