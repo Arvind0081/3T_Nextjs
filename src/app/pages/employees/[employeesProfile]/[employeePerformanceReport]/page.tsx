@@ -109,18 +109,23 @@ const EmployeePerformanceReport = async ({ params, searchParams }: any) => {
     count: badgeCounts[badgeImage],
   }));
 
-  const totalUpworkHours = projectBillingStatus
-    ?.reduce((sum: any, project: any) => sum + project.totalUpworkHours, 0)
-    .toFixed(2);
-  const totalFixedHours = projectBillingStatus
-    ?.reduce((sum: any, project: any) => sum + project.totalFixedHours, 0)
-    .toFixed(2);
-  const totalBillingHours = projectBillingStatus
-    ?.reduce((sum: any, project: any) => sum + project.totalBillingHours, 0)
-    .toFixed(2);
-  const nonBillableHours = projectBillingStatus
-    ?.reduce((sum: any, project: any) => sum + project.nonBillableHours, 0)
-    .toFixed(2);
+  const topProjects = projectBillingStatus
+  ?.sort((a: any, b: any) => (b.totalBillingHours || 0) - (a.totalBillingHours || 0))
+  .slice(0, 5);
+
+// Calculate totals for the top 5 projects
+const totalUpworkHours = topProjects
+  ?.reduce((sum: any, project: any) => sum + (project.totalUpworkHours || 0), 0)
+  .toFixed(2);
+const totalFixedHours = topProjects
+  ?.reduce((sum: any, project: any) => sum + (project.totalFixedHours || 0), 0)
+  .toFixed(2);
+const totalBillingHours = topProjects
+  ?.reduce((sum: any, project: any) => sum + (project.totalBillingHours || 0), 0)
+  .toFixed(2);
+const nonBillableHours = topProjects
+  ?.reduce((sum: any, project: any) => sum + (project.nonBillableHours || 0), 0)
+  .toFixed(2);
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import WorkHandDateFilter from './workInHandDateFilter';
 import WorkModuleStatusDropdown from './workModuleStatusDropdown';
 import Link from 'next/link';
+import { format } from 'date-fns';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 type WorkInHandProps = {
   workInHandRes: any;
@@ -147,7 +148,7 @@ const WorkInHand = ({
                               </Link>
 
                               <td>{moduleItem.moduleName}</td>
-                              <td>{moduleItem.deadlineDate}</td>
+                              <td>{format(new Date(moduleItem.deadlineDate), 'yyyy-MM-dd')}</td>
                               <td className='text-success'>
                                 {numberToTimeConversion(
                                   moduleItem.approvedHours || 0

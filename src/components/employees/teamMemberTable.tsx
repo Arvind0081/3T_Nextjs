@@ -158,12 +158,15 @@ const TeamMember = ({
       </table>
       <div className='card-footer'>
         <div className='d-flex align-items-center'>
-          Total Showing Entries {totalEntries} out of{' '}
+          Showing Entries {totalEntries} out of{' '}
           {initialEmployees?.model?.totalCount ?? 0}
+          <div className='ms-auto'>
           <Paginator
             totalRecords={initialEmployees?.model?.totalCount}
             payload={reqParams}
           />
+          </div>
+          
         </div>
       </div>
     </div>
