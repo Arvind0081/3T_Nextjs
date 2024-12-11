@@ -38,7 +38,8 @@ const Projects = async ({ searchParams }: any) => {
   let currentPage: number = searchParams.page ?? 1;
   let hiringStatusId: number = searchParams.hiringStatus ?? 0;
   let bilingTypeId: number = searchParams.bilingType ?? 0;
-  let teamAdminId:string= searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined || searchParams.teamAdminId==='undefined' ? '': searchParams.teamAdminId ;  let sortColumn: string = searchParams.sortColumn ?? '';
+  let teamAdminId:string= searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined || searchParams.teamAdminId==='undefined' ? '': searchParams.teamAdminId ;
+  let sortColumn: string = searchParams.sortColumn ?? '';
   let sortOrder: string = searchParams.sortOrder ?? '';
   let today = new Date();
   let startDate =
@@ -179,16 +180,16 @@ const Projects = async ({ searchParams }: any) => {
                       </div>
                       <div className="card-footer">
                         <div className="d-flex align-items-center">
-                          <div>
+                          {allProjects.length !== 0 && <div>
                             {showingRecordCount()}
 
                             <i className="bi bi-arrow-right ms-2 fw-semibold"></i>
-                          </div>
+                          </div>}
                           <div className="ms-auto">
-                            <Paginator
+                            {allProjects.length !== 0 && <Paginator
                               totalRecords={totalRecords}
                               data={data}
-                            />
+                            />}
                           </div>
                         </div>
                       </div>

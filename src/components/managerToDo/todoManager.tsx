@@ -24,8 +24,8 @@ const ToDoManager = () => {
   // Fetch team To-Do list
   const getTeamToDo = useCallback(async () => {
     const data: todoParam = {
-      departmentId: token.departmentId,
-      teamAdminId: teamAdminId,
+      departmentId: token?.departmentId,
+      teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined || teamAdminId==='undefined' ? '': teamAdminId ,
     };
  
     try {
@@ -73,7 +73,7 @@ const ToDoManager = () => {
     } catch (error) {
       console.error('Error fetching team ToDo list:', error);
     }
-  }, [token.departmentId, teamAdminId]);
+  }, [token?.departmentId, teamAdminId]);
  
   useEffect(() => {
     getTeamToDo();
@@ -103,7 +103,7 @@ const ToDoManager = () => {
   // };
  
   const handleToDoList = async (id: string, isTeamLead: boolean = false) => {
-    const newValue = (isTeamLead ? teamLeadToDos[id] : localToDos[id]).trim();
+    const newValue = (isTeamLead ? teamLeadToDos[id] : localToDos[id])?.trim();
  
     const existingValue = teamToDoList.find((item) => item.employeeId === id)
       ?.toDoList?.name;
@@ -147,7 +147,7 @@ const ToDoManager = () => {
   };
  
   const handleBlur = (id: string, isTeamLead: boolean = false) => {
-    const value = (isTeamLead ? teamLeadToDos[id] : localToDos[id]).trim(); // Trim spaces
+    const value = (isTeamLead ? teamLeadToDos[id] : localToDos[id])?.trim(); // Trim spaces
  
     const existingValue = teamToDoList.find((item) => item.employeeId === id)
       ?.toDoList?.name;

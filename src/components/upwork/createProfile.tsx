@@ -70,6 +70,7 @@ const CreateProfile = ({ getDepartment,profileList }: any) => {
                         <p className='fw-semibold mb-2'>Profile Name</p>
                         <input
                             type='text'
+                            placeholder='Enter Name'
                             className='form-control'
                             value={profile}     
                             onChange={handleProfileName}

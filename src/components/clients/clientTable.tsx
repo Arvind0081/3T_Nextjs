@@ -7,11 +7,11 @@ import { useRouter, usePathname } from 'next/navigation';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 const ClientTable = ({
   param,
-  totalEntries,
+  // totalEntries,
   allClients,
   department,
   showListContent,
-}: any) => {
+}: any) => {debugger;
   const router = useRouter();
   // const searchParams = useSearchParams();
   const url = usePathname();
@@ -31,6 +31,9 @@ const ClientTable = ({
       `${url}/?showListContent=${param.showListContent}&page=${param.pageNumber}&size=${param.pageSize}&departmentId=${param.departmentID}&searchValue=${param.searchValue}&teamAdminId=${param.teamAdminId}&sortColumn=${key}&sortOrder=${direction}`
     );
   };
+
+  const startRecord = (param.pageNumber - 1) * param.pageSize + 1;
+  const endRecord = Math.min(param.pageNumber * param.pageSize, allClients?.model.totalCount);
 
   return (
     <>
@@ -150,30 +153,37 @@ const ClientTable = ({
                           </td>
 
                           <td>
-                            <EditButton
+                            <div className='icon_btn_outer'>
+                            <EditButton 
                               id={client.id.toString()}
                               department={department}
                             />
                             <DeleteButton id={client.id.toString()} />
+                            </div>
                           </td>
+                          
                         </tr>
                       ))}
-                      {allClients?.model.results.length == 0 && (
-                        <tr>
-                          <td className='5'>No record found.</td>
-                        </tr>
-                      )}
+                     
                     </tbody>
                   </table>
+                  {!allClients && (
+                        <span>
+                          No Record Found.
+                        </span>
+                      )}
                   <div className='card-footer'>
                     <div className='d-flex align-items-center'>
-                      Total Showing Entries {totalEntries}
+                    {allClients && <div>   Showing {startRecord} to {endRecord} of {allClients?.model.totalCount} Entries </div>}
+                      {/* Showing Entries {totalEntries}
                       out of {allClients?.model.totalCount ?? 0}
-                      &nbsp;
-                      <Paginator
+                      &nbsp; */}
+                      <div className='ms-auto'>
+                     {allClients && <Paginator
                         totalRecords={allClients?.model.totalCount}
                         payload={param}
-                      />
+                      />}
+                      </div>
                     </div>
                   </div>
                 </div>

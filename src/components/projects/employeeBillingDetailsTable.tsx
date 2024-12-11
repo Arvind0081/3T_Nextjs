@@ -149,13 +149,13 @@ const EmployeeBillingDetailsTable=({projectId}:any)=>{
                               </tbody>
                             )}
                           </table>
-                          {!employeeDetails && (
+                          {employeeDetails.length==0 && (
                             <span>No record found.</span>
                           )}
                         </div>
                       </div>
                       <div className='card-footer'>
-                        {employeeDetails && <div className='d-flex align-items-center'>
+                        {employeeDetails.length>0 && <div className='d-flex align-items-center'>
                           <div>
                             {' '}
                             Showing {entriesCount()} Entry{' '}

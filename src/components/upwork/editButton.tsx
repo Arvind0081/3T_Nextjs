@@ -44,7 +44,7 @@ const EditButton = ({ id,getDepartment,profileList }: Props) => {
           
         />
       )}
-      <button onClick={fetchClientData}>
+      <button className='icon_btn icon_PrimaryBtn' onClick={fetchClientData}>
         <i className='bi bi-pencil-square'></i>
       </button>
     </>

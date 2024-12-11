@@ -16,8 +16,8 @@ const Clients = async ({ searchParams }: any) => {
   let currentPage = searchParams?.page ?? 1;
   let searchQuery = searchParams?.search ?? '';
   let teamAdminId: string = searchParams.teamAdminId ?? '';
-  let sortColumn: any = searchParams?.sortColumn;
-  let sortOrder: any = searchParams?.sortOrder;
+  let sortColumn: any = searchParams?.sortColumn??'';
+  let sortOrder: any = searchParams?.sortOrder??'';
   let showListContent = searchParams?.showListContent ?? 'true';
 
   let user: any = getUser();
@@ -74,7 +74,7 @@ const Clients = async ({ searchParams }: any) => {
                   </div>
 
                   <div className='row'>
-                   <ClientTable  showListContent={showListContent} param={reqParams}totalEntries={totalEntries} allClients={allClients} department={department}/>
+                   <ClientTable  showListContent={showListContent} param={reqParams} totalEntries={totalEntries} allClients={allClients} department={department}/>
                   </div>
                 </div>
               </div>

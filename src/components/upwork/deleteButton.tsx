@@ -18,7 +18,7 @@ const DeleteButton = ({ id }: Props) => {
   return (
     <>
     {show && <DeleteProfileForm show ={show} setShow ={setShow} id={id}/>}
-      <button  onClick={() => showModal()}>
+      <button className='icon_btn icon_DeleteBtn' onClick={() => showModal()}>
       <i className="bi bi-trash"></i>
       </button>
     </>

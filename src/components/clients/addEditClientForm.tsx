@@ -56,6 +56,13 @@ const AddEditClientForm = ({setShow,departmentData,clientData }: any) => {
           <Offcanvas.Title>
             {clientData ? 'Edit Client' : 'Add Client'}
           </Offcanvas.Title>
+          <button
+                                            type='button'
+                                            className='btn-close text-reset text-right'
+                                            onClick={() => handleClose()}
+                                        >
+                                            <i className='fe fe-x fs-18'></i>
+                                        </button>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <form

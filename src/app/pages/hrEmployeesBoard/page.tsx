@@ -61,7 +61,9 @@ const HREmployeesBoard = async ({ searchParams }: any) => {
         employeeStatus: '',
         designation: selectedDesignation,
         isActive: selectedEmpStatus !== undefined ? selectedEmpStatus : '',
-        TeamAdminId:managerId??''
+        TeamAdminId:managerId??'',
+        SortColumn:'',
+        SortOrder:'',
     };
  
     // try {

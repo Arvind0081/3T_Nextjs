@@ -21,8 +21,8 @@ const upworkProfile = async ({ searchParams }: any) => {
   let currentPage = searchParams?.page ?? 1;
   let searchQuery = searchParams?.search ?? '';
   let teamAdminId: string = searchParams.teamAdminId ?? '';
-  let sortColumn: any = searchParams?.sortColumn;
-  let sortOrder: any = searchParams?.sortOrder;
+  let sortColumn: any = searchParams?.sortColumn??'';
+  let sortOrder: any = searchParams?.sortOrder??'';
 
   const reqParams: UpworkReqParams = {
     departmentID: user.departmentId,
