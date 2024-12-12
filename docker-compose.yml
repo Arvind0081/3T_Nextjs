@@ -9,4 +9,4 @@ services:
     environment:
       NODE_ENV: production
     volumes:
-      - ./3T_Nextjs:/app
+      - ./:/app

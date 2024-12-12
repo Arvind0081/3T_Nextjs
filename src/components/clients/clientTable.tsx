@@ -11,7 +11,7 @@ const ClientTable = ({
   allClients,
   department,
   showListContent,
-}: any) => {debugger;
+}: any) => {
   const router = useRouter();
   // const searchParams = useSearchParams();
   const url = usePathname();

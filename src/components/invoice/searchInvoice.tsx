@@ -228,7 +228,7 @@ const SearchInvoice = ({
                       ) : (
                         <tr>
                           <td colSpan={8} className='text-center'>
-                            No results found.
+                            No Result Found.
                           </td>
                         </tr>
                       )}

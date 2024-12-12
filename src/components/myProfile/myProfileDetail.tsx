@@ -5,14 +5,14 @@ import EditProjectButton from '@/components/myProfile/editProjectButton';
 import ProjectDeleteButton from '@/components/myProfile/projectDeleteButton';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  AwaitedReactNode,
-  Key,
-} from 'react';
+// import {
+//   ReactElement,
+//   JSXElementConstructor,
+//   ReactNode,
+//   ReactPortal,
+//   AwaitedReactNode,
+//   Key,
+// } from 'react';
 import EditToolButton from './editToolButton';
 import ToolDeleteButton from './toolDeleteButton';
 import UpdateProfileImage from './updateProfileImage';
@@ -28,7 +28,7 @@ const ProfileDetail = ({
   project,
   userTool,
 }: any) => {
-  let user: any = getUser();
+  const user: any = getUser();
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
@@ -240,7 +240,7 @@ const ProfileDetail = ({
                 <div>
                   {profileDetails?.model?.userProfile.skills
                     ?.split(',')
-                    .map((skill: string, index: Key | null | undefined) => (
+                    .map((skill: string, index: number | null | undefined) => (
                       <a key={index}>
                         <span className='badge bg-primary m-1'>
                           {skill.trim()}
@@ -276,51 +276,24 @@ const ProfileDetail = ({
                             projectName:
                               | string
                               | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
                               | null
                               | undefined;
                             technology: any;
                             description:
                               | string
                               | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
                               | null
                               | undefined;
                             liveUrl:
                               | string
                               | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
                               | null
                               | undefined;
                             id: {
                               toString: () => string;
                             };
                           },
-                          index: Key | null | undefined
+                          index: number | null | undefined
                         ) => (
                           <li
                             key={index}
@@ -392,51 +365,24 @@ const ProfileDetail = ({
                             description:
                               | string
                               | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
                               | null
                               | undefined;
                             technology: any;
                             networkUrl:
                               | string
                               | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
                               | null
                               | undefined;
                             localUrl:
                               | string
                               | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
                               | null
                               | undefined;
                             id: {
                               toString: () => string;
                             };
                           },
-                          index: Key | null | undefined
+                          index: number | null | undefined
                         ) => (
                           <li
                             key={index}
