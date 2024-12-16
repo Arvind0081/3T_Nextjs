@@ -37,7 +37,7 @@ const EditButton = ({ id ,department}: Props) => {
           setClientData={setClientData}
         />
       )}
-      <button onClick={showModal}>
+      <button className='icon_btn icon_PrimaryBtn' onClick={showModal}>
         <i className="bi bi-pencil-square"></i>
       </button>
     </>

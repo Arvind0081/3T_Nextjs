@@ -20,7 +20,7 @@ const ToDoManager = ({ departmentIDParam, teamAdminIdParam }: any) => {
 
   // Fetch team To-Do list
   const getTeamToDo = useCallback(async () => {
- 
+   
     const data: todoParam = {
         departmentId:token.role === 'Admin' ? departmentIDParam : token.departmentId,   
         teamAdminId: teamAdminIdParam,
@@ -71,7 +71,7 @@ const ToDoManager = ({ departmentIDParam, teamAdminIdParam }: any) => {
     } catch (error) {
       console.error('Error fetching team ToDo list:', error);
     }
-  }, [token.role,token.departmentId ,departmentIDParam, teamAdminIdParam]);
+  }, [token.role,token?.departmentId ,departmentIDParam, teamAdminIdParam]);
 
   useEffect(() => {
     getTeamToDo();
@@ -102,7 +102,7 @@ const ToDoManager = ({ departmentIDParam, teamAdminIdParam }: any) => {
 
   const handleToDoList = async (id: string, isTeamLead: boolean = false) => {
     const newValue = (isTeamLead ? teamLeadToDos[id] : localToDos[id]).trim();
-
+ 
     const existingValue = teamToDoList.find((item) => item.employeeId === id)
       ?.toDoList?.name;
 
@@ -146,7 +146,7 @@ const ToDoManager = ({ departmentIDParam, teamAdminIdParam }: any) => {
 
   const handleBlur = (id: string, isTeamLead: boolean = false) => {
     const value = (isTeamLead ? teamLeadToDos[id] : localToDos[id]).trim(); // Trim spaces
-
+ 
     const existingValue = teamToDoList.find((item) => item.employeeId === id)
       ?.toDoList?.name;
 

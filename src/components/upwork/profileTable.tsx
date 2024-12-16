@@ -11,7 +11,7 @@ const ProfileTable = ({
   upworkprofilerecords,
   profileList,
   getDepartment,
-  totalEntries,
+  //totalEntries,
 }: any) => {
   const router = useRouter();
   const url = usePathname();
@@ -20,17 +20,11 @@ const ProfileTable = ({
     direction: params.sortOrder || 'asc',
   });
 
-  const showingRecordCount = () => {
- 
-    const totalCount = totalEntries || 0; // totalEntries ko use kar rahe hain
-    const currentPage = params.pageNumber || 1;
-    const pageSizeValue = params.pageSize || 10;
 
-    const pageStart = (currentPage - 1) * pageSizeValue + 1;
-    const pageEnd = Math.min(currentPage * pageSizeValue, totalCount);
+  const startRecord = (params.pageNumber - 1) * params.pageSize + 1;
+  const endRecord = Math.min(params.pageNumber * params.pageSize, upworkprofilerecords?.model?.totalCount);
 
-    return { pageStart, pageEnd, totalCount };
-  };
+  
 
   const handleSort = (key: string) => {
     let direction = 'asc';
@@ -91,32 +85,38 @@ const ProfileTable = ({
                       </td>
 
                       <td>
+                        <div className='icon_btn_outer'>
                         <EditButton
                           id={upwork.id.toString()}
                           profileList={profileList}
                           getDepartment={getDepartment}
                         />
                         <DeleteButton id={upwork.id} />
+                        </div>
                       </td>
                     </tr>
                   ))}
-                  {upworkprofilerecords?.model.results.length === 0 && (
-                    <tr>No record found.</tr>
-                  )}
                 </tbody>
               </table>
+              {upworkprofilerecords?.model.results.length === 0 && (
+                    <span>No Record Found.</span>
+                  )}
               <div className="card-footer">
                 <div className="d-flex align-items-center">
-                  <div>
-                    Showing {showingRecordCount().pageStart} to{' '}
+                  {upworkprofilerecords?.model.results.length > 0 && <div>
+                    <div>   Showing {startRecord} to {endRecord} of {upworkprofilerecords?.model?.totalCount} Entries </div>
+                    {/* Showing {showingRecordCount().pageStart} to{' '}
                     {showingRecordCount().pageEnd} of{' '}
-                    {upworkprofilerecords?.model.totalCount} Entries
-                  </div>
+                    {showingRecordCount().totalCount} Entries */}
+                  </div>}
                   &nbsp;
-                  <Paginator
-                    totalRecords={upworkprofilerecords?.model.totalCount}
+                  <div className='ms-auto'>
+                  {upworkprofilerecords?.model.results.length > 0 && <Paginator
+                    totalRecords={upworkprofilerecords?.model?.totalCount}
                     payload={params}
-                  />
+                  />}
+                  </div>
+                  
                 </div>
               </div>
             </div>

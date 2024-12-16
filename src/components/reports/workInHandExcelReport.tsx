@@ -25,7 +25,9 @@ const DeveloperExcelReport = () => {
                 PageSize: 0,
                 DepartmentId: 0,
                 SearchValue: '',
-                TeamAdminId: ''
+                TeamAdminId: '',
+                SortColumn:'',
+                SortOrder:'',
             };
             try {
                 developersReports = await developersReport(developersReportReq);

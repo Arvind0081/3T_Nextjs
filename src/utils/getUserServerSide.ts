@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { cookies } from 'next/headers'; 
 
 
-const User=()=>{
+const User= ()=>{
   const cookieStore = cookies();
   const cookieValue = cookieStore.get('user')?.value;
   let jsonObject;
@@ -19,8 +19,8 @@ const User=()=>{
 
   export default User;
 
-  export const token=()=>{
-   const cookieStore = cookies();
+  export const token= ()=>{
+   const cookieStore =  cookies();
    const cookieValue = cookieStore.get('user')?.value;
    let jsonObject;
    if (cookieValue) {

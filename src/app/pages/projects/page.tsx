@@ -209,18 +209,18 @@ const Projects = async ({ searchParams }: any) => {
                           <span>No record found.</span>
                         )}
                       </div>
-                      <div className='card-footer'>
-                        <div className='d-flex align-items-center'>
-                          <div>
+                      <div className="card-footer">
+                        <div className="d-flex align-items-center">
+                          {allProjects.length !== 0 && <div>
                             {showingRecordCount()}
 
-                            <i className='bi bi-arrow-right ms-2 fw-semibold'></i>
-                          </div>
-                          <div className='ms-auto'>
-                            <Paginator
+                            <i className="bi bi-arrow-right ms-2 fw-semibold"></i>
+                          </div>}
+                          <div className="ms-auto">
+                            {allProjects.length !== 0 && <Paginator
                               totalRecords={totalRecords}
                               data={data}
-                            />
+                            />}
                           </div>
                         </div>
                       </div>

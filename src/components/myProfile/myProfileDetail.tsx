@@ -21,9 +21,7 @@ const ProfileDetail = ({
   project,
   userTool,
 }: any) => {
-  let user: any = getUser();
-
-  console.log('project', project);
+  const user: any = getUser();
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
@@ -239,7 +237,7 @@ const ProfileDetail = ({
                 <div>
                   {profileDetails?.model?.userProfile.skills
                     ?.split(',')
-                    .map((skill: string, index: any | null | undefined) => (
+                    .map((skill: string, index: number | null | undefined) => (
                       <a key={index}>
                         <span className='badge bg-primary m-1'>
                           {skill.trim()}

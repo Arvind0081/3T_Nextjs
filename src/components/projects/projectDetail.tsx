@@ -145,7 +145,7 @@ const ProjectDetail=({projectId,projectModels,projectStatusData,hiringType}:any)
                  <div className="card-title">Project Billing History</div>
               </div>
               <div className="card-body">
-                 <ProjectBillingHistory projectBillingHistory={projectBillingHistoryArray}/>
+                 {projectBillingHistoryArray.length>0 ? <ProjectBillingHistory projectBillingHistory={projectBillingHistoryArray}/>: <span>No Record Found.</span>}
               </div>
            </div>
         </div>

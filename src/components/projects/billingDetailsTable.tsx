@@ -220,13 +220,13 @@ const BillingDetailsTable=({projectId}:any)=>{
                               )}
                             </tfoot>
                           </table>
-                          {!billingDetails && (
+                          {billingDetails.length==0 && (
                             <span>No record found.</span>
                           )}
                         </div>
                       </div>
                       <div className='card-footer'>
-                        {billingDetails && <div className='d-flex align-items-center'>
+                        {billingDetails.length>0 && <div className='d-flex align-items-center'>
                           <div>
                             {' '}
                             Showing {billingDetails?.length} Entries{' '}

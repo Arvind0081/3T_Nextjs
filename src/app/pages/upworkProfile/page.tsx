@@ -5,7 +5,7 @@ import getUser from '@/utils/getUserServerSide';
 import { UpworkProfile, allDepartments, ProfileList, departments } from '@/utils/publicApi';
 import CreateProfile from '@/components/upwork/createProfile';
 import Footer from '@/components/common/Footer/footer';
-import ProfileTable from '@/components/upwork/profileTable';
+// import ProfileTable from '@/components/upwork/profileTable';
 
 const upworkProfile = async ({ searchParams }: any) => {
 
