@@ -126,8 +126,16 @@ export const designations = async (id: number): Promise<DesignationModel[]> => {
 
 export const departments = async (): Promise<DepartmentModel[]> => {
   const response = await apiService.get('/Employee/GetDepartmentsList');
-  return response?.model;
+
+  if (response?.model && Array.isArray(response.model)) {
+    return response.model.filter(
+      (department:any) => department.name !== 'Admin'
+    );
+  }
+
+  return [];
 };
+
 
 export const projectDetail = async (): Promise<ProjectModel[]> => {
   const response = await apiService.get(
@@ -333,8 +341,9 @@ export const employeesById = async (
   reqParams: EmpReqParams
 ): Promise<EmployeeResponse | null> => {
   try {
+   
     const response = await apiService.get(
-      `/Employee/GetAllEmployees?${reqParams.departmentID}&PageNumber=${reqParams.pagenumber}&Designation=${reqParams.designation}&PageSize=${reqParams.pageSize}&SearchValue=${reqParams.searchValue}&isActive=${reqParams.isActive}&TeamAdminId=${reqParams.TeamAdminId}&SortColumn=${reqParams.SortColumn}&SortOrder=${reqParams.SortOrder}`
+      `/Employee/GetAllEmployees?DepartmentId=${reqParams.departmentID}&PageNumber=${reqParams.pagenumber}&Designation=${reqParams.designation}&PageSize=${reqParams.pageSize}&SearchValue=${reqParams.searchValue}&isActive=${reqParams.isActive}&TeamAdminId=${reqParams.TeamAdminId}&SortColumn=${reqParams.SortColumn}&SortOrder=${reqParams.SortOrder}`
     );
 
     if (response && response.model && response.model.results) {

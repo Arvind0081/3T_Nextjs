@@ -34,6 +34,7 @@ const ProfileSection = ({ profileDetails }: any) => {
         e.preventDefault();
         deleteCookie('user');
         deleteCookie('manager');
+        deleteCookie('departmentId');
         router.push('/');
     };
 

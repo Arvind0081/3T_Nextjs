@@ -66,7 +66,7 @@ const SideBarMenu = ({ user }: any) => {
             <Link
               className={`side-menu__item has-link ${pathName == '/dashBoard' ? 'active' : ''} `}
               data-bs-toggle='slide'
-              href='/dashBoard?departmentId=1005'
+              href='/dashBoard'
             >
               <i className='side-menu__icon bx bx-home'></i>
               <span className='side-menu__label'>Dashboard</span>
@@ -129,12 +129,13 @@ const SideBarMenu = ({ user }: any) => {
           'BDM',
           'HR',
           'HOD',
+          'Admin'
         ]) && (
           <li className='sub-category'>
             <h3>Pages</h3>
           </li>
         )}
-        {compairRole(['Project Manager', 'HOD']) && (
+        {compairRole(['Project Manager', 'HOD','Admin','HR']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/reports' ? 'active' : ''} `}
@@ -146,7 +147,7 @@ const SideBarMenu = ({ user }: any) => {
             </Link>
           </li>
         )}
-        {compairRole(['Project Manager', 'HOD']) && (
+        {compairRole(['Project Manager', 'HOD','Admin','HR']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/employees' ? 'active' : ''} `}
@@ -158,7 +159,7 @@ const SideBarMenu = ({ user }: any) => {
             </Link>
           </li>
         )}
-        {compairRole(['HR']) && (
+        {/* {compairRole(['HR']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/hrReports' ? 'active' : ''} `}
@@ -169,8 +170,8 @@ const SideBarMenu = ({ user }: any) => {
               <span className='side-menu__label'>Reports</span>
             </Link>
           </li>
-        )}
-        {compairRole(['HR']) && (
+        )} */}
+        {/* {compairRole(['HR']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/hrEmployeesBoard' ? 'active' : ''} `}
@@ -181,7 +182,7 @@ const SideBarMenu = ({ user }: any) => {
               <span className='side-menu__label'>Team Members</span>
             </Link>
           </li>
-        )}
+        )} */}
 
         {compairRole(['Employee', 'Team Lead', 'BDM']) && (
           <li className='slide'>
@@ -233,7 +234,7 @@ const SideBarMenu = ({ user }: any) => {
             </Link>
           </li>
         )}
-        {compairRole(['Project Manager', 'HOD', 'Team Lead', 'BDM']) && (
+        {compairRole(['Project Manager', 'HOD', 'Team Lead', 'BDM','Admin']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/projects' ? 'active' : ''} `}
@@ -257,7 +258,7 @@ const SideBarMenu = ({ user }: any) => {
             </Link>
           </li>
         )}
-        {compairRole(['Project Manager', 'HOD', 'BDM']) && (
+        {compairRole(['Project Manager', 'HOD', 'BDM','Admin']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/upworkprofile' ? 'active' : ''} `}
@@ -269,7 +270,7 @@ const SideBarMenu = ({ user }: any) => {
             </Link>
           </li>
         )}
-        {compairRole(['Project Manager', 'HOD', 'BDM']) && (
+        {compairRole(['Project Manager', 'HOD', 'BDM','Admin']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/clients' ? 'active' : ''} `}
@@ -281,7 +282,7 @@ const SideBarMenu = ({ user }: any) => {
             </Link>
           </li>
         )}
-        {compairRole(['Project Manager', 'HOD']) && (
+        {compairRole(['Project Manager', 'HOD','Admin']) && (
           <li className='slide'>
             <Link
               className={`side-menu__item has-link ${pathName == '/invoices' ? 'active' : ''} `}
@@ -324,6 +325,7 @@ const SideBarMenu = ({ user }: any) => {
           'BDM',
           'HR',
           'HOD',
+          'Admin',
         ]) && (
           <li className='sub-category'>
             <h3>General</h3>
@@ -336,6 +338,7 @@ const SideBarMenu = ({ user }: any) => {
           'BDM',
           'HR',
           'HOD',
+          'Admin',
         ]) && (
           <li className='slide'>
             <Link
@@ -354,6 +357,7 @@ const SideBarMenu = ({ user }: any) => {
           'Team Lead',
           'BDM',
           'HOD',
+          'Admin'
         ]) && (
           <li className='slide'>
             <Link
@@ -372,6 +376,7 @@ const SideBarMenu = ({ user }: any) => {
           'Team Lead',
           'BDM',
           'HOD',
+          'Admin',
         ]) && (
           <li className='slide'>
             <Link
@@ -385,7 +390,7 @@ const SideBarMenu = ({ user }: any) => {
           </li>
         )}
 
-        {compairRole(['Project Manager', 'HOD']) && <SideBarSettings />}
+        {compairRole(['Project Manager', 'HOD','Admin']) && <SideBarSettings />}
       </ul>
       <div className='slide-right' id='slide-right'>
         <svg

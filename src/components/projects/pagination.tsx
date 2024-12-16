@@ -19,7 +19,7 @@ const Paginator=({totalRecords,data}:any)=>{
     totalPagesCount = totalPagesCount % 1 === 0 ? totalPagesCount : Math.ceil(totalPagesCount);
  
     if(totalRecords === 0 ){
-     router.push(`${url}/?page=${data.pageNumber>1?data.pageNumber-1:1}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
+     router.push(`${url}/?page=${data.pageNumber>1?data.pageNumber-1:1}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
     }
     return totalPagesCount;
 };
@@ -29,7 +29,7 @@ const handlePaginationChange = (e: React.MouseEvent<HTMLAnchorElement, MouseEven
 
        return router.push(`${url}/?page=${activePage}&size=${data.pageSize}&empStatus=${data.employeeStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}`);
    }
-   return router.push(`${url}/?page=${activePage}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
+   return router.push(`${url}/?page=${activePage}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
 
 };  
 

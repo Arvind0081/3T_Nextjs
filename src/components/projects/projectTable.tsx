@@ -28,7 +28,7 @@ const ProjectTable=({allProjects,billingType,hiringType,projectStatusData,client
         }
         setSortConfig({ key, direction });
     
-        return router.push(`${url}/?page=${data.pageNumber}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${key}&sortOrder=${direction}`);
+        return router.push(`${url}/?page=${data.pageNumber}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${key}&sortOrder=${direction}`);
    
       };
 

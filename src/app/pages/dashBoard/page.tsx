@@ -24,8 +24,7 @@ import CustomLinearProgress from '@/components/dashboard/customLinearProgress';
 const Dashboard = async ({ searchParams }: any) => {
   const user: any = getUser();
   let teamAdminId: string = searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined ||searchParams.teamAdminId==='undefined' ? '':searchParams.teamAdminId;
-  let managerId = searchParams.managerId ?? '';
-  let departmentID = searchParams?.departmentId ?? 1;
+  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
   let teamProductivity: TeamProductivityResponseModel[] = [];
   let departmentData: DepartmentModel[] = [];
   let getManagerList: any;
@@ -45,8 +44,8 @@ const Dashboard = async ({ searchParams }: any) => {
   [year, month] = selectedMonth.split('-');
 
   let payload: ManagerDashBoardModel = {
-    teamAdminId: user.role === 'Admin' ? managerId : teamAdminId,
-    departmentId: departmentID ?? 0,
+    teamAdminId:teamAdminId,
+    departmentId: user.role==='Admin'? departmentID : user?.departmentId,
     month: Number(month),
     year: Number(year),
   };
@@ -68,8 +67,9 @@ const Dashboard = async ({ searchParams }: any) => {
   } catch (error) {}
 
   try {
-    getManagerList = await managerList(departmentID);
+    getManagerList = await managerList(Number(departmentID));
   } catch (error: any) {}
+
 
   // ${getDesignationClass(Number(member.teamMemberExperienceOnJoining))}
   // const getDesignationClass = (years: number) => {
@@ -139,7 +139,7 @@ const Dashboard = async ({ searchParams }: any) => {
             <div className='side-app'>
               <div className='main-container container-fluid main-page'>
                 <div className='topCard_content'>
-                  <DateFilter month={selectedMonth} />
+                  <DateFilter month={selectedMonth} param={payload} />
                   <div className='team_colorBox'>
                     <ul>
                       <li>
@@ -205,7 +205,7 @@ const Dashboard = async ({ searchParams }: any) => {
                                 Total Productive Percent
                               </h6>
                               <h3 className='mb-0 number-font'>
-                                {(projectsSummary?.productivityPercentage).toFixed(
+                                {(projectsSummary?.productivityPercentage)?.toFixed(
                                   2
                                 ) ?? 0}
                                 %

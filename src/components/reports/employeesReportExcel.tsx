@@ -12,13 +12,13 @@ const EmployeeExcel = ({param}:any) => {
    
         try {
             const projectReq: EmployeesAttendanceReport = {
-                PageNumber: param.PageNumber,
-                PageSize: param.PageSize,
+                PageNumber: 0,
+                PageSize: 0,
                 DepartmentId: param.DepartmentId,
-                SearchValue: param.SearchValue,
+                SearchValue: '',
                 TeamAdminId: param.TeamAdminId,
-                SortColumn: param.SortColumn,
-                SortOrder: param.SortOrder,
+                SortColumn: '',
+                SortOrder: '',
             };
            
 

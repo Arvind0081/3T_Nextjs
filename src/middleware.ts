@@ -7,9 +7,9 @@ export const rolePaths: any = {
   'Employee': ['/employeeDashBoard', '/myStatus', '/employees/:id', '/checklist', '/profile', '/helpvideos','/profile/:id','/allUsers'],
   'Team Lead': ['/teamLeadDashBoard',  '/teamLeadDashBoard/:id' , '/employees/:id', '/myStatus', '/teamStatus', '/projects','/projects/:id', '/teamMembers', '/teamToDo', '/profile', '/checklist', '/helpvideos','/profile/:id','/employeesProfile/:id','/allUsers'],
   'BDM': ['/employeeDashBoard', '/myStatus', '/projects','/projects/:id', '/clients', '/profile', '/helpvideos', '/checklist', '/upworkprofile','/profile/:id','/allUsers'],
-  'HR': ['/hrDashBoard', '/hrReports', '/hrEmployeesBoard', '/employees/:id','/employeesProfile/:id', '/profile','/profile/:id','/allUsers'],
+  'HR': ['/hrDashBoard', '/reports', '/hrEmployeesBoard', '/employees/:id','/employeesProfile/:id', '/profile','/profile/:id','/allUsers'],
   'HOD': ['/dashBoard','/dashBoard/:id','/assignTeam', '/reports', '/employees/:id','/teamToDo', '/projects','/projects/:id' ,'/clients', '/profile', '/helpvideos', '/checklist', '/upworkprofile','/assignBadge','/employeesProfile/:id','/invoices','/allUsers','/managerToDo'],
-  'Admin': ['/adminDepartment','/dashBoard','/managerToDo','/allUsers','/employees/:id','/dashBoard/:id','/projects/:id','/employeesProfile/:id','/assignTeam' ],
+  'Admin': ['/adminDepartment','/dashBoard','/managerToDo','/allUsers','/employees/:id','/dashBoard/:id','/projects','/projects/:id','/employeesProfile/:id','/assignTeam','/reports','/upworkprofile','/assignTeam','/clients','/invoices','/profile','/checklist','/helpvideos','/assignBadge'],
 };
 
 

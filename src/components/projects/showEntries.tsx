@@ -11,7 +11,7 @@ const ShowEntries = ({ data }: any) => {
   const handlePageSize = (value: any) => {
     setPageSize(value);
     return router.push(
-      `${url}/?page=${1}&size=${value}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
+      `${url}/?page=${1}&size=${value}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
     );
   };
 

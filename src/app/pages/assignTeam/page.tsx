@@ -1,7 +1,7 @@
 import Header from '@/components/common/Header/header';
 import SideNav from '@/components/common/SideBar/sidebar';
-import {  settingsEmployeeList } from '@/utils/publicApi';
-import {  SettingEmpReqParams } from '@/utils/types';
+import {  managerList, settingsEmployeeList,departments } from '@/utils/publicApi';
+import {  DepartmentModel, SettingEmpReqParams } from '@/utils/types';
 import getUser from '@/utils/getUserServerSide';
 import AssignTeamMember from '@/components/assignTeam/assignTeamMember';
 import Footer from '@/components/common/Footer/footer';
@@ -13,11 +13,13 @@ const AssignTeam = async ({searchParams}:any) => {
  
     user = getUser();
  
-  let teamAdminId: string = searchParams.teamAdminId ?? '';
+  // let teamAdminId: string = searchParams.teamAdminId ?? '';
 
+  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
+  let teamAdminId: string = searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined ||searchParams.teamAdminId==='undefined' ? '':searchParams.teamAdminId;
 
   let reqParams: SettingEmpReqParams = {
-    departmentID: user.departmentId,
+    departmentID: user.role === 'Admin' ? departmentID :  user.departmentId,
     teamAdminId: teamAdminId
   };
   try {
@@ -26,12 +28,29 @@ const AssignTeam = async ({searchParams}:any) => {
     
   }
 
+  let getManagerList: any;
+
+  let departmentData: DepartmentModel[] = [];
+
+
+  try {
+    departmentData = await departments();
+  } catch (error) {}
+
+  try {
+    getManagerList = await managerList(Number(departmentID));
+  } catch (error: any) {}
+
 
   return (
     <div className='app sidebar-mini ltr light-mode'>
       <div className='page'>
         <div className='page-main'>
-          <Header />
+        <Header
+            getManagerList={getManagerList}
+            departmentData={departmentData}
+           
+          />
           <SideNav />
           <div className='main-content app-content mt-0'>
             <div className='side-app'>

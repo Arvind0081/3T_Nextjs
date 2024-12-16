@@ -1,12 +1,9 @@
 'use client';
 import React, { useState } from 'react';
-
 import { AssignBagesModel } from '@/utils/types';
-import getUser from '@/utils/getUserClientSide';
 import { AssignBadges } from '@/utils/publicApi';
 
-const AssignBadgeComponenet = () => {
-  const user: any = getUser();
+const AssignBadgeComponenet = ({param}:any) => {
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -23,7 +20,7 @@ const AssignBadgeComponenet = () => {
       const payLoad: AssignBagesModel = {
         month: Number(month),
         year: Number(year),
-        departmentId: Number(user.departmentId),
+        departmentId: param.departmentID,
       };
 
       await AssignBadges(payLoad);

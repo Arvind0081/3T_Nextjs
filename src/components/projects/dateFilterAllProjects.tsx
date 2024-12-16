@@ -16,7 +16,7 @@ const DateFilter = ({ data }: any) => {
         data.projectStatus
       }&search=${
         data.searchValue
-      }&startDate=${startDateValue}&endDate=${endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
+      }&startDate=${startDateValue}&endDate=${endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
     );
   };
 
@@ -28,7 +28,7 @@ const DateFilter = ({ data }: any) => {
         data.projectStatus
       }&search=${
         data.searchValue
-      }&startDate=${startDate}&endDate=${endDateValue}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
+      }&startDate=${startDate}&endDate=${endDateValue}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
     );
   };
 

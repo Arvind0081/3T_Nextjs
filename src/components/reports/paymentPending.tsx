@@ -69,8 +69,8 @@ const PaymentPending = ({
     setSelectedStatusType(value);
   };
 
-  const filteredReports = paymentPendingReports
-  .map((item: any) => {
+  const filteredReports = paymentPendingReports?.map((item: any) => {
+ 
  
     const filteredModules = item.modulesList.filter((module: any) => {
       const matchesBillingType =

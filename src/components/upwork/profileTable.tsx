@@ -21,7 +21,7 @@ const ProfileTable = ({
   });
 
   const showingRecordCount = () => {
-    debugger;
+ 
     const totalCount = totalEntries || 0; // totalEntries ko use kar rahe hain
     const currentPage = params.pageNumber || 1;
     const pageSizeValue = params.pageSize || 10;
@@ -110,7 +110,7 @@ const ProfileTable = ({
                   <div>
                     Showing {showingRecordCount().pageStart} to{' '}
                     {showingRecordCount().pageEnd} of{' '}
-                    {showingRecordCount().totalCount} Entries
+                    {upworkprofilerecords?.model.totalCount} Entries
                   </div>
                   &nbsp;
                   <Paginator

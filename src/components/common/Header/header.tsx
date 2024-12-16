@@ -9,8 +9,7 @@ import getUser from '@/utils/getUserServerSide';
 import AdminPagesList from './adminPagesList';
 // import FilterManager from '@/components/hod/filterManager';
 
-
-const Header = async ({ getManagerList, departmentData,param }: any) => {
+const Header = async ({ getManagerList, departmentData, param }: any) => {
   let user: any = getUser();
 
   let getManagerListHOD: any;
@@ -28,14 +27,14 @@ const Header = async ({ getManagerList, departmentData,param }: any) => {
           <ToggleSideMenu />
           &nbsp;
           {user.role === 'Admin' || user.role === 'HR' ? (
-    <HRDepartmentList
-    getDepartment={departmentData}
-    getManagerList={getManagerList}
-    param={param}
-  />
-) : (
-  details?.model?.userProfile.departmentName + ' Department'
-)}
+            <HRDepartmentList
+              getDepartment={departmentData}
+              getManagerList={getManagerList}
+              param={param}
+            />
+          ) : (
+            details?.model?.userProfile.departmentName + ' Department'
+          )}
           <Link className='logo-horizontal' href='#'>
             <Image
               src='https://design.csdevhub.com/3tDesign/assets/images/brand/logo-white.png'
@@ -52,8 +51,8 @@ const Header = async ({ getManagerList, departmentData,param }: any) => {
               alt='logo'
             />
           </Link>
-           {user.role == 'HOD' && <AdminPagesList list={getManagerListHOD}/>}
-           {/* <FilterManager list={getManagerListHOD} /> */}
+          {user.role == 'HOD' && <AdminPagesList list={getManagerListHOD} />}
+          {/* <FilterManager list={getManagerListHOD} /> */}
           <div className='d-flex order-lg-2 ms-auto header-right-icons'>
             <button
               className='navbar-toggler navresponsive-toggler d-lg-none ms-auto'
@@ -91,7 +90,7 @@ const Header = async ({ getManagerList, departmentData,param }: any) => {
                   </div>
                   <div className='dropdown d-flex notifications'>
                     <a className='nav-link icon' data-bs-toggle='dropdown'>
-                    <i className="bi bi-bell"></i>
+                      <i className='bi bi-bell'></i>
                       <span className='pulse'></span>
                     </a>
                     <div className='dropdown-menu dropdown-menu-end dropdown-menu-arrow profile-dropdown'>

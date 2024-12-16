@@ -21,9 +21,9 @@ const DeveloperExcelReport = ({param}:any) => {
                 To: param.To,
                 PageNumber: 0,
                 PageSize: 0,
-                DepartmentId: 0,
+                DepartmentId: param.DepartmentId,
                 SearchValue: '',
-                TeamAdminId: '',
+                TeamAdminId: param.TeamAdminId,
                 SortColumn: '',
                 SortOrder: ''
             };

@@ -7,14 +7,13 @@ import { projectsReport } from '@/utils/publicApi';
 // import { useSearchParams } from 'next/navigation';
 import { ProjectsReport } from '@/utils/types';
 
-import getUser from '@/utils/getUserClientSide';
 
 const ProjectExcelReport = ({param}:any) => {
     //Initialize hook
     // const searchParams = useSearchParams();
 
     // Get Logged In User Details
-    let user: any = getUser();
+ 
 
     // Get Params
     // const projectStartDate: any = searchParams?.get('projectStartDate');
@@ -30,9 +29,9 @@ const ProjectExcelReport = ({param}:any) => {
                 StartDate: param.StartDate,
                 From: param.From,
                 To: param.To,
-                DepartmentId: Number(user.departmentId),
+                DepartmentId: param.DepartmentId,
                 SearchValue: '',
-                TeamAdminId: '',
+                TeamAdminId: param.TeamAdminId,
                 SortColumn: '',
                 SortOrder: ''
             };

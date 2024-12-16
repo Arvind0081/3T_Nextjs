@@ -22,6 +22,8 @@ import {
   projectsHiringFilter,
   projectsStatus,
   monthlyHoursReport,
+  managerList,
+  departments,
 } from '@/utils/publicApi';
 import {
   ProjectsReport,
@@ -36,6 +38,7 @@ import {
   reportAttendenceFormValue,
   MonthlyReportByManagerReq,
   ClientReqParam,
+  DepartmentModel,
 } from '@/utils/types';
 import getUser from '@/utils/getUserServerSide';
 import SelectTabs from '@/components/reports/selectTabs';
@@ -57,6 +60,15 @@ const Reports = async ({ searchParams }: any) => {
     'yyyy-MM-dd'
   );
   let endDateTo = format(new Date(), 'yyyy-MM-dd');
+  let getManagerList: any;
+  let departmentData: DepartmentModel[] = [];
+  let departmentID: string =
+    searchParams.departmentId === 'null' ||
+    searchParams.departmentId === '' ||
+    searchParams.departmentId === undefined ||
+    searchParams.departmentId === 'undefined'
+      ? ''
+      : searchParams.departmentId;
 
   let projectStartDate: any = searchParams?.projectStartDate ?? startDateFrom;
   let fromDate: any = searchParams?.from ?? startDateFrom;
@@ -90,8 +102,8 @@ const Reports = async ({ searchParams }: any) => {
   let billingType: any;
   let projectsHiringFilters: any;
   let projectStatusFilter: any;
-  let monthlyReportRes:any;
-  let reportsAttendencePayload: reportAttendenceFormValue={
+  let monthlyReportRes: any;
+  let reportsAttendencePayload: reportAttendenceFormValue = {
     departmentId: 0,
     month: 0,
     year: 0,
@@ -99,10 +111,9 @@ const Reports = async ({ searchParams }: any) => {
     pageSize: 0,
     searchValue: '',
     teamAdminId: '',
-    date: ''
+    date: '',
   };
 
- 
   const pageNumber = searchParams?.pageNumber ?? 1;
   const pageSize = searchParams?.pageSize ?? 10;
   const searchQuery = searchParams?.search ?? '';
@@ -116,26 +127,54 @@ const Reports = async ({ searchParams }: any) => {
   }
   let [year, month] = dateStr.split('-');
 
-
   try {
-
-    if(user.role==='HOD'){
-       reportsAttendencePayload= {
+    if (user.role === 'HOD') {
+      reportsAttendencePayload = {
         departmentId: Number(user?.departmentId),
         month: Number(month),
         year: Number(year),
         pageNo: Number(pageNumber),
         pageSize: Number(pageSize),
         searchValue: searchQuery,
-        teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
+        teamAdminId:
+          teamAdminId === 'null' ||
+          teamAdminId === '' ||
+          teamAdminId === undefined ||
+          teamAdminId === 'undefined'
+            ? ''
+            : teamAdminId,
         date: dateStr,
       };
 
       attendanceReportList = await attendanceReports(reportsAttendencePayload);
-     
     }
-    else{
+    
+    if (user.role === 'Admin') {
+      reportsAttendencePayload = {
+        departmentId:Number(departmentID) ,
+        month: Number(month),
+        year: Number(year),
+        pageNo: Number(pageNumber),
+        pageSize: Number(pageSize),
+        searchValue: searchQuery,
+        teamAdminId:
+          teamAdminId === 'null' ||
+          teamAdminId === '' ||
+          teamAdminId === undefined ||
+          teamAdminId === 'undefined'
+            ? ''
+            : teamAdminId,
+        date: dateStr,
+      };
 
+      attendanceReportList = await attendanceReports(reportsAttendencePayload);
+    }
+
+   
+
+    
+    
+    if (user.role === 'Project Manager'){
       reportsAttendencePayload = {
         departmentId: Number(user?.departmentId),
         month: Number(month),
@@ -148,22 +187,24 @@ const Reports = async ({ searchParams }: any) => {
       };
 
       attendanceReportList = await attendanceReports(reportsAttendencePayload);
-
     }
- 
-   
   } catch (error) {}
 
-  
   const projectReq: ProjectsReport = {
     PageNumber: Number(pageNumber),
     PageSize: Number(pageSize),
     StartDate: projectStartDate ?? '',
     From: fromDate ?? '',
     To: toDate ?? '',
-    DepartmentId: Number(user.departmentId),
+    DepartmentId: user.role === 'Admin' ? departmentID : user?.departmentId,
     SearchValue: searchQuery ?? '',
-    TeamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
+    TeamAdminId:
+      teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+        ? ''
+        : teamAdminId,
     SortColumn: sortColumn ?? '',
     SortOrder: sortOrder ?? '',
   };
@@ -185,9 +226,15 @@ const Reports = async ({ searchParams }: any) => {
     To: toDate ?? '',
     PageNumber: pageNumber,
     PageSize: pageSize,
-    DepartmentId:Number(user.departmentId),
+    DepartmentId: user.role === 'Admin' ? departmentID : user?.departmentId,
     SearchValue: searchQuery ?? '',
-    TeamAdminId:  teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
+    TeamAdminId:
+      teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+        ? ''
+        : teamAdminId,
     SortColumn: sortColumn ?? '',
     SortOrder: sortOrder ?? '',
   };
@@ -198,9 +245,15 @@ const Reports = async ({ searchParams }: any) => {
   const empReportReq: EmployeesAttendanceReport = {
     PageNumber: pageNumber,
     PageSize: pageSize,
-    DepartmentId: Number(user.departmentId),
+    DepartmentId: (user.role === 'Admin' || user.role === 'HR') ? Number(departmentID)  : Number(user?.departmentId) ,
     SearchValue: searchQuery ?? '',
-    TeamAdminId:teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
+    TeamAdminId:
+      teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+        ? ''
+        : teamAdminId,
     SortColumn: sortColumn ?? '',
     SortOrder: sortOrder ?? '',
   };
@@ -209,8 +262,14 @@ const Reports = async ({ searchParams }: any) => {
   } catch (error) {}
 
   const paymentPendingReportReq: PaymentPendingReport = {
-    teamAdminId: teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
-    departmentId:Number(user.departmentId),
+    teamAdminId:
+      teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+        ? ''
+        : teamAdminId,
+    departmentId: user.role === 'Admin' ? departmentID : user?.departmentId,
     searchText: searchQuery ?? '',
   };
   try {
@@ -231,8 +290,14 @@ const Reports = async ({ searchParams }: any) => {
   const clientReportReq: ClientReportReq = {
     From: fromDate ?? '',
     To: toDate ?? '',
-    DepartmentId: Number(user.departmentId),
-    TeamAdminId:  teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
+    DepartmentId: user.role === 'Admin' ? departmentID : user?.departmentId,
+    TeamAdminId:
+      teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+        ? ''
+        : teamAdminId,
   };
   try {
     clientReportResonse = await clientReport(clientReportReq);
@@ -241,8 +306,14 @@ const Reports = async ({ searchParams }: any) => {
   //Work In Hand API Call
   const workInHandReq: WorkInHandReq = {
     SearchText: searchQuery ?? '',
-    DepartmentId:Number(user.departmentId),
-    TeamAdminId:teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
+    DepartmentId: user.role === 'Admin' ? departmentID : user?.departmentId,
+    TeamAdminId:
+      teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+        ? ''
+        : teamAdminId,
   };
   try {
     workInHandRes = await workInHand(workInHandReq);
@@ -251,8 +322,14 @@ const Reports = async ({ searchParams }: any) => {
   //Full Report API Call
   const fullReportReq: FullReportByManagerReq = {
     EmployeeId: emp ?? '',
-    DepartmentId: user.departmentId,
-    TeamAdminId:teamAdminId==='null' || teamAdminId==='' || teamAdminId===undefined ||teamAdminId==='undefined' ? '':teamAdminId,
+    DepartmentId: user.role === 'Admin' ? departmentID : user?.departmentId,
+    TeamAdminId:
+      teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+        ? ''
+        : teamAdminId,
     ProjectId: projectID ?? 0,
     ClientId: clientID ?? 0,
     From: fromDate,
@@ -318,12 +395,23 @@ const Reports = async ({ searchParams }: any) => {
     projectStatusFilter = await projectsStatus();
   } catch (error) {}
 
+  try {
+    getManagerList = await managerList(Number(departmentID));
+  } catch (error: any) {}
+
+  try {
+    departmentData = await departments();
+  } catch (error) {}
+
   return (
     <>
       <div className='app sidebar-mini ltr light-mode'>
         <div className='page'>
           <div className='page-main'>
-            <Header />
+            <Header
+              getManagerList={getManagerList}
+              departmentData={departmentData}
+            />
             <SideNav />
             <div className='main-content app-content mt-0'>
               <div className='side-app'>

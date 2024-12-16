@@ -7,7 +7,7 @@ import PerformanceChart from './performanceChart';
 import { useRouter } from 'next/navigation';
 import { addToDoList } from '@/utils/publicApi';
 import { AddToDoPayloadModel } from '@/utils/types';
-import { Modal} from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { format } from 'date-fns';
 
 const Dashboard = ({
@@ -15,13 +15,15 @@ const Dashboard = ({
   empProjectList,
   empProfileList,
   user,
-  assignedTask,bioMetricAttendance,dateStr
+  assignedTask,
+  bioMetricAttendance,
+  dateStr,
 }: any) => {
   const [currentMonth, setCurrentMonth] = useState('');
   const router = useRouter();
   const [toDo, setToDo] = useState(assignedTask);
-  const [show,setShow]=useState(false);
-const [bioMetric,setBioMetric]=useState<any>({});
+  const [show, setShow] = useState(false);
+  const [bioMetric, setBioMetric] = useState<any>({});
 
   useEffect(() => {
     // const date = new Date();
@@ -78,57 +80,55 @@ const [bioMetric,setBioMetric]=useState<any>({});
     return formattedTime;
   };
 
-  const extractTime=(time:string)=>{
+  const extractTime = (time: string) => {
     const date = new Date(time);
-// Extract the time in HH:MM format
-const hours = date.getHours().toString().padStart(2, '0');
-const minutes = date.getMinutes().toString().padStart(2, '0');
+    // Extract the time in HH:MM format
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
 
-return `${hours}:${minutes}`;
-  }
+    return `${hours}:${minutes}`;
+  };
 
-  const handleBiometric=(biometricObj:any)=>{
-       
+  const handleBiometric = (biometricObj: any) => {
     setShow(true);
     setBioMetric(biometricObj);
-}
+  };
 
-const handleClose=()=>{
-  setShow(false);
-}
+  const handleClose = () => {
+    setShow(false);
+  };
 
-const dateFormat=(dateString:string)=>{
-  if(dateString){
-      return  format(dateString, 'yyyy-MM-dd')
-  }
-}
+  const dateFormat = (dateString: string) => {
+    if (dateString) {
+      return format(dateString, 'yyyy-MM-dd');
+    }
+  };
 
-const convertMinutesToTime=(minutes:number)=> {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  // Pad the hours and minutes with leading zeros if necessary
-  const paddedHours = String(hours).padStart(2, '0');
-  const paddedMinutes = String(mins).padStart(2, '0');
-  return `${paddedHours}:${paddedMinutes}`;
-}
+  const convertMinutesToTime = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    // Pad the hours and minutes with leading zeros if necessary
+    const paddedHours = String(hours).padStart(2, '0');
+    const paddedMinutes = String(mins).padStart(2, '0');
+    return `${paddedHours}:${paddedMinutes}`;
+  };
 
-const dateTimeFormat=(dateTimeString:string)=>{
-  const date = new Date(dateTimeString);
+  const dateTimeFormat = (dateTimeString: string) => {
+    const date = new Date(dateTimeString);
 
-  // Format the date as YYYY-MM-DD
-const formattedDate = date.toLocaleDateString('en-CA'); // 'en-CA' gives 'YYYY-MM-DD' format
+    // Format the date as YYYY-MM-DD
+    const formattedDate = date.toLocaleDateString('en-CA'); // 'en-CA' gives 'YYYY-MM-DD' format
 
-// Format the time as HH:MM AM/PM
-const formattedTime = date.toLocaleTimeString('en-US', {
-hour: 'numeric',
-minute: 'numeric',
-hour12: true,
-});
+    // Format the time as HH:MM AM/PM
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    });
 
-// Combine date and time
-return `${formattedDate} ${formattedTime}`;
-
-}
+    // Combine date and time
+    return `${formattedDate} ${formattedTime}`;
+  };
 
   return (
     <div className='main-content app-content mt-0'>
@@ -232,18 +232,50 @@ return `${formattedDate} ${formattedTime}`;
                                             {attendance.attendanceStatus}
                                           </span>
                                           <span className='threeT-time'>
-                                                    {attendance.attendanceStatus!=='--'?numberToTimeConversion(attendance.dayHours):''}
-                                                    </span>
+                                            {attendance.attendanceStatus !==
+                                            '--'
+                                              ? numberToTimeConversion(
+                                                  attendance.dayHours
+                                                )
+                                              : ''}
+                                          </span>
                                         </div>
-                                        <div className='attendance_status_bm bg-white' onClick={(e)=>{bioMetricAttendance[index]?.inTime ? handleBiometric(bioMetricAttendance[index]):e.preventDefault()}}>
+                                        <div
+                                          className='attendance_status_bm bg-white'
+                                          onClick={(e) => {
+                                            bioMetricAttendance[index]?.inTime
+                                              ? handleBiometric(
+                                                  bioMetricAttendance[index]
+                                                )
+                                              : e.preventDefault();
+                                          }}
+                                        >
                                           <span className='BM_info'>BM</span>
                                           <span className='BM__attendance bg-white'>
-                                                      {bioMetricAttendance[index]?.statusCode==='A'?'Ab':bioMetricAttendance[index]?.statusCode}
-                                                    </span>
-                                                    <span className='threeT-time'>
-                                                    {bioMetricAttendance[index]?.inTime ? <span>{extractTime(bioMetricAttendance[index]?.inTime)} to {extractTime(bioMetricAttendance[index]?.outTime)}</span>:'--'} 
-                                                    
-                                                    </span>
+                                            {bioMetricAttendance[index]
+                                              ?.statusCode === 'A'
+                                              ? 'Ab'
+                                              : bioMetricAttendance[index]
+                                                  ?.statusCode}
+                                          </span>
+                                          <span className='threeT-time'>
+                                            {bioMetricAttendance[index]
+                                              ?.inTime ? (
+                                              <span>
+                                                {extractTime(
+                                                  bioMetricAttendance[index]
+                                                    ?.inTime
+                                                )}{' '}
+                                                to{' '}
+                                                {extractTime(
+                                                  bioMetricAttendance[index]
+                                                    ?.outTime
+                                                )}
+                                              </span>
+                                            ) : (
+                                              '--'
+                                            )}
+                                          </span>
                                         </div>
                                       </div>
                                     )}
@@ -318,90 +350,111 @@ return `${formattedDate} ${formattedTime}`;
           </div>
 
           <Modal show={show} backdrop='static' onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Biometric Detail</Modal.Title>
-          <button aria-label="Close" className="btn-close position-absolute"
-                                 data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-        </Modal.Header>
-        <Modal.Body>
-        <div className="BM_attendance_modalcontent">
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Employee Name:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{user.unique_name}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Employee Number:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{bioMetric?.employeeCode}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Attendance Date:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{dateFormat(bioMetric?.attendanceDate)}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Status Code:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{bioMetric?.statusCode}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Duration:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{bioMetric?.duration}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Duration Time:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{convertMinutesToTime(bioMetric?.duration)}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>In Time:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{dateTimeFormat(bioMetric?.inTime)}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Out Time:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{dateTimeFormat(bioMetric?.outTime)}</p>
-                                    </div>
-                                 </div>
-                                 <div className="mainflex_box">
-                                    <div className="leftBox">
-                                       <p><strong>Punch Record:</strong></p>
-                                    </div>
-                                    <div className="rightBox">
-                                       <p>{bioMetric?.punchRecords}</p>
-                                    </div>
-                                 </div>
-                              </div>
-
-        </Modal.Body>
-       
-      </Modal>
+            <Modal.Header closeButton>
+              <Modal.Title>Biometric Detail</Modal.Title>
+              <button
+                aria-label='Close'
+                className='btn-close position-absolute'
+                data-bs-dismiss='modal'
+              >
+                <span aria-hidden='true'>&times;</span>
+              </button>
+            </Modal.Header>
+            <Modal.Body>
+              <div className='BM_attendance_modalcontent'>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Employee Name:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{user.unique_name}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Employee Number:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{bioMetric?.employeeCode}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Attendance Date:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{dateFormat(bioMetric?.attendanceDate)}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Status Code:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{bioMetric?.statusCode}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Duration:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{bioMetric?.duration}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Duration Time:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{convertMinutesToTime(bioMetric?.duration)}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>In Time:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{dateTimeFormat(bioMetric?.inTime)}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Out Time:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{dateTimeFormat(bioMetric?.outTime)}</p>
+                  </div>
+                </div>
+                <div className='mainflex_box'>
+                  <div className='leftBox'>
+                    <p>
+                      <strong>Punch Record:</strong>
+                    </p>
+                  </div>
+                  <div className='rightBox'>
+                    <p>{bioMetric?.punchRecords}</p>
+                  </div>
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
     </div>

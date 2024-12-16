@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
-const DateFilter = ({ month }: any) => {
+const DateFilter = ({ month ,param}: any) => {
     const [currentMonth, setCurrentMonth] = useState('');
     const router = useRouter();
     const url = usePathname();
@@ -10,7 +10,7 @@ const DateFilter = ({ month }: any) => {
     const handleDate = (e: { target: { value: any } }) => {
         const dateValue = e.target.value;
         setCurrentMonth(dateValue);
-        router.push(`${url}/?month=${dateValue}`);
+        router.push(`${url}/?month=${dateValue}&teamAdminId=${param.teamAdminId}&departmentId=${param.departmentId}`);
     };
 
     useEffect(() => {

@@ -5,9 +5,11 @@ import Header from '@/components/common/Header/header';
 import {
   CLientModelByDepartment,
   ClientReqParam,
+  DepartmentModel,
   InvoicePaymentModel,
 } from '@/utils/types';
 import {
+  departments,
   getCLients,
   invoicePayment,
   invoicePaymentStatus,
@@ -17,12 +19,14 @@ import getUser from '@/utils/getUserServerSide';
 
 const Invoices = async ({ searchParams }: any) => {
   let user: any = getUser();
+  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
   let getCllientList: CLientModelByDepartment[] = [];
   let paymentList: InvoicePaymentModel[] = [];
   let payment: InvoicePaymentModel[] = [];
-
+  let departmentData: DepartmentModel[] = [];
+  
   const params: ClientReqParam = {
-    departmentID: user.departmentId,
+  departmentID: user.role==='Admin'? departmentID : user.departmentId,
   };
 
   try {
@@ -37,12 +41,16 @@ const Invoices = async ({ searchParams }: any) => {
     payment = await invoicePayment();
   } catch (error) {}
 
+  try {
+    departmentData = await departments();
+  } catch (error) {}
+
   let activeTab = searchParams?.tabs ?? 'Search Invoice';
   return (
     <div>
       <div className='app sidebar-mini ltr light-mode'>
         <div className='page'>
-          <Header />
+        <Header  departmentData={departmentData} />
           <SideNav />
           <div className='main-content app-content mt-0'>
             <div className='side-app'>
@@ -55,6 +63,7 @@ const Invoices = async ({ searchParams }: any) => {
                         paymentList={paymentList}
                         payment={payment}
                         activeTab={activeTab}
+                        params={params}
                       />
                     </div>
                   </div>

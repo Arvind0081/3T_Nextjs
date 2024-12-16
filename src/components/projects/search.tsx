@@ -24,7 +24,7 @@ import { useRouter,usePathname } from 'next/navigation';
     }, [debounceSearchValue]);
 
     const PageReload=()=>{
-       return router.push(`${url}/?page=${1}&size=${data.pageSize}&status=${data.projectStatus}&search=${debounceSearchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
+       return router.push(`${url}/?page=${1}&size=${data.pageSize}&status=${data.projectStatus}&search=${debounceSearchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
     };
 
     

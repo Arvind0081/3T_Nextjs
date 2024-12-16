@@ -15,14 +15,14 @@ const BillingAndHiringStatusFilter = ({data,hiringTypeFilter,billingTypeFilter}:
   const handleChangeHiringStatus = (e: { target: { value: any } }) => {
     const hiringValue = e.target.value;
     setHiringStatus(hiringValue);
-    router.push( `${url}/?page=${1}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${hiringValue}&bilingType=${billingStatus}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
+    router.push( `${url}/?page=${1}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${hiringValue}&bilingType=${billingStatus}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
 router.refresh();  
 };
 
   const handleChangeBillingStatus = (e: { target: { value: any } }) => {
     const billingValue = e.target.value;
     setBillingStatus(billingValue);
-    router.push(`${url}/?page=${1}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${hiringStatus}&bilingType=${billingValue}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
+    router.push(`${url}/?page=${1}&size=${data.pageSize}&status=${data.projectStatus}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${hiringStatus}&bilingType=${billingValue}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`);
 router.refresh();  
   
 };

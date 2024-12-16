@@ -87,7 +87,7 @@ const AssignTeamMember = ({ employees }: any) => {
                   value={selectedTeamLead}
                   onChange={handleTeamLeadChange}
                 >
-                  <option value='' disabled>
+                  <option value=''>
                     Choose Team Lead
                   </option>
                   {employees?.map((employee: any) => (

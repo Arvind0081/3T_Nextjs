@@ -1,6 +1,6 @@
 import Header from '@/components/common/Header/header';
 import SideNav from '@/components/common/SideBar/sidebar';
-import { allDepartments, clientsById } from '@/utils/publicApi';
+import { allDepartments, clientsById, departments } from '@/utils/publicApi';
 import getUser from '@/utils/getUserServerSide';
 import ClientSearch from '@/components/clients/clientSearch';
 import ExportExcel from '@/components/common/ExportExcel/exportToExcel';
@@ -10,8 +10,10 @@ import AddClient from '@/components/clients/addClientButton';
 import ToggleButton from '@/components/clients/toggleButton';
 import Footer from '@/components/common/Footer/footer';
 import ClientTable from '@/components/clients/clientTable';
+import { DepartmentModel } from '@/utils/types';
 
 const Clients = async ({ searchParams }: any) => {
+  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
   let pageSize = searchParams?.size ?? 10;
   let currentPage = searchParams?.page ?? 1;
   let searchQuery = searchParams?.search ?? '';
@@ -19,12 +21,13 @@ const Clients = async ({ searchParams }: any) => {
   let sortColumn: any = searchParams?.sortColumn;
   let sortOrder: any = searchParams?.sortOrder;
   let showListContent = searchParams?.showListContent ?? 'true';
+  let departmentData: DepartmentModel[] = [];
 
   let user: any = getUser();
   let department: any;
   let allClients: any;
   let reqParams = {
-    departmentID: user.departmentId,
+    departmentID: user.role==='Admin'? departmentID : user.departmentId,
     pageNumber: currentPage,
     pageSize: pageSize,
     searchValue: searchQuery,
@@ -45,12 +48,17 @@ const Clients = async ({ searchParams }: any) => {
   const totalEntries =
     totalCount < pageSize * currentPage ? totalCount : pageSize * currentPage;
 
+    try {
+      departmentData = await departments();
+    } catch (error) {}
+
+
   return (
     <>
       <div className='app sidebar-mini ltr light-mode'>
         <div className='page'>
           <div className='page-main'>
-            <Header />
+          <Header  departmentData={departmentData} />
             <SideNav />
 
             <div className='main-content app-content mt-0'>

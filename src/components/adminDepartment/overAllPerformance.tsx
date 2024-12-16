@@ -5,9 +5,9 @@ import HighchartsReact from 'highcharts-react-official';
 
 const OverAllPerformance = ({ allDepartmentproductivity }: any) => {
     // Extract data from the response
-    const departments = allDepartmentproductivity.map((item:any) => item.departmentName);
-    const requiredProductivity = allDepartmentproductivity.map((item:any) => item.requiredProductivity);
-    const currentProductivity = allDepartmentproductivity.map((item:any)=> item.currentProductivity);
+    const departments = allDepartmentproductivity?.map((item:any) => item.departmentName);
+    const requiredProductivity = allDepartmentproductivity?.map((item:any) => item.requiredProductivity);
+    const currentProductivity = allDepartmentproductivity?.map((item:any)=> item.currentProductivity);
 
     // Configure the Highcharts options
     const chartOptions = {

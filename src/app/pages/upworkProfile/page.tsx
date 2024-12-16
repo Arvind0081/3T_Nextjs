@@ -2,12 +2,13 @@ import Header from '@/components/common/Header/header';
 import SideNav from '@/components/common/SideBar/sidebar';
 import { DepartmentModel, UpworkReqParams } from '@/utils/types';
 import getUser from '@/utils/getUserServerSide';
-import { UpworkProfile, allDepartments, ProfileList } from '@/utils/publicApi';
+import { UpworkProfile, allDepartments, ProfileList, departments } from '@/utils/publicApi';
 import CreateProfile from '@/components/upwork/createProfile';
 import Footer from '@/components/common/Footer/footer';
 import ProfileTable from '@/components/upwork/profileTable';
 
 const upworkProfile = async ({ searchParams }: any) => {
+
   const user: any = getUser();
   let profileList: any;
 
@@ -16,6 +17,7 @@ const upworkProfile = async ({ searchParams }: any) => {
   } catch (error) {}
 
   const getDepartment: DepartmentModel[] = await allDepartments();
+  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
 
   let pageSize = searchParams?.size ?? 10;
   let currentPage = searchParams?.page ?? 1;
@@ -23,9 +25,10 @@ const upworkProfile = async ({ searchParams }: any) => {
   let teamAdminId: string = searchParams.teamAdminId ?? '';
   let sortColumn: any = searchParams?.sortColumn;
   let sortOrder: any = searchParams?.sortOrder;
+  let departmentData: DepartmentModel[] = [];
 
   const reqParams: UpworkReqParams = {
-    departmentID: user.departmentId,
+    departmentID: user.role==='Admin'? departmentID : user.departmentId,
     pageSize: pageSize,
     pageNumber: currentPage,
     searchValue: searchQuery,
@@ -40,11 +43,15 @@ const upworkProfile = async ({ searchParams }: any) => {
   const totalEntries =
     totalCount < pageSize * currentPage ? totalCount : pageSize * currentPage;
 
+    try {
+      departmentData = await departments();
+    } catch (error) {}
+
   return (
     <>
       <div className="app sidebar-mini ltr light-mode">
         <div className="page-main">
-          <Header />
+          <Header  departmentData={departmentData} />
           <SideNav />
           <div className="main-content app-content mt-0">
             <div className="side-app">

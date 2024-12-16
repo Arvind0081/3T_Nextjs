@@ -12,7 +12,7 @@ const ProjectStatus = ({ statusData, data}: any) => {
     const statusId = Number(e.target.value);
     setStatus(e.target.value);
     router.push(
-      `${url}/?page=${1}&size=${data.pageSize}&status=${statusId}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
+      `${url}/?page=${1}&size=${data.pageSize}&status=${statusId}&search=${data.searchValue}&startDate=${data.startDate}&endDate=${data.endDate}&hiringStatus=${data.hiringStatus}&bilingType=${data.bilingType}&departmentId=${data.departmentId}&teamAdminId=${data.teamAdminId}&sortColumn=${data.sortColumn}&sortOrder=${data.sortOrder}`
     );
   };
   

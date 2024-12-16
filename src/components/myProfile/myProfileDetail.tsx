@@ -5,14 +5,7 @@ import EditProjectButton from '@/components/myProfile/editProjectButton';
 import ProjectDeleteButton from '@/components/myProfile/projectDeleteButton';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  AwaitedReactNode,
-  Key,
-} from 'react';
+
 import EditToolButton from './editToolButton';
 import ToolDeleteButton from './toolDeleteButton';
 import UpdateProfileImage from './updateProfileImage';
@@ -21,7 +14,7 @@ import UpdateEmail from './updateEmail';
 
 const ProfileDetail = ({
   profileDetails,
-  designation,
+  designation,  
   department,
   projectDetails,
   technologies,
@@ -29,6 +22,8 @@ const ProfileDetail = ({
   userTool,
 }: any) => {
   let user: any = getUser();
+
+  console.log('project', project);
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
@@ -151,51 +146,55 @@ const ProfileDetail = ({
                     ))}
                   </div>
                   &nbsp;
-                  {user?.role !== 'Project Manager' && user?.role !== 'HOD' && (
-                    <div className='d-flex mb-2'>
-                      <div className='me-4'>
-                        <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
-                          {profileDetails?.model?.userProfile.projects}
-                        </p>
-                        <p className='mb-0 fs-11 op-8 text-fixed-white'>
-                          Projects
-                        </p>
-                      </div>
-                      <div className='me-4'>
-                        <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
-                          {numberToTimeConversion(
-                            profileDetails?.model?.userProfile.upworkHours
-                          )}
-                        </p>
-                        <p className='mb-0 fs-11 op-8 text-fixed-white'>
-                          Upwork
-                        </p>
-                      </div>
-                      <div className='me-4'>
-                        <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
-                          {numberToTimeConversion(
-                            profileDetails?.model?.userProfile.fixedHours
-                          )}
-                        </p>
-                        <p className='mb-0 fs-11 op-8 text-fixed-white'>
-                          Fixed
-                        </p>
-                      </div>
+                  {user?.role !== 'Project Manager' &&
+                    user?.role !== 'HOD' &&
+                    user?.role !== 'HR' &&
+                    user.role !== 'Admin' && (
+                      <div className='d-flex mb-2'>
+                        <div className='me-4'>
+                          <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
+                            {profileDetails?.model?.userProfile.projects}
+                          </p>
+                          <p className='mb-0 fs-11 op-8 text-fixed-white'>
+                            Projects
+                          </p>
+                        </div>
+                        <div className='me-4'>
+                          <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
+                            {numberToTimeConversion(
+                              profileDetails?.model?.userProfile.upworkHours
+                            )}
+                          </p>
+                          <p className='mb-0 fs-11 op-8 text-fixed-white'>
+                            Upwork
+                          </p>
+                        </div>
+                        <div className='me-4'>
+                          <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
+                            {numberToTimeConversion(
+                              profileDetails?.model?.userProfile.fixedHours
+                            )}
+                          </p>
+                          <p className='mb-0 fs-11 op-8 text-fixed-white'>
+                            Fixed
+                          </p>
+                        </div>
 
-                      <div className='me-4'>
-                        <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
-                          {numberToTimeConversion(
-                            profileDetails?.model?.userProfile.offlineHours
-                          )}
-                        </p>
-                        <p className='mb-0 fs-11 op-8 text-fixed-white'>
-                          Offline
-                        </p>
+                        <div className='me-4'>
+                          <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
+                            {numberToTimeConversion(
+                              profileDetails?.model?.userProfile.offlineHours
+                            )}
+                          </p>
+                          <p className='mb-0 fs-11 op-8 text-fixed-white'>
+                            Offline
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                   {user.role !== 'HOD' &&
                     user.role !== 'HR' &&
+                    user.role !== 'Admin' &&
                     user.role !== 'Project Manager' && (
                       <Link
                         href={`/profile/${profileDetails?.model?.userProfile.id}`}
@@ -240,7 +239,7 @@ const ProfileDetail = ({
                 <div>
                   {profileDetails?.model?.userProfile.skills
                     ?.split(',')
-                    .map((skill: string, index: Key | null | undefined) => (
+                    .map((skill: string, index: any | null | undefined) => (
                       <a key={index}>
                         <span className='badge bg-primary m-1'>
                           {skill.trim()}
@@ -270,109 +269,58 @@ const ProfileDetail = ({
                   </div>
                   <div className='card-body'>
                     <ul className='list-group'>
-                      {project?.map(
-                        (
-                          project: {
-                            projectName:
-                              | string
-                              | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
-                              | null
-                              | undefined;
-                            technology: any;
-                            description:
-                              | string
-                              | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
-                              | null
-                              | undefined;
-                            liveUrl:
-                              | string
-                              | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
-                              | null
-                              | undefined;
-                            id: {
-                              toString: () => string;
-                            };
-                          },
-                          index: Key | null | undefined
-                        ) => (
-                          <li
-                            key={index}
-                            className='d-flex gap-2 justify-content-between list-group-item'
-                          >
-                            <div>
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  Project :
-                                </div>
-                                <span>{project?.projectName}</span>
+                      {project?.map((project: any) => (
+                        <li
+                          key={project.id}
+                          className='d-flex gap-2 justify-content-between list-group-item'
+                        >
+                          <div>
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Project:
                               </div>
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  Technology :
-                                </div>
-                                <span>
-                                  {
-                                    technologies?.filter(
-                                      (item: { id: number }) =>
-                                        item.id === Number(project.technology)
-                                    )[0]?.name
-                                  }
-                                </span>
-                              </div>
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  Description :
-                                </div>
-                                <span>{project.description}</span>
-                              </div>
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  Production Url :
-                                </div>
-                                <span>{project.liveUrl}</span>
-                              </div>
-
-                              <div className='d-flex align-items-start line-text'>
-                                <EditProjectButton
-                                  id={project.id.toString()}
-                                  projectDetails={projectDetails}
-                                  technologies={technologies}
-                                />
-                                <ProjectDeleteButton
-                                  id={project.id.toString()}
-                                />
-                              </div>
+                              <span>{project?.projectName}</span>
                             </div>
-                          </li>
-                        )
-                      )}
+
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Technology:
+                              </div>
+                              <span>
+                                {
+                                  technologies?.find(
+                                    (item: { id: number }) =>
+                                      item.id === Number(project.technology)
+                                  )?.name
+                                }
+                              </span>
+                            </div>
+
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Description:
+                              </div>
+                              <span>{project.description}</span>
+                            </div>
+
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Production Url:
+                              </div>
+                              <span>{project.liveUrl}</span>
+                            </div>
+
+                            <div className='d-flex align-items-start line-text'>
+                              <EditProjectButton
+                                id={project.id.toString()}
+                                projectDetails={projectDetails}
+                                technologies={technologies}
+                              />
+                              <ProjectDeleteButton id={project.id.toString()} />
+                            </div>
+                          </div>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -386,105 +334,58 @@ const ProfileDetail = ({
                   </div>
                   <div className='card-body'>
                     <ul className='list-group'>
-                      {userTool?.map(
-                        (
-                          tool: {
-                            description:
-                              | string
-                              | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
-                              | null
-                              | undefined;
-                            technology: any;
-                            networkUrl:
-                              | string
-                              | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
-                              | null
-                              | undefined;
-                            localUrl:
-                              | string
-                              | number
-                              | bigint
-                              | boolean
-                              | ReactElement<
-                                  any,
-                                  string | JSXElementConstructor<any>
-                                >
-                              | Iterable<ReactNode>
-                              | ReactPortal
-                              | Promise<AwaitedReactNode>
-                              | null
-                              | undefined;
-                            id: {
-                              toString: () => string;
-                            };
-                          },
-                          index: Key | null | undefined
-                        ) => (
-                          <li
-                            key={index}
-                            className='d-flex gap-2 justify-content-between list-group-item'
-                          >
-                            <div>
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  {' '}
-                                  Technology:{' '}
-                                </div>
-                                <span>{tool?.technology}</span>
+                      {userTool?.map((tool: any, index: number) => (
+                        <li
+                          key={tool.id || index}
+                          className='d-flex gap-2 justify-content-between list-group-item'
+                        >
+                          <div>
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Technology:
                               </div>
-
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  {' '}
-                                  Network URL:{' '}
-                                </div>
-                                <span>{tool.networkUrl}</span>
-                              </div>
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  {' '}
-                                  Local URL:{' '}
-                                </div>
-                                <span>{tool.localUrl}</span>
-                              </div>
-                              <div className='d-flex align-items-start line-text'>
-                                <div className='me-2 fw-semibold nowrap'>
-                                  {' '}
-                                  Description:{' '}
-                                </div>
-                                <span>{tool?.description}</span>
-                              </div>
-
-                              <div className='d-flex align-items-start line-text'>
-                                <EditToolButton
-                                  id={tool.id.toString()}
-                                  userTool={userTool}
-                                  technologies={technologies}
-                                />
-                                <ToolDeleteButton id={tool.id.toString()} />
-                              </div>
+                              <span>
+                                {
+                                  technologies?.find(
+                                    (item: { id: number }) =>
+                                      item.id === Number(tool.technology)
+                                  )?.name
+                                }
+                              </span>
                             </div>
-                          </li>
-                        )
-                      )}
+
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Network URL:
+                              </div>
+                              <span>{tool.networkUrl}</span>
+                            </div>
+
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Local URL:
+                              </div>
+                              <span>{tool.localUrl}</span>
+                            </div>
+
+                            <div className='d-flex align-items-start line-text'>
+                              <div className='me-2 fw-semibold nowrap'>
+                                Description:
+                              </div>
+                              <span>{tool?.description}</span>
+                            </div>
+
+                            <div className='d-flex align-items-start line-text'>
+                              <EditToolButton
+                                id={tool.id.toString()}
+                                userTool={userTool}
+                                technologies={technologies}
+                              />
+                              <ToolDeleteButton id={tool.id.toString()} />
+                            </div>
+                          </div>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>

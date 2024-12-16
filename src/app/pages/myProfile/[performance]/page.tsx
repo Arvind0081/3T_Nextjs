@@ -117,8 +117,6 @@ const Performance = async ({ params, searchParams }: any) => {
     teamProductivity = await TeamProductivitySummary(projectBillingStatusParam);
   } catch (error) {}
 
-
-
   const badgeCounts = profileDetails?.model?.userBadges?.reduce(
     (acc: { [key: string]: number }, badge: any) => {
       const key = badge.badgeImage; // Use badgeImage as the key
@@ -128,7 +126,6 @@ const Performance = async ({ params, searchParams }: any) => {
     {}
   );
 
- 
   const uniqueBadges = Array.from(
     new Set(
       profileDetails?.model?.userBadges?.map((badge: any) => badge.badgeImage)
@@ -167,22 +164,21 @@ const Performance = async ({ params, searchParams }: any) => {
     ?.reduce((sum: any, project: any) => sum + project.nonBillableHours, 0)
     .toFixed(2);
 
-
-
-    const totalUpworkHoursForTeamProductivity = teamProductivity
+  const totalUpworkHoursForTeamProductivity = teamProductivity
     ?.reduce((sum: any, project: any) => sum + project?.upWorkHours, 0)
     .toFixed(2);
   const totalFixedHoursForTeamProductivity = teamProductivity
     ?.reduce((sum: any, project: any) => sum + project?.fixedBillingHours, 0)
     .toFixed(2);
 
-   
   const nonBillableHoursForTeamProductivity = teamProductivity
-    ?.reduce((sum: any, project: any) => sum + project?.nonBillableHours, 0).toFixed(2);
+    ?.reduce((sum: any, project: any) => sum + project?.nonBillableHours, 0)
+    .toFixed(2);
 
-    const totalBillingHoursForTeamProductivity = teamProductivity
-    ?.reduce((sum: any, project: any) => sum + Number(project?.billingHours), 0)
-
+  const totalBillingHoursForTeamProductivity = teamProductivity?.reduce(
+    (sum: any, project: any) => sum + Number(project?.billingHours),
+    0
+  );
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
@@ -194,8 +190,6 @@ const Performance = async ({ params, searchParams }: any) => {
     return formattedTime;
   };
 
-
-
   const profileImageSrc = profileDetails?.model?.userProfile.profileImage
     ? `https://3t-api.csdevhub.com/images/${profileDetails?.model?.userProfile.profileImage}`
     : null;
@@ -205,8 +199,7 @@ const Performance = async ({ params, searchParams }: any) => {
     profileDetails?.model?.userProfile.lastName
       ? `${profileDetails?.model?.userProfile.firstName.substring(0, 1).toUpperCase()}${profileDetails?.model?.userProfile.lastName.substring(0, 1).toUpperCase()}`
       : '';
-      const projectSummary = (employeeWorkedProjectSummary ?? [])[0] ?? {};
-
+  const projectSummary = (employeeWorkedProjectSummary ?? [])[0] ?? {};
 
   return (
     <>
@@ -298,8 +291,9 @@ const Performance = async ({ params, searchParams }: any) => {
                                     </div>
                                     <div className='me-4'>
                                       <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
-                                      
-                                        {numberToTimeConversion(projectSummary?.upworkHours ?? 0)}
+                                        {numberToTimeConversion(
+                                          projectSummary?.upworkHours ?? 0
+                                        )}
                                       </p>
                                       <p className='mb-0 fs-11 op-8 text-fixed-white'>
                                         Upwork
@@ -308,7 +302,7 @@ const Performance = async ({ params, searchParams }: any) => {
                                     <div className='me-4'>
                                       <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
                                         {numberToTimeConversion(
-                                          projectSummary?.fixedBillingHours??0
+                                          projectSummary?.fixedBillingHours ?? 0
                                         )}
                                       </p>
                                       <p className='mb-0 fs-11 op-8 text-fixed-white'>
@@ -318,7 +312,7 @@ const Performance = async ({ params, searchParams }: any) => {
                                     <div className='me-4'>
                                       <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
                                         {numberToTimeConversion(
-                                          projectSummary?.nonBillableHours??0
+                                          projectSummary?.nonBillableHours ?? 0
                                         )}
                                       </p>
                                       <p className='mb-0 fs-11 op-8 text-fixed-white'>
@@ -327,7 +321,9 @@ const Performance = async ({ params, searchParams }: any) => {
                                     </div>
                                     <div className='me-4'>
                                       <p className='fw-bold fs-20 text-fixed-white text-shadow mb-0'>
-                                        {projectSummary?.productivityPercentage?.toFixed(2)??0}
+                                        {projectSummary?.productivityPercentage?.toFixed(
+                                          2
+                                        ) ?? 0}
                                         %
                                       </p>
                                       <p className='mb-0 fs-11 op-8 text-fixed-white'>
@@ -582,22 +578,22 @@ const Performance = async ({ params, searchParams }: any) => {
                                               <td>{project.projectName}</td>
                                               <td>
                                                 {numberToTimeConversion(
-                                                  project.totalUpworkHours||0
+                                                  project.totalUpworkHours || 0
                                                 )}
                                               </td>
                                               <td>
                                                 {numberToTimeConversion(
-                                                  project.totalFixedHours||0
+                                                  project.totalFixedHours || 0
                                                 )}
                                               </td>
                                               <td className='text-success text-bold'>
                                                 {numberToTimeConversion(
-                                                  project.totalBillingHours||0
+                                                  project.totalBillingHours || 0
                                                 )}
                                               </td>
                                               <td className='text-danger'>
                                                 {numberToTimeConversion(
-                                                  project.nonBillableHours||0
+                                                  project.nonBillableHours || 0
                                                 )}
                                               </td>
                                             </tr>
@@ -608,22 +604,22 @@ const Performance = async ({ params, searchParams }: any) => {
                                           <td className='text-bold'>Total</td>
                                           <td>
                                             {numberToTimeConversion(
-                                              totalUpworkHours||0
+                                              totalUpworkHours || 0
                                             )}
                                           </td>
                                           <td>
                                             {numberToTimeConversion(
-                                              totalFixedHours||0
+                                              totalFixedHours || 0
                                             )}
                                           </td>
                                           <td className='text-success text-bold'>
                                             {numberToTimeConversion(
-                                              totalBillingHours||0
+                                              totalBillingHours || 0
                                             )}
                                           </td>
                                           <td className='text-danger'>
                                             {numberToTimeConversion(
-                                              nonBillableHours||0
+                                              nonBillableHours || 0
                                             )}
                                           </td>
                                         </tr>
@@ -687,7 +683,6 @@ const Performance = async ({ params, searchParams }: any) => {
                                               project.billingHours
                                             )}
                                           </td>
-                                         
                                         </tr>
                                       ))}
                                     </tbody>

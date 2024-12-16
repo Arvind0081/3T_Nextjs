@@ -1,12 +1,15 @@
 import {
   allDesignations,
+  departments,
   employeeStatus,
   employeesById,
   getEmployeeStatus,
+  managerList,
   newMemberRequestList,
 } from '@/utils/publicApi';
 import SearchInput from '@/components/common/Search/search';
 import {
+  DepartmentModel,
   DesignationsParam,
   EmpReqParams,
   newRequestModel,
@@ -24,6 +27,7 @@ import PageSizeHandler from '@/components/employees/pazeSizeHandler';
 
 const EmployeeComponent = async ({ searchParams }: any) => {
   let user: any = getUser();
+  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
   let searchQuery = searchParams?.searchValue ?? '';
   const selectedDesignation = searchParams?.designation ?? '';
   const selectedEmpStatus = searchParams?.empStatus ?? 1;
@@ -36,10 +40,21 @@ const EmployeeComponent = async ({ searchParams }: any) => {
   const empStatusList = await employeeStatus();
   const empStatus = await getEmployeeStatus();
 
+  let getManagerList: any;
+  let departmentData: DepartmentModel[] = [];
+
+  try {
+    getManagerList = await managerList(Number(departmentID));
+  } catch (error: any) {}
+
+  try {
+    departmentData = await departments();
+  } catch (error) {}
+
   let newRequest: newRequestModel[] = [];
 
   let reqParams: EmpReqParams = {
-    departmentID: user?.departmentId ?? 0,
+    departmentID: (user.role === 'Admin' || user.role === 'HR') ? departmentID : user?.departmentId,
     searchValue: searchQuery,
     pageSize: pageSize,
     pagenumber: currentPage,
@@ -51,6 +66,8 @@ const EmployeeComponent = async ({ searchParams }: any) => {
     SortOrder: sortOrder??'',
   };
 
+ 
+
   let initialEmployees = await employeesById(reqParams);
 
   const totalCount = initialEmployees?.model?.totalCount || 0;
@@ -58,7 +75,7 @@ const EmployeeComponent = async ({ searchParams }: any) => {
     totalCount < pageSize * currentPage ? totalCount : pageSize * currentPage;
 
   const params: DesignationsParam = {
-    departmentID: user.departmentId,
+    departmentID: (user.role === 'Admin' || user.role === 'HR') ? departmentID : user?.departmentId,
   };
 
   const designations = await allDesignations(params);
@@ -67,12 +84,16 @@ const EmployeeComponent = async ({ searchParams }: any) => {
     const { results } = await newMemberRequestList();
     newRequest = results;
   } catch (error) {}
+  
 
   return (
     <div className='app sidebar-mini ltr light-mode'>
       <div className='page'>
         <div className='page-main'>
-          <Header />
+        <Header
+            getManagerList={getManagerList}
+            departmentData={departmentData}
+          />
           <SideNav />
           <div className='main-content app-content mt-0'>
             <div className='side-app'>

@@ -13,6 +13,7 @@ const SearchInvoice = ({
   paymentList,
   payment,
   activeTab,
+  params,
 }: any) => {
   const today = new Date();
   // Calculate the first day of the current month and today's date
@@ -55,22 +56,23 @@ const SearchInvoice = ({
 
   const handleSearch = useCallback(async () => {
     try {
+     
       const response = await apiService.get(
-        `/Invoice?PaymentStatus=${selectedPayment}&ClientId=${selectedClient}&FromDate=${startDate}&ToDate=${endDate}&Status=${lockStatus}`
+        `/Invoice?PaymentStatus=${selectedPayment}&ClientId=${selectedClient}&FromDate=${startDate}&ToDate=${endDate}&Status=${lockStatus}&DepartmentId=${params.departmentID}`
       );
       setSearchResults(response.model || []);
     } catch (error) {
       console.error('Error fetching search results:', error);
       setSearchResults([]);
     }
-  }, [selectedClient, selectedPayment, startDate, endDate, lockStatus]);
+  }, [selectedClient, selectedPayment, startDate, endDate, lockStatus,params]);
 
   const loadInitialInvoices = async () => {
- 
+
     try {
       // Trigger the initial search with default dates
       const response = await apiService.get(
-        `/Invoice?PaymentStatus=${selectedPayment}&ClientId=${selectedClient}&FromDate=${startDate}&ToDate=${endDate}&Status=${lockStatus}`
+        `/Invoice?PaymentStatus=${selectedPayment}&ClientId=${selectedClient}&FromDate=${startDate}&ToDate=${endDate}&Status=${lockStatus}&DepartmentId=${params.departmentID}`
       );
       setSearchResults(response.model || []);
     } catch (error) {
@@ -81,7 +83,7 @@ const SearchInvoice = ({
   useEffect(() => {
     loadInitialInvoices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lockStatus, selectedClient, selectedPayment]);
+  }, [lockStatus, selectedClient, selectedPayment,params]);
 
   return (
     <>

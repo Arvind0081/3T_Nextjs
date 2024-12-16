@@ -1,21 +1,22 @@
 import SearchUser from '@/components/allUser/searchFilter';
 import Header from '@/components/common/Header/header';
 import SideNav from '@/components/common/SideBar/sidebar';
-import { getAllUsers } from '@/utils/publicApi';
-import { UserParam } from '@/utils/types';
+import { departments, getAllUsers } from '@/utils/publicApi';
+import { DepartmentModel, UserParam } from '@/utils/types';
 import Image from 'next/image';
 import getUser from '@/utils/getUserServerSide';
 import Footer from '@/components/common/Footer/footer';
 const AllUsers = async ({ searchParams }: any) => {
   let users: any;
   let token: any;
-
+  let departmentData: DepartmentModel[] = [];
   token = getUser();
+  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
 
   let searchQuery = searchParams?.search ?? '';
   let data: UserParam = {
     searchValue: searchQuery,
-    departmentId: token.departmentId,
+    departmentId: (token.role === 'Admin' || token.role === 'HR') ? departmentID : token?.departmentId,
     pageNumber: 0,
     pageSize: 0,
   };
@@ -25,6 +26,11 @@ const AllUsers = async ({ searchParams }: any) => {
   } catch (error) {
     console.error('Error fetching users:', error);
   }
+
+  try {
+    departmentData = await departments();
+  } catch (error) {}
+
 
   const calculateCombinedExperience = (
     joiningDate: string,
@@ -55,7 +61,7 @@ const AllUsers = async ({ searchParams }: any) => {
     <div className='app sidebar-mini ltr light-mode'>
       <div className='page'>
         <div className='page-main'>
-          <Header />
+        <Header  departmentData={departmentData} />
           <SideNav />
           <div className='main-content app-content mt-0'>
             <div className='side-app'>
@@ -69,7 +75,7 @@ const AllUsers = async ({ searchParams }: any) => {
                             <div className='h5 fw-semibold mb-0'>All Users</div>
                             <div className='search_box'>
                               <i className='ri-search-line' />
-                              <SearchUser />
+                              <SearchUser  />
                             </div>
                           </div>
                         </div>
@@ -79,7 +85,7 @@ const AllUsers = async ({ searchParams }: any) => {
                 </div>
 
                 <div className='row'>
-                  {users.results.map((user: any) => {
+                  {users?.results.map((user: any) => {
                     const badgeCounts: { [key: string]: number } = {};
 
                     // Calculate badge counts for the current user

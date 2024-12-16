@@ -31,7 +31,7 @@ const TeamMember = ({
     setSortConfig({ key, direction });
 
     router.push(
-      `${url}?page=${reqParams.pagenumber}&size=${reqParams.pageSize}&empStatus=${reqParams.isActive}&departmentId=${reqParams.departmentID}&designation=${reqParams.designation}&searchValue=${reqParams.searchValue}&sortColumn=${key}&sortOrder=${direction}`
+      `${url}?page=${reqParams.pagenumber}&size=${reqParams.pageSize}&empStatus=${reqParams.isActive}&departmentId=${reqParams.departmentID}&teamAdminId=${reqParams.TeamAdminId}&designation=${reqParams.designation}&searchValue=${reqParams.searchValue}&sortColumn=${key}&sortOrder=${direction}`
     );
   };
 

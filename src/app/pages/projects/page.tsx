@@ -14,12 +14,15 @@ import {
   projectsBillingTypeFilter,
   getApplicationDomain,
   technologyList,
+  managerList,
+  departments,
 } from '@/utils/publicApi';
 import {
   ProjectInfoModel,
   GetAllProjectsParamsModel,
   applicationDomainModel,
   Technology,
+  DepartmentModel,
 } from '@/utils/types';
 import Search from '@/components/projects/search';
 import ProjectStatus from '@/components/projects/projectStatus';
@@ -38,12 +41,26 @@ const Projects = async ({ searchParams }: any) => {
   let currentPage: number = searchParams.page ?? 1;
   let hiringStatusId: number = searchParams.hiringStatus ?? 0;
   let bilingTypeId: number = searchParams.bilingType ?? 0;
-  let teamAdminId:string= searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined || searchParams.teamAdminId==='undefined' ? '': searchParams.teamAdminId ;  let sortColumn: string = searchParams.sortColumn ?? '';
+  let departmentID: any =
+  searchParams.departmentId === 'null' ||
+  searchParams.departmentId === '' ||
+  searchParams.departmentId === undefined ||
+  searchParams.departmentId === 'undefined'
+    ? ''
+    : searchParams.departmentId;
+    let teamAdminId: string =
+    searchParams.teamAdminId === 'null' ||
+    searchParams.teamAdminId === '' ||
+    searchParams.teamAdminId === undefined ||
+    searchParams.teamAdminId === 'undefined'
+      ? ''
+      : searchParams.teamAdminId;
+  let sortColumn: string = searchParams.sortColumn ?? '';
   let sortOrder: string = searchParams.sortOrder ?? '';
   let today = new Date();
   let startDate =
     searchParams.startDate ??
-    format(new Date(today.setDate(today.getDate() - 6)), 'yyyy-MM-dd');
+  format(new Date(today.setDate(today.getDate() - 6)), 'yyyy-MM-dd');
   let endDate = searchParams.endDate ?? format(new Date(), 'yyyy-MM-dd');
   let allProjects: ProjectInfoModel[] = [];
   let totalRecords: number = 0;
@@ -81,7 +98,7 @@ const Projects = async ({ searchParams }: any) => {
   const projectStatusData = await individualProjectStatus();
 
   let data: GetAllProjectsParamsModel = {
-    departmentId: Number(token?.departmentId),
+    departmentId:token.role === 'Admin' ? Number(departmentID) : Number(token?.departmentId),
     pageNumber: currentPage,
     pageSize: pageSize,
     searchValue: searchValue,
@@ -118,30 +135,45 @@ const Projects = async ({ searchParams }: any) => {
     return `Showing ${startRecord} to ${endRecord} of ${totalRecords} Entries`;
   };
 
+  let getManagerList: any;
+
+  let departmentData: DepartmentModel[] = [];
+
+  try {
+    departmentData = await departments();
+  } catch (error) {}
+
+  try {
+    getManagerList = await managerList(Number(departmentID));
+  } catch (error: any) {}
+
   return (
     <>
       {/* <!-- PAGE --> */}
-      <div className="app sidebar-mini ltr light-mode">
-        <div className="page">
+      <div className='app sidebar-mini ltr light-mode'>
+        <div className='page'>
           {/* <!-- app-Header --> */}
-          <Header />
+          <Header
+            getManagerList={getManagerList}
+            departmentData={departmentData}
+          />
           {/* <!--APP-SIDEBAR--> */}
           <SideNav />
           {/* <!--app-content open--> */}
-          <div className="main-content app-content mt-0">
-            <div className="side-app">
+          <div className='main-content app-content mt-0'>
+            <div className='side-app'>
               {/* <!-- CONTAINER --> */}
-              <div className="main-container container-fluid">
+              <div className='main-container container-fluid'>
                 {/* <!-- Project --> */}
-                <div className="row">
-                  <div className="col-xl-12">
-                    <div className="card custom-card">
-                      <div className="card-header justify-content-between">
-                        <div className="filter-left d-flex gap-x-2 project_leftBox">
+                <div className='row'>
+                  <div className='col-xl-12'>
+                    <div className='card custom-card'>
+                      <div className='card-header justify-content-between'>
+                        <div className='filter-left d-flex gap-x-2 project_leftBox'>
                           <DateFilter data={data} />
                         </div>
 
-                        <div className="filter-right d-flex gap-x-2 project_leftBox">
+                        <div className='filter-right d-flex gap-x-2 project_leftBox'>
                           <BillingAndHiringStatusFilter
                             data={data}
                             hiringTypeFilter={hiringTypeFilter}
@@ -159,8 +191,8 @@ const Projects = async ({ searchParams }: any) => {
                           />
                         </div>
                       </div>
-                      <div className="card-body">
-                        <div className="d-flex flex-wrap justify-content-between dataTable_filterBox">
+                      <div className='card-body'>
+                        <div className='d-flex flex-wrap justify-content-between dataTable_filterBox'>
                           <ShowEntries data={data} />
                         </div>
                         <ProjectTable
@@ -177,14 +209,14 @@ const Projects = async ({ searchParams }: any) => {
                           <span>No record found.</span>
                         )}
                       </div>
-                      <div className="card-footer">
-                        <div className="d-flex align-items-center">
+                      <div className='card-footer'>
+                        <div className='d-flex align-items-center'>
                           <div>
                             {showingRecordCount()}
 
-                            <i className="bi bi-arrow-right ms-2 fw-semibold"></i>
+                            <i className='bi bi-arrow-right ms-2 fw-semibold'></i>
                           </div>
-                          <div className="ms-auto">
+                          <div className='ms-auto'>
                             <Paginator
                               totalRecords={totalRecords}
                               data={data}
@@ -198,31 +230,31 @@ const Projects = async ({ searchParams }: any) => {
                 {/* <!-- Projects END --> */}
 
                 {/* <!--Delete Modal --> */}
-                <div className="modal fade" id="DeleteModal">
+                <div className='modal fade' id='DeleteModal'>
                   <div
-                    className="modal-dialog modal-dialog-centered text-center"
-                    role="document"
+                    className='modal-dialog modal-dialog-centered text-center'
+                    role='document'
                   >
-                    <div className="modal-content tx-size-sm">
-                      <div className="modal-body text-center p-4 pb-5">
+                    <div className='modal-content tx-size-sm'>
+                      <div className='modal-body text-center p-4 pb-5'>
                         <button
-                          aria-label="Close"
-                          className="btn-close position-absolute"
-                          data-bs-dismiss="modal"
+                          aria-label='Close'
+                          className='btn-close position-absolute'
+                          data-bs-dismiss='modal'
                         >
-                          <span aria-hidden="true">&times;</span>
+                          <span aria-hidden='true'>&times;</span>
                         </button>
-                        <i className="icon icon-close fs-70 text-danger lh-1 my-5 d-inline-block"></i>
-                        <h4 className="text-danger">
+                        <i className='icon icon-close fs-70 text-danger lh-1 my-5 d-inline-block'></i>
+                        <h4 className='text-danger'>
                           Are you sure you want to delete?
                         </h4>
-                        <p className="mg-b-20 mg-x-20">
+                        <p className='mg-b-20 mg-x-20'>
                           Do you Really want to delete this record?
                         </p>
                         <button
-                          aria-label="Close"
-                          className="btn btn-danger pd-x-25"
-                          data-bs-dismiss="modal"
+                          aria-label='Close'
+                          className='btn btn-danger pd-x-25'
+                          data-bs-dismiss='modal'
                         >
                           Yes
                         </button>
@@ -235,103 +267,103 @@ const Projects = async ({ searchParams }: any) => {
 
                 {/* <!-- Update Project--> */}
                 <div
-                  className="offcanvas offcanvas-end ModalW500"
+                  className='offcanvas offcanvas-end ModalW500'
                   // tabIndex='-1'
-                  id="UpdateProjectModal"
-                  aria-labelledby="UpdateProjectModalLabel"
+                  id='UpdateProjectModal'
+                  aria-labelledby='UpdateProjectModalLabel'
                 >
-                  <div className="offcanvas-header">
+                  <div className='offcanvas-header'>
                     <h5>Update Project</h5>
                     <button
-                      type="button"
-                      className="btn-close text-reset"
-                      data-bs-dismiss="offcanvas"
-                      aria-label="Close"
+                      type='button'
+                      className='btn-close text-reset'
+                      data-bs-dismiss='offcanvas'
+                      aria-label='Close'
                     >
-                      <i className="fe fe-x fs-18"></i>
+                      <i className='fe fe-x fs-18'></i>
                     </button>
                   </div>
-                  <div className="offcanvas-body">
-                    <form className="status-repeat-box row m-0">
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputCity">Project Name</label>
+                  <div className='offcanvas-body'>
+                    <form className='status-repeat-box row m-0'>
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputCity'>Project Name</label>
                         <input
-                          type="text"
-                          className="form-control"
-                          placeholder=""
+                          type='text'
+                          className='form-control'
+                          placeholder=''
                         />
                       </div>
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputState">Hiring Status</label>
-                        <select id="inputState" className="form-control">
-                          <option value="0">Choose Hiring Status</option>
-                          <option value="1">Agency</option>
-                          <option value="2">Freelancer</option>
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputState'>Hiring Status</label>
+                        <select id='inputState' className='form-control'>
+                          <option value='0'>Choose Hiring Status</option>
+                          <option value='1'>Agency</option>
+                          <option value='2'>Freelancer</option>
                         </select>
                       </div>
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputState">Client Name</label>
-                        <select id="inputState" className="form-control">
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputState'>Client Name</label>
+                        <select id='inputState' className='form-control'>
                           <option>Select Profile</option>
                           <option>...</option>
                         </select>
                       </div>
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputState">Status</label>
-                        <select id="inputState" className="form-control">
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputState'>Status</label>
+                        <select id='inputState' className='form-control'>
                           <option>Select Status</option>
                           <option>...</option>
                         </select>
                       </div>
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputState">Billing Type</label>
-                        <select id="inputState" className="form-control">
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputState'>Billing Type</label>
+                        <select id='inputState' className='form-control'>
                           <option>Choose Billing Type</option>
                           <option>...</option>
                         </select>
                       </div>
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputState">Project Invoice ID</label>
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputState'>Project Invoice ID</label>
                         <input
-                          type="text"
-                          className="form-control"
-                          placeholder=""
+                          type='text'
+                          className='form-control'
+                          placeholder=''
                         />
                       </div>
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputState">Production Url</label>
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputState'>Production Url</label>
                         <input
-                          type="text"
-                          className="form-control"
-                          placeholder=""
+                          type='text'
+                          className='form-control'
+                          placeholder=''
                         />
                       </div>
-                      <div className="col-md-6 form-group">
-                        <label htmlFor="inputState">Dev/Stage Url</label>
+                      <div className='col-md-6 form-group'>
+                        <label htmlFor='inputState'>Dev/Stage Url</label>
                         <input
-                          type="text"
-                          className="form-control"
-                          placeholder=""
+                          type='text'
+                          className='form-control'
+                          placeholder=''
                         />
                       </div>
-                      <div className="col-md-12 form-group">
-                        <label htmlFor="inputCity">Description </label>
+                      <div className='col-md-12 form-group'>
+                        <label htmlFor='inputCity'>Description </label>
                         <textarea
-                          id="inputState"
-                          className="form-control h50"
+                          id='inputState'
+                          className='form-control h50'
                         ></textarea>
                       </div>
-                      <div className="col-md-12 form-group">
-                        <label htmlFor="inputCity">Important Notes </label>
+                      <div className='col-md-12 form-group'>
+                        <label htmlFor='inputCity'>Important Notes </label>
                         <textarea
-                          id="inputState"
-                          className="form-control h100"
+                          id='inputState'
+                          className='form-control h100'
                         ></textarea>
                       </div>
                     </form>
                   </div>
-                  <div className="offcanvas-footer text-right">
-                    <button type="submit" className="btn btn-primary">
+                  <div className='offcanvas-footer text-right'>
+                    <button type='submit' className='btn btn-primary'>
                       Update
                     </button>
                   </div>
@@ -339,38 +371,38 @@ const Projects = async ({ searchParams }: any) => {
 
                 {/* <!-- Notes--> */}
                 <div
-                  className="offcanvas offcanvas-end ModalW500"
+                  className='offcanvas offcanvas-end ModalW500'
                   // tabIndex='-1'
-                  id="NotesProjectModal"
-                  aria-labelledby="NotesProjectModalLabel"
+                  id='NotesProjectModal'
+                  aria-labelledby='NotesProjectModalLabel'
                 >
-                  <div className="offcanvas-header">
+                  <div className='offcanvas-header'>
                     <h5>Project Notes</h5>
                     <button
-                      type="button"
-                      className="btn-close text-reset"
-                      data-bs-dismiss="offcanvas"
-                      aria-label="Close"
+                      type='button'
+                      className='btn-close text-reset'
+                      data-bs-dismiss='offcanvas'
+                      aria-label='Close'
                     >
-                      <i className="fe fe-x fs-18"></i>
+                      <i className='fe fe-x fs-18'></i>
                     </button>
                   </div>
-                  <div className="offcanvas-body">
-                    <div className="row">
-                      <div className="col-md-12 form-group">
+                  <div className='offcanvas-body'>
+                    <div className='row'>
+                      <div className='col-md-12 form-group'>
                         <textarea
-                          id="inputState"
-                          className="form-control"
+                          id='inputState'
+                          className='form-control'
                           style={{ height: '500px' }}
                         ></textarea>
                       </div>
                     </div>
                   </div>
-                  <div className="offcanvas-footer text-right">
-                    <button type="submit" className="btn btn-danger">
+                  <div className='offcanvas-footer text-right'>
+                    <button type='submit' className='btn btn-danger'>
                       Cancel
                     </button>
-                    <button type="submit" className="btn btn-primary">
+                    <button type='submit' className='btn btn-primary'>
                       Update
                     </button>
                   </div>
