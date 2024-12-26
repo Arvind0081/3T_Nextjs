@@ -103,7 +103,7 @@ const Dashboard = async ({ searchParams }: any) => {
         (new Date().getMonth() - joining.getMonth())
       : 0;
 
-    return totalMonths + (experienceOnJoining || 0);
+    return totalMonths + (experienceOnJoining ?? 0);
   };
 
   const getDesignationNameClass = (months: number) => {

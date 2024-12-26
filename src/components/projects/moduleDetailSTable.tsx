@@ -18,8 +18,8 @@ const ModuleDetailsTable=({projectId,projectModuleStatus,projectPaymentsStatus}:
 
   const [moduleDetails,setModuleDetails]=useState<any[]>([]);
   const [totalRecords,setTotalRecords]=useState(0);
-  const [moduleFilter,setModuleFilter]=useState<String[]>(['Open']);
-  const [paymentFilter,setPaymentFilter]=useState<String[]>(['Pending']);
+  const [moduleFilter,setModuleFilter]=useState<string[]>(['Open']);
+  const [paymentFilter,setPaymentFilter]=useState<string[]>(['Pending']);
   const [pageSize,setPageSize]=useState(10);
   const [pageNumber,setPageNumber]=useState(1);
   const [debounceSearchValue,setDebounceSearchValue]=useState('');

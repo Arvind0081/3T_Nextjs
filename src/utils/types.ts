@@ -217,8 +217,8 @@ export type EmployeeDetailsModel = {
 
 export type ProjectModuleFormValue = {
   id: number;
-  moduleStatus: String[];
-  paymentStatus: String[];
+  moduleStatus: string[];
+  paymentStatus: string[];
   departmentId: number;
   pageSize:number;
   pageNumber:number;

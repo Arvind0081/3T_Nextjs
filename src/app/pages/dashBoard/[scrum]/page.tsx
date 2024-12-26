@@ -8,8 +8,6 @@ import ScrumTeamStatus from '@/components/scrum/teamStatus';
 import { format } from 'date-fns';
 import ProjectInProgress from '@/components/scrum/projectInProgressTable';
 
-
-// import Link from 'next/link';
  import getUser from '@/utils/getUserServerSide';
 import ScrumTeamDetails from '@/components/scrum/teamDetails';
 
@@ -35,6 +33,7 @@ let employeeData:EmployeeProfileDetailsResponse={
     empStatus: 0,
     joiningDate: null,
     experience: null,
+    experienceOnJoining:0,
     teamAdminId: '',
     manager: '',
     address: '',
