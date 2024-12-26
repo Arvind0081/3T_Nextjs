@@ -63,7 +63,7 @@ const QuickAction = ({ id, data, getManagerList, empstatus }: any) => {
 
   return (
     <div className='mb-0 profile-action'>
-      {(user?.role === 'Project Manager' || user?.role === 'HOD' ) && (
+      {(user?.role === 'Project Manager' || user?.role === 'HOD' || user.role==='Admin') && (
         <p className='fs-12 text-fixed-white mb-3 op-8 management-change'>
           <span className='me-3'>
             <label>Status: </label>
@@ -82,7 +82,7 @@ const QuickAction = ({ id, data, getManagerList, empstatus }: any) => {
         </p>
       )}
 
-      {(user?.role === 'Project Manager' || user?.role === 'HOD') && (
+      {(user?.role === 'Project Manager' || user?.role === 'HOD' || user.role ==='Admin' ) && (
         <p className='fs-12 text-fixed-white mb-3 op-8 management-change'>
           <span className='me-3'>
             <label>Manager: </label>
@@ -101,7 +101,7 @@ const QuickAction = ({ id, data, getManagerList, empstatus }: any) => {
         </p>
       )}
 
-      {(user?.role === 'Project Manager' || user?.role === 'HOD') && (
+      {(user?.role === 'Project Manager' || user?.role === 'HOD' || user.role === 'Admin' ) && (
         <p className='fs-12 text-fixed-white mb-3 op-8 management-change'>
           <span className='me-3'>
             <label>Status Update: </label>
@@ -110,7 +110,7 @@ const QuickAction = ({ id, data, getManagerList, empstatus }: any) => {
         </p>
       )}
 
-      {(user?.role === 'Project Manager' || user?.role === 'HOD') && (
+      {(user?.role === 'Project Manager' || user?.role === 'HOD' || user.role ==='Admin' ) && (
         <p className='fs-12 text-fixed-white mb-0 op-8 management-change'>
           <span className='me-3'>
             <label>Password: </label>

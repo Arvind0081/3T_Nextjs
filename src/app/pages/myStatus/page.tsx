@@ -1,40 +1,43 @@
-import React from 'react';
-import SideNav from '@/components/common/SideBar/sidebar';
-import Footer from '@/components/common/Footer/footer';
-import Header from '@/components/common/Header/header';
+import React from "react";
+import SideNav from "@/components/common/SideBar/sidebar";
+import Footer from "@/components/common/Footer/footer";
+import Header from "@/components/common/Header/header";
 import {
   GetEmployeeStatusResponseModel,
   ProjectListModel,
+  ProjectListParam,
   UpworkProfileListModel,
-} from '@/utils/types';
+} from "@/utils/types";
 import {
   EmployeeStatusList,
   projectsList,
   upwokProfileList,
-} from '@/utils/publicApi';
-import { format } from 'date-fns';
-import AddStatusButton from '@/components/myStatus/addStatusButton';
-import getUser from '@/utils/getUserServerSide';
-import EmployeeStatusDateFilter from '@/components/myStatus/employeeStatusDateFilter';
-import EditStatusButton from '@/components/myStatus/editStatusButton';
-import DeleteStatusButton from '@/components/myStatus/deleteStatusButton';
-import Paginator from '@/components/myStatus/pagination';
-
+  userProfileDetails,
+} from "@/utils/publicApi";
+import { format } from "date-fns";
+import AddStatusButton from "@/components/myStatus/addStatusButton";
+import getUser from "@/utils/getUserServerSide";
+import EmployeeStatusDateFilter from "@/components/myStatus/employeeStatusDateFilter";
+import EditStatusButton from "@/components/myStatus/editStatusButton";
+import DeleteStatusButton from "@/components/myStatus/deleteStatusButton";
+import Paginator from "@/components/myStatus/pagination";
 const MyStatus = async ({ searchParams }: any) => {
   let pageSize: number = searchParams.size ?? 10;
   let currentPage: number = searchParams.page ?? 1;
   const token: any = getUser();
-  const today = new Date();
-  const startDate =
-    searchParams.StartDate ??
-    format(new Date(today.setDate(today.getDate() - 6)), 'yyyy-MM-dd');
-  const endDate = searchParams.EndDate ?? format(new Date(), 'yyyy-MM-dd');
+  let today = new Date();
+  let startDate =
+    searchParams.fromDate ??
+    format(new Date(today.setDate(today.getDate() - 6)), "yyyy-MM-dd");
+  let endDate = searchParams.toDate ?? format(new Date(), "yyyy-MM-dd");
 
   let employeeStatus: GetEmployeeStatusResponseModel[] = [];
   let totalRecords: number = 0;
 
   let projectsListFromDb: ProjectListModel[] = [];
   let upwokProfileListFromDb: UpworkProfileListModel[] = [];
+  let profileDetails: any;
+
   const payLoad = {
     fromDate: startDate,
     toDate: endDate,
@@ -48,11 +51,20 @@ const MyStatus = async ({ searchParams }: any) => {
     totalRecords = totalCount;
   } catch (error) {}
 
+  const projectListPayLoad: ProjectListParam = {
+    DepartmentId: token.departmentId,
+  };
+
   try {
-    projectsListFromDb = await projectsList();
+    projectsListFromDb = await projectsList(projectListPayLoad);
   } catch (error) {}
+
   try {
     upwokProfileListFromDb = await upwokProfileList();
+  } catch (error) {}
+
+  try {
+    profileDetails = await userProfileDetails();
   } catch (error) {}
 
   const numberToTimeConversion = (decimalTime: any) => {
@@ -61,7 +73,9 @@ const MyStatus = async ({ searchParams }: any) => {
     const minutes = Math.round(fractionalHours * 60);
 
     // Format time string to HH:mm
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}`;
     return formattedTime;
   };
 
@@ -74,154 +88,172 @@ const MyStatus = async ({ searchParams }: any) => {
 
     return Count;
   };
-
   return (
     <>
-      {/* <!-- PAGE --> */}
-      <div className='app sidebar-mini ltr light-mode'>
-        <div className='page'>
-          {/* <!-- app-Header --> */}
+      <div className="app sidebar-mini ltr light-mode">
+        <div className="page">
           <Header />
-          {/* <!--APP-SIDEBAR--> */}
           <SideNav />
-          {/* <!--app-content open--> */}
-          <div className='main-content app-content mt-0'>
-            <div className='side-app'>
-              <div className='main-container container-fluid'>
-                <div className='row'>
-                  <div className='col-xl-12'>
-                    <div className='card custom-card'>
-                      <div className='card-header justify-content-between items-center'>
-                        <div className='card-title'>My Status</div>
-                        <div className='filter-right d-flex gap-x-2'>
-                          <EmployeeStatusDateFilter payLoad={payLoad} />
+          <div className="main-content app-content mt-0">
+            <div className="side-app">
+              <div className="main-container container-fluid">
+                <div className="row">
+                  <div className="col-xl-12">
+                    <div className="card custom-card">
+                      <div className="card-header justify-content-between items-center">
+                        <div className="card-title">My Status</div>
+                        <div className="filter-right d-flex gap-x-2">
+                          <EmployeeStatusDateFilter data={payLoad} />
                           <AddStatusButton
                             projectsListFromDb={projectsListFromDb}
                             upwokProfileListFromDb={upwokProfileListFromDb}
+                            profileDetails={profileDetails}
                           />
                         </div>
                       </div>
-                      <div className='card-body'>
-                        <div className='table-responsive theme_table'>
-                          <table className='table text-nowrap table-hover border table-bordered status_table'>
+                      <div className="card-body">
+                        <div className="table-responsive theme_table">
+                          <table className="table text-nowrap table-hover border table-bordered status_table">
                             <thead>
                               <tr>
-                                <th scope='col'>Date</th>
-
-                                <th className='project-width'>Project Name</th>
-                                <th scope='col'>Client Name</th>
-                                <th scope='col' className='module-width'>
+                                <th scope="col">Date</th>
+                                <th className="project-width">Project Name</th>
+                                <th scope="col">Client Name</th>
+                                <th scope="col" className="module-width">
                                   Module
                                 </th>
-                                <th scope='col' className='profile-width'>
+                                <th scope="col" className="profile-width">
                                   Profile
                                 </th>
-                                <th scope='col' className='memo-width'>
-                                  Memo{' '}
+                                <th scope="col" className="memo-width">
+                                  Memo{" "}
                                 </th>
-                                <th scope='col'>Upwork Hours</th>
-                                <th scope='col'>Fixed Billing Hours</th>
-                                <th scope='col'>Billing Hours</th>
-                                <th scope='col'>Non Billable Hours</th>
+                                <th scope="col">Upwork Hours</th>
+                                <th scope="col">Fixed Billing Hours</th>
+                                <th scope="col">Billing Hours</th>
+                                <th scope="col">Non Billable Hours</th>
 
-                                <th scope='col'>Action</th>
+                                <th scope="col">Action</th>
                               </tr>
                             </thead>
-
                             <tbody>
                               {employeeStatus &&
-                                employeeStatus?.map(
+                                employeeStatus.map(
                                   (
                                     status: GetEmployeeStatusResponseModel,
                                     index: number,
                                     employeeStatus: GetEmployeeStatusResponseModel[]
-                                  ) => (
-                                    <tr
-                                      className={
-                                        index == 0
-                                          ? 'mainuser'
-                                          : employeeStatus[index].date !==
-                                              employeeStatus[index - 1].date
-                                            ? 'mainuser'
-                                            : ''
-                                      }
-                                      key={status.id}
-                                    >
-                                      <td className='nowrap'>
-                                        {format(
-                                          new Date(status.date),
-                                          'dd-MM-yyyy'
-                                        )}
-                                      </td>
+                                  ) => {
+                                    const isMainUserRow =
+                                      index === 0 ||
+                                      employeeStatus[index].date !==
+                                        employeeStatus[index - 1].date;
 
-                                      <td>
-                                        <a
-                                       href={`/projects/${status.id}`}
+                                    if (status.markAsLeave) {
+                                      // Render row for leave
+                                      return (
+                                        <tr
+                                          className={
+                                            isMainUserRow ? "mainuser" : ""
+                                          }
+                                          key={status.id}
+                                        >
+                                          <td className="nowrap">
+                                            {format(
+                                              new Date(status.date),
+                                              "dd-MM-yyyy"
+                                            )}
+                                          </td>
+                                          <td
+                                            colSpan={10}
+                                            className="text-center text-success"
+                                          >
+                                            <strong>Leave</strong>
+                                          </td>
+                                        </tr>
+                                      );
+                                    }
+
+                                    // Render normal row
+                                    return (
+                                      <tr
+                                        className={
+                                          isMainUserRow ? "mainuser" : ""
+                                        }
+                                        key={status.id}
                                       >
-                                        {status.projectName}{' '}
-
-                                      </a>
-                                      </td>
-                                     
-                                      <td>{status.clientName}</td>
-                                      <td>{status.moduleName}</td>
-                                      <td>
-                                        {upwokProfileListFromDb?.filter(
-                                          (item: any) =>
-                                            item.id == status?.profileId
-                                        )[0]?.name ?? ''}
-                                      </td>
-                                      <td>{status.memo}</td>
-                                      <td>
-                                        {numberToTimeConversion(
-                                          status.upworkHours
-                                        )}
-                                      </td>
-                                      <td>
-                                        {numberToTimeConversion(
-                                          status.fixedHours
-                                        )}
-                                      </td>
-                                      <td className='text-success text-bold'>
-                                        <b>
-                                          {numberToTimeConversion(
-                                            status.upworkHours +
-                                              status.fixedHours
+                                        <td className="nowrap">
+                                          {format(
+                                            new Date(status.date),
+                                            "dd-MM-yyyy"
                                           )}
-                                        </b>
-                                      </td>
-                                      <td className='text-danger'>
-                                        {numberToTimeConversion(
-                                          status.offlineHours
-                                        )}
-                                      </td>
-                                      <td>
-                                        <div className='align-items-start d-flex fs-15 gap-2'>
-                                          <EditStatusButton
-                                            item={employeeStatus.filter(
-                                              (x: { date: string }) =>
-                                                x.date == status.date
+                                        </td>
+                                        <td>
+                                          <a href={`/projects/${status.id}`}>
+                                            {status.projectName}
+                                          </a>
+                                        </td>
+                                        <td>{status.clientName}</td>
+                                        <td>{status.moduleName}</td>
+                                        <td>
+                                          {upwokProfileListFromDb?.find(
+                                            (item: any) =>
+                                              item.id === status?.profileId
+                                          )?.name || ""}
+                                        </td>
+                                        <td>{status.memo}</td>
+                                        <td>
+                                          {numberToTimeConversion(
+                                            status.upworkHours
+                                          )}
+                                        </td>
+                                        <td>
+                                          {numberToTimeConversion(
+                                            status.fixedHours
+                                          )}
+                                        </td>
+                                        <td className="text-success text-bold">
+                                          <b>
+                                            {numberToTimeConversion(
+                                              status.upworkHours +
+                                                status.fixedHours
                                             )}
-                                            projectsListFromDb={
-                                              projectsListFromDb
-                                            }
-                                            upwokProfileListFromDb={
-                                              upwokProfileListFromDb
-                                            }
-                                          />
+                                          </b>
+                                        </td>
+                                        <td className="text-danger">
+                                          {numberToTimeConversion(
+                                            status.offlineHours
+                                          )}
+                                        </td>
+                                        <td>
+                                          <div className="align-items-start d-flex fs-15 gap-2">
+                                            <EditStatusButton
+                                              item={employeeStatus.filter(
+                                                (x: { date: string }) =>
+                                                  x.date === status.date
+                                              )}
+                                              projectsListFromDb={
+                                                projectsListFromDb
+                                              }
+                                              upwokProfileListFromDb={
+                                                upwokProfileListFromDb
+                                              }
+                                              profileDetails={profileDetails}
+                                            />
 
-                                          <DeleteStatusButton
-                                            id={status.date}
-                                            item={employeeStatus.filter(
-                                              (x: { date: string }) =>
-                                                x.date == status.date
-                                            )}
-                                            userId={token.id}
-                                          />
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  )
+                                            <DeleteStatusButton
+                                              id={status.date}
+                                              item={employeeStatus.filter(
+                                                (x: { date: string }) =>
+                                                  x.date === status.date
+                                              )}
+                                              userId={token.id}
+                                            />
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    );
+                                  }
                                 )}
                             </tbody>
                           </table>
@@ -230,14 +262,14 @@ const MyStatus = async ({ searchParams }: any) => {
                           )}
                         </div>
                       </div>
-                      <div className='card-footer'>
-                        <div className='d-flex align-items-center'>
+                      <div className="card-footer">
+                        <div className="d-flex align-items-center">
                           <div>
-                            {' '}
-                            Showing {showingRecordCount()} Entries{' '}
-                            <i className='bi bi-arrow-right ms-2 fw-semibold'></i>
+                            {" "}
+                            Showing {showingRecordCount()} Entries{" "}
+                            <i className="bi bi-arrow-right ms-2 fw-semibold"></i>
                           </div>
-                          <div className='ms-auto'>
+                          <div className="ms-auto">
                             <Paginator
                               totalRecords={totalRecords}
                               data={payLoad}
@@ -249,13 +281,9 @@ const MyStatus = async ({ searchParams }: any) => {
                   </div>
                 </div>
               </div>
-              {/* <!-- CONTAINER END --> */}
             </div>
           </div>
-          {/* <!--app-content close--> */}
         </div>
-
-        {/* FOOTER  */}
         <Footer />
       </div>
     </>

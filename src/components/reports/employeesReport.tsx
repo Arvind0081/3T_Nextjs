@@ -151,28 +151,12 @@ const EmployeesReport = ({ employeesReport, param }: any) => {
                   <tr>
                     <th onClick={() => handleSort('srNo')}>
                       SR. No.{' '}
-                      {sortConfig.key === 'srNo' ? (
-                        sortConfig.direction === 'asc' ? (
-                          <FaSortUp />
-                        ) : (
-                          <FaSortDown />
-                        )
-                      ) : (
-                        <FaSort />
-                      )}
+                     
                     </th>
 
                     <th onClick={() => handleSort('employeeNumber')}>
                       Employee Id.{' '}
-                      {sortConfig.key === 'employeeNumber' ? (
-                        sortConfig.direction === 'asc' ? (
-                          <FaSortUp />
-                        ) : (
-                          <FaSortDown />
-                        )
-                      ) : (
-                        <FaSort />
-                      )}
+                     
                     </th>
 
                     <th onClick={() => handleSort('userName')}>

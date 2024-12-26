@@ -311,6 +311,7 @@ export type EmployeeProfileDetailsResponse = {
   empStatus: number;
   joiningDate: string | null;
   experience: string | null;
+  experienceOnJoining:number;
   teamAdminId: string;
   manager: string;
   address: string;
@@ -725,7 +726,7 @@ export type AddEmployeeStatusFormModel={
     upworkHours: number|null,
     fixedHours: number|null,
     offlineHours: number|null,
-    //isSVNUpdated: boolean,
+    isSVNUpdated: boolean,
     updatedClient: boolean,
     markAsLeave: boolean,
     profileId:number|null
@@ -1333,4 +1334,21 @@ export type CLientModelByDepartment = {
 
 export type ClientReqParam = {
   departmentID:number;
+};
+
+
+export type MonthlyReportsByHr = {  
+  Month: number;
+  Year: number;
+  DepartmentId:number;
+  TeamAdminId: string;
+  PageNumber:number;
+  PageSize:number;
+  SearchValue:string;
+  date:string
+};
+
+
+export type ProjectListParam = {  
+  DepartmentId:number;
 };

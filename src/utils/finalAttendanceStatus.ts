@@ -917,7 +917,7 @@ export const finalAttendanceStatus=(statusDetails:any,bioMetricDetails:any)=>{
               }
             }
           }
-          else if (BMHours <= 0 && hour < 8){
+          else if (BMHours <= 0 && hour < 8){ 
             //BM -HA present with Exception
             if (attendanceStatus != 'P'){
               if (attendanceStatus === 'Ab'){

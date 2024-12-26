@@ -1,28 +1,30 @@
-'use client';
+"use client";
 import {
   moduleList,
   addEmployeeStatus,
   updateEmployeeStatus,
   deleteEmployeeStatus,
-} from '@/utils/publicApi';
+} from "@/utils/publicApi";
 import {
   AddEmployeeStatusFormModel,
   ProjectModuleListModel,
   UpworkProfileListModel,
-} from '@/utils/types';
-import React, { useState, useEffect } from 'react';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import { useForm, Controller } from 'react-hook-form';
-import { format } from 'date-fns';
+} from "@/utils/types";
+import React, { useState, useEffect } from "react";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import { useForm, Controller } from "react-hook-form";
+import { format, subDays, addDays } from "date-fns";
 import {
   LocalizationProvider,
   MobileTimePicker,
-} from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import getUser from '@/utils/getUserClientSide';
-import { useRouter } from 'next/navigation';
-import dayjs from 'dayjs';
- 
+} from "@mui/x-date-pickers-pro";
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
+import getUser from "@/utils/getUserClientSide";
+import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import toastr from "toastr";
+import { Dropdown } from "semantic-ui-react";
+
 const AddEditStatusForm = ({
   show,
   setShow,
@@ -30,17 +32,20 @@ const AddEditStatusForm = ({
   upwokProfileListFromDb,
   selectedStatus,
   setSelectedStatus,
+  profileDetails,
 }: any) => {
   let user: any = getUser();
   const router = useRouter();
-  const [projectModules, setProjectModules] =
-    useState<ProjectModuleListModel[]>();
+  const [projectModulesMap, setProjectModulesMap] = useState<
+    Record<number, ProjectModuleListModel[]>
+  >({});
   const [individualStatusList, setIndividualStatusList] = useState<any[]>([]);
   const [addMore, setAddMore] = useState(false);
-  const sortedProjects = projectsListFromDb.sort((a: any, b: any) => {
+  const [selectedDate, setSelectedDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
+  const sortedProjects = projectsListFromDb?.sort((a: any, b: any) => {
     return a.name.localeCompare(b.name);
   });
- 
+
   const {
     control,
     register,
@@ -52,7 +57,7 @@ const AddEditStatusForm = ({
     reset,
     setValue,
   } = useForm<AddEmployeeStatusFormModel>();
- 
+
   const handleClose = () => {
     if (selectedStatus) {
       setSelectedStatus([]);
@@ -61,138 +66,153 @@ const AddEditStatusForm = ({
     reset();
     clearFormFields();
     setIndividualStatusList([]);
+    setProjectModulesMap({});
+    setSelectedDate(format(new Date(), "yyyy-MM-dd"));
   };
- 
+
   const projectModuleList = async (id: number) => {
     const response = await moduleList(id);
-    setProjectModules(response);
+    if (response === null || response === undefined) {
+      toastr.warning("Please ask your TL to create a module", "Warning");
+      return setProjectModulesMap((prev) => ({ ...prev, [id]: [] }));
+    }
+    setProjectModulesMap((prev) => ({ ...prev, [id]: response }));
   };
- 
+
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
     const fractionalHours = decimalTime - hours;
     const minutes = Math.round(fractionalHours * 60);
- 
-    // Format time string to HH:mm
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes?.toString().padStart(2, '0')}`;
+
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+      ?.toString()
+      .padStart(2, "0")}`;
     return formattedTime;
   };
- 
+
   useEffect(() => {
     if (selectedStatus) {
       const statusArrayFromDB = selectedStatus.map((status: any) => {
+        if (!projectModulesMap[status.projectID]) {
+          projectModuleList(status.projectID);
+        }
+        const formattedDate = format(new Date(status.date), "yyyy-MM-dd");
+        setSelectedDate(formattedDate);
         return {
           ...status,
           upworkHours: numberToTimeConversion(status.upworkHours),
           fixedHours: numberToTimeConversion(status.fixedHours),
           offlineHours: numberToTimeConversion(status.offlineHours),
-          date: format(new Date(status.date), 'yyyy-MM-dd'),
+          date: formattedDate,
         };
       });
- 
+
       setIndividualStatusList(statusArrayFromDB);
     }
   }, [selectedStatus]);
- 
-  const leave = watch('markAsLeave');
-  const project = watch('projectID');
- 
+
+  const leave = watch("markAsLeave");
+  const projectId = watch("projectID");
+
   useEffect(() => {
     if (leave) {
-      trigger('projectID');
-      trigger('moduleId');
-      trigger('profileId');
-      trigger('date');
-      trigger('upworkHours');
-      trigger('fixedHours');
-      trigger('offlineHours');
-      trigger('memo');
-      trigger('updatedClient');
+      trigger("projectID");
+      trigger("moduleId");
+      trigger("profileId");
+      trigger("date");
+      trigger("upworkHours");
+      trigger("fixedHours");
+      trigger("offlineHours");
+      trigger("memo");
+      trigger("updatedClient");
+      trigger("isSVNUpdated");
     }
   }, [leave, trigger]);
- 
+
   useEffect(() => {
-    if (project) {
-      projectModuleList(Number(project));
-      resetField('moduleId');
+    if (projectId && !projectModulesMap[projectId]) {
+      projectModuleList(Number(projectId));
+      resetField("moduleId");
     }
-  }, [project, resetField]);
- 
+  }, [projectId, resetField]);
+
   const timeToNumberConversion = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':').map(Number);
+    const [hours, minutes] = timeString.split(":").map(Number);
     if (hours === 12) {
-      let val = hours.toString().padStart(2, '0');
-      const timeDecimalString = `${hours === 12 ? 0 : val}.${minutes?.toString().padStart(2, '0')}`;
+      let val = hours.toString().padStart(2, "0");
+      const timeDecimalString = `${hours === 12 ? 0 : val}.${minutes
+        ?.toString()
+        .padStart(2, "0")}`;
       return Number(timeDecimalString);
     } else {
-      const timeDecimalString = `${hours.toString().padStart(2, '0')}.${minutes?.toString().padStart(2, '0')}`;
+      const timeDecimalString = `${hours.toString().padStart(2, "0")}.${minutes
+        ?.toString()
+        .padStart(2, "0")}`;
       return Number(timeDecimalString);
     }
   };
- 
+
   const convertTimeToForm = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':').map(Number);
+    const [hours, minutes] = timeString.split(":").map(Number);
     const timeDecimalString = dayjs().hour(hours).minute(minutes);
     return timeDecimalString;
   };
- 
+
   const handleSubmitStatus = async (data: any) => {
     let payload: any[] = [];
- 
+
     const inputData: any = {
       id: data ? data.id : 0,
       applicationUsersId: user.id,
       projectID: Number(data.projectID),
-      date: data.date,
+      date: selectedDate, // Use selectedDate instead of data.date
       moduleId: data.moduleId,
       profileId: Number(data.profileId),
       memo: data.memo,
       upworkHours: data.upworkHours
-        ? format(new Date(data.upworkHours), 'hh:mm')
-        : '00:00',
+        ? format(new Date(data.upworkHours), "hh:mm")
+        : "00:00",
       fixedHours: data.fixedHours
-        ? format(new Date(data.fixedHours), 'hh:mm')
-        : '00:00',
+        ? format(new Date(data.fixedHours), "hh:mm")
+        : "00:00",
       offlineHours: data.offlineHours
-        ? format(new Date(data.offlineHours), 'hh:mm')
-        : '00:00',
-      //isSVNUpdated: boolean,
+        ? format(new Date(data.offlineHours), "hh:mm")
+        : "00:00",
+      isSVNUpdated: data.isSVNUpdated,
       updatedClient: data.updatedClient,
       markAsLeave: data.markAsLeave,
     };
- 
+
     payload = [...individualStatusList, inputData];
- 
+
     if (addMore && data.id) {
-      (inputData.upworkHours = timeToNumberConversion(
+      inputData.upworkHours = timeToNumberConversion(
         inputData.upworkHours.toString()
-      )),
-        (inputData.fixedHours = timeToNumberConversion(
-          inputData.fixedHours.toString()
-        )),
-        (inputData.offlineHours = timeToNumberConversion(
-          inputData.offlineHours.toString()
-        )),
-        await updateEmployeeStatus(inputData);
-      //router.refresh();
-      //  handleClose();
+      );
+      inputData.fixedHours = timeToNumberConversion(
+        inputData.fixedHours.toString()
+      );
+      inputData.offlineHours = timeToNumberConversion(
+        inputData.offlineHours.toString()
+      );
+      await updateEmployeeStatus(inputData);
     }
- 
+
     if (!addMore && data.id) {
-      (inputData.upworkHours = timeToNumberConversion(
+      inputData.upworkHours = timeToNumberConversion(
         inputData.upworkHours.toString()
-      )),
-        (inputData.fixedHours = timeToNumberConversion(
-          inputData.fixedHours.toString()
-        )),
-        (inputData.offlineHours = timeToNumberConversion(
-          inputData.offlineHours.toString()
-        )),
-        await updateEmployeeStatus(inputData);
+      );
+      inputData.fixedHours = timeToNumberConversion(
+        inputData.fixedHours.toString()
+      );
+      inputData.offlineHours = timeToNumberConversion(
+        inputData.offlineHours.toString()
+      );
+      await updateEmployeeStatus(inputData);
       router.refresh();
       handleClose();
     }
- 
+
     if (!addMore && data.id == undefined) {
       payload = payload.map((status: any) => {
         return {
@@ -203,37 +223,43 @@ const AddEditStatusForm = ({
         };
       });
       payload = payload.filter((status: any) => status.id === undefined);
- 
+
       await addEmployeeStatus(payload);
       router.refresh();
       handleClose();
     } else {
       setIndividualStatusList(payload);
     }
- 
+
     clearFormFields();
   };
- 
+
   const clearFormFields = () => {
-    setValue('projectID', null);
-    setValue('moduleId', '');
-    setValue('profileId', null);
-    setValue('date', '');
-    setValue('upworkHours', null);
-    setValue('fixedHours', null);
-    setValue('offlineHours', null);
-    setValue('memo', '');
-    setValue('updatedClient', false);
-    setValue('markAsLeave', false);
-    setValue('id', undefined);
+    setValue("projectID", null);
+    setValue("moduleId", "");
+    setValue("profileId", null);
+    setValue("date", selectedDate); // Use selectedDate instead of current date
+    setValue("upworkHours", null);
+    setValue("fixedHours", null);
+    setValue("offlineHours", null);
+    setValue("memo", "");
+    setValue("isSVNUpdated", false);
+    setValue("updatedClient", false);
+    setValue("markAsLeave", false);
+    setValue("id", undefined);
   };
+
   const handleResetStatus = (data: any, value: any) => {
+    if (!projectModulesMap[data.projectID]) {
+      projectModuleList(data.projectID);
+    }
+
     const status = {
       ...data,
       upworkHours: convertTimeToForm(data.upworkHours.toString()),
       fixedHours: convertTimeToForm(data.fixedHours.toString()),
       offlineHours: convertTimeToForm(data.offlineHours.toString()),
-      date: format(new Date(data.date), 'yyyy-MM-dd'),
+      date: data.date,
     };
     reset(status);
     const updatedData: any = individualStatusList.filter(
@@ -241,7 +267,7 @@ const AddEditStatusForm = ({
     );
     setIndividualStatusList(updatedData);
   };
- 
+
   const handleRemoveStatus = async (value: any) => {
     if (selectedStatus) {
       try {
@@ -263,7 +289,68 @@ const AddEditStatusForm = ({
       setIndividualStatusList(updatedData);
     }
   };
- 
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow date change if there are no statuses in the list
+    if (individualStatusList.length === 0) {
+      setSelectedDate(e.target.value);
+      setValue("date", e.target.value);
+    }
+  };
+
+  const projectOptions = (sortedProjects || []).map((project: any) => ({
+    key: project.id,
+    text: project.name,
+    value: project.id,
+  }));
+
+  const getModuleOptions = (projectId: number) => {
+    const modules = projectModulesMap[projectId] || [];
+    return modules.map((module) => ({
+      key: module.id,
+      text: module.name,
+      value: module.id,
+    }));
+  };
+
+  const getProjectRestrictions = (project: any) => {
+    if (!project) return {};
+
+    const { isBilling } = project;
+
+    if (isBilling === 0) {
+      return { disable: [] };
+    }
+
+    if (isBilling === 1 || isBilling === 2) {
+      return { disable: ["offlineHours"] };
+    }
+
+    if (isBilling === 3) {
+      return { disable: ["upworkHours", "fixedHours"] };
+    }
+
+    return {};
+  };
+
+  const selectedProject = projectsListFromDb?.find(
+    (project: any) => project.id === Number(projectId)
+  );
+  const { disable } = getProjectRestrictions(selectedProject);
+
+  const today = new Date();
+  const lastFiveDays = Array.from({ length: 5 }, (_, index) =>
+    format(subDays(today, index), "yyyy-MM-dd")
+  );
+
+  const isEditable = profileDetails?.model?.userProfile?.canEditStatus;
+  const maxDate = format(today, "yyyy-MM-dd");
+  const minDate = isEditable ? undefined : lastFiveDays[4];
+  const maxDateForLastFiveDays = isEditable ? undefined : lastFiveDays[0];
+
+  // Date field should be disabled if there are existing statuses
+  const isDateDisabled = individualStatusList.length > 0;
+
   return (
     <>
       <Offcanvas
@@ -274,7 +361,7 @@ const AddEditStatusForm = ({
       >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
-            {selectedStatus ? 'Update Status' : 'Add Status'}
+            {selectedStatus ? "Update Status" : "Add Status"}
           </Offcanvas.Title>
           <button
             type="button"
@@ -299,18 +386,18 @@ const AddEditStatusForm = ({
                         }
                       </p>
                       <p className="mb-1">
-                        Module :{' '}
+                        Module :{" "}
                         <span className="mb-1 text-muted">
                           {item.moduleName
                             ? item.moduleName
-                            : projectModules?.filter(
+                            : projectModulesMap[item.projectID]?.filter(
                                 (module) => module.id === item.moduleId
                               )[0]?.name}
                         </span>
                       </p>
                       <div className="status-left">
                         <p className="mb-1">
-                          Profile :{' '}
+                          Profile :{" "}
                           <span className="mb-1 text-muted">
                             {item.profileName
                               ? item.profileName
@@ -320,33 +407,45 @@ const AddEditStatusForm = ({
                           </span>
                         </p>
                         <p className="mb-1">
-                          Date :{' '}
+                          Date :{" "}
                           <span className="mb-1 text-muted">{item.date}</span>
                         </p>
                       </div>
                       <div className="status-right">
                         <p className="mb-1">
-                          Upwork :{' '}
+                          Upwork :{" "}
                           <span className="mb-1 text-muted">
-                            {item.upworkHours} hrs
+                          {item.upworkHours} hrs
                           </span>
                         </p>
                         <p className="mb-1">
-                          Fixed :{' '}
+                          Fixed :{" "}
                           <span className="mb-1 text-muted">
                             {item.fixedHours} hrs
                           </span>
                         </p>
                         <p className="mb-1">
-                          Offline :{' '}
+                          Offline :{" "}
                           <span className="mb-1 text-muted">
                             {item.offlineHours} hrs
                           </span>
                         </p>
                       </div>
                       <p className="mb-1">
-                        Memo :{' '}
+                        Memo :{" "}
                         <span className="mb-1 text-muted">{item.memo}</span>
+                      </p>
+                      <p className="mb-1">
+                        Is DevOps Updated :{" "}
+                        <span className="mb-1 text-muted">
+                          {item.isSVNUpdated ? "true" : "false"}
+                        </span>
+                      </p>
+                      <p className="mb-1">
+                        Update DSR To Client :{" "}
+                        <span className="mb-1 text-muted">
+                          {item.updatedClient ? "true" : "false"}
+                        </span>
                       </p>
                     </div>
                     <div>
@@ -369,10 +468,7 @@ const AddEditStatusForm = ({
                 </div>
               ))}
           </div>
-          <form
-            className="form-row"
-            onSubmit={handleSubmit(handleSubmitStatus)}
-          >
+          <form className="form-row" onSubmit={handleSubmit(handleSubmitStatus)}>
             <div>
               <div className="offcanvas-body">
                 <div className="status-repeat-box row">
@@ -380,27 +476,33 @@ const AddEditStatusForm = ({
                     <input
                       id="markAsLeave"
                       type="checkbox"
-                      {...register('markAsLeave')}
-                    />{' '}
+                      {...register("markAsLeave")}
+                    />{" "}
                     Mark as Leave
                   </label>
                   <div className="col-md-6 form-group">
                     <label htmlFor="projectID">Project</label>
-                    <select
-                      id="projectID"
-                      className="form-control"
-                      {...register('projectID', {
-                        required: leave ? false : 'Project is required',
-                      })}
-                      disabled={leave}
-                    >
-                      <option value="">Select Project</option>
-                      {projectsListFromDb?.map((item: any) => (
-                        <option key={item.id} value={item.id}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
+                    <span className="astrisk">*</span>
+                    <Controller
+                      name="projectID"
+                      control={control}
+                      rules={{
+                        required: leave ? undefined : "Project is required",
+                      }}
+                      render={({ field }) => (
+                        <Dropdown
+                          id="projectID"
+                          placeholder="Select Project"
+                          fluid
+                          selection
+                          search
+                          options={projectOptions}
+                          disabled={leave}
+                          value={field.value || ""}
+                          onChange={(e, { value }) => field.onChange(value)}
+                        />
+                      )}
+                    />
                     {errors.projectID && (
                       <div className="validation_error">
                         <span role="alert">{errors.projectID.message}</span>
@@ -409,21 +511,27 @@ const AddEditStatusForm = ({
                   </div>
                   <div className="col-md-6 form-group">
                     <label htmlFor="moduleId">Module</label>
-                    <select
-                      id="moduleId"
-                      className="form-control"
-                      {...register('moduleId', {
-                        required: leave ? false : 'Module is required',
-                      })}
-                      disabled={leave}
-                    >
-                      <option value="">Select Module</option>
-                      {projectModules?.map((item: ProjectModuleListModel) => (
-                        <option key={item.id} value={item.id}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
+                    <span className="astrisk">*</span>
+                    <Controller
+                      name="moduleId"
+                      control={control}
+                      rules={{
+                        required: leave ? false : "Module is required",
+                      }}
+                      render={({ field }) => (
+                        <Dropdown
+                          id="moduleId"
+                          placeholder="Select Module"
+                          fluid
+                          selection
+                          search
+                          options={getModuleOptions(Number(projectId))}
+                          disabled={leave}
+                          value={field.value || ""}
+                          onChange={(e, { value }) => field.onChange(value)}
+                        />
+                      )}
+                    />
                     {errors.moduleId && (
                       <div className="validation_error">
                         <span role="alert">{errors.moduleId.message}</span>
@@ -432,11 +540,12 @@ const AddEditStatusForm = ({
                   </div>
                   <div className="col-md-6 form-group">
                     <label htmlFor="profileId">Profile</label>
+                    <span className="astrisk">*</span>
                     <select
                       id="profileId"
                       className="form-control"
-                      {...register('profileId', {
-                        required: leave ? false : 'Profile Name is required',
+                      {...register("profileId", {
+                        required: leave ? false : "Profile Name is required",
                       })}
                       disabled={leave}
                     >
@@ -457,15 +566,17 @@ const AddEditStatusForm = ({
                   </div>
                   <div className="col-md-6 form-group">
                     <label htmlFor="date">Date</label>
+                    <span className="astrisk">*</span>
                     <div className="input-group">
                       <input
                         type="date"
                         id="date"
-                        defaultValue={format(new Date(), 'yyyy-MM-dd')}
                         className="form-control"
-                        {...register('date', {
-                          required: 'Date is required',
-                        })}
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        disabled={isDateDisabled || leave}
+                        min={minDate}
+                        max={isEditable ? maxDate : maxDateForLastFiveDays}
                       />
                     </div>
                     {errors.date && (
@@ -481,27 +592,20 @@ const AddEditStatusForm = ({
                         <Controller
                           name="upworkHours"
                           control={control}
-                          // rules={{ required:leave?false: 'Upwork Hours is required' }}
                           render={({ field }) => (
                             <MobileTimePicker
-                              disabled={leave}
+                              disabled={disable?.includes("upworkHours") || leave}
                               value={field.value || null}
                               onChange={field.onChange}
                               className="hideBtn"
                               ampm={true}
-                              views={['hours', 'minutes']}
-                              format={'HH:mm'}
+                              views={["hours", "minutes"]}
+                              format={"HH:mm"}
                             />
                           )}
                         />
                       </LocalizationProvider>
                     </div>
- 
-                    {/* {errors.upworkHours && (
-                      <div className='validation_error'>
-                        <span role='alert'>{errors.upworkHours.message}</span>
-                      </div>
-                    )} */}
                   </div>
                   <div className="col-md-4 form-group mb-0">
                     <label htmlFor="fixedHours">Fixed Billing Hours</label>
@@ -512,12 +616,12 @@ const AddEditStatusForm = ({
                           control={control}
                           render={({ field }) => (
                             <MobileTimePicker
-                              disabled={leave}
+                              disabled={disable?.includes("fixedHours") || leave}
                               value={field.value || null}
                               onChange={field.onChange}
                               ampm={true}
-                              views={['hours', 'minutes']}
-                              format={'HH:mm'}
+                              views={["hours", "minutes"]}
+                              format={"HH:mm"}
                             />
                           )}
                         />
@@ -533,12 +637,12 @@ const AddEditStatusForm = ({
                           control={control}
                           render={({ field }) => (
                             <MobileTimePicker
-                              disabled={leave}
+                              disabled={disable?.includes("offlineHours") || leave}
                               value={field.value || null}
                               onChange={field.onChange}
                               ampm={true}
-                              views={['hours', 'minutes']}
-                              format={'HH:mm'}
+                              views={["hours", "minutes"]}
+                              format={"HH:mm"}
                             />
                           )}
                         />
@@ -547,15 +651,15 @@ const AddEditStatusForm = ({
                   </div>
                   <div
                     className="col-md-12 form-group"
-                    style={{ marginBottom: '5px' }}
+                    style={{ marginBottom: "5px" }}
                   >
                     <label htmlFor="memo">Memo</label>
                     <textarea
                       id="memo"
                       className="form-control"
-                      style={{ height: '61px' }}
-                      {...register('memo', {
-                        required: leave ? false : 'Memo is required',
+                      style={{ height: "61px" }}
+                      {...register("memo", {
+                        required: leave ? false : "Memo is required",
                       })}
                       disabled={leave}
                     ></textarea>
@@ -571,20 +675,28 @@ const AddEditStatusForm = ({
                       <input
                         className="form-check-input"
                         type="checkbox"
-                        id="updatedClient"
-                        {...register('updatedClient')}
+                        id="isSVNUpdated"
+                        {...register("isSVNUpdated")}
                         disabled={leave}
                       />
-                      <label
-                        className="form-check-label"
-                        htmlFor="updatedClient"
-                      >
+                      <label className="form-check-label" htmlFor="isSVNUpdated">
+                        Is DevOps Updated
+                      </label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="updatedClient"
+                        {...register("updatedClient")}
+                        disabled={leave}
+                      />
+                      <label className="form-check-label" htmlFor="updatedClient">
                         Update DSR To Client
                       </label>
                     </div>
                   </div>
                 </div>
-                {/* {selectedStatus === undefined && ( */}
                 <div className="text-right">
                   <input
                     type="submit"
@@ -594,7 +706,6 @@ const AddEditStatusForm = ({
                   />
                   <i className="ri-add-line align-middle"></i>
                 </div>
-                {/* )} */}
               </div>
               <div className="offcanvas-footer text-right">
                 <input
@@ -611,5 +722,5 @@ const AddEditStatusForm = ({
     </>
   );
 };
- 
+
 export default AddEditStatusForm;

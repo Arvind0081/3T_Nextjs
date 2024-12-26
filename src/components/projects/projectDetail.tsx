@@ -73,11 +73,6 @@ const ProjectDetail=({projectId,projectModels,projectStatusData,hiringType}:any)
 
     };
 
-   
-
-   
- 
-
     return(
         <div className="row">
         <div className="col-sm-6">
@@ -87,11 +82,11 @@ const ProjectDetail=({projectId,projectModels,projectStatusData,hiringType}:any)
                     <div className="projectdetail_info leftbox">
                        <div className="project-detail-maincard">
                           <div className="align-items-start d-flex gap-1"><span
-                             className="fw-semibold text-muted nowrap">Assigned to :</span>  {projectModels.assignedTo}
+                             className="fw-semibold text-muted nowrap">Assigned to :</span>  {projectModels?.assignedTo}
                              <EditAssignedTeam
                                projectName={projectModels?.name}
-                               clientName={projectModels.clientName}
-                               departmentId={projectModels.projectDepartmentIds}
+                               clientName={projectModels?.clientName}
+                               departmentId={projectModels?.projectDepartmentIds}
                                projectAssignedDetails={projectAssignedDetails}
                                projectId={projectId}
                              /></div>

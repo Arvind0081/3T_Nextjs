@@ -20,14 +20,14 @@ const Paginator=({totalRecords,data}:any)=>{
     totalPagesCount = totalPagesCount % 1 === 0 ? totalPagesCount : Math.ceil(totalPagesCount);
  
     if(totalRecords === 0 ){
-     router.push(`${url}/?page=${data.pageNumber>1?data.pageNumber-1:1}&size=${data.pageSize}&startDate=${data.fromDate}&endDate=${data.toDate}`);
+     router.push(`${url}/?page=${data.pageNumber>1?data.pageNumber-1:1}&size=${data.pageSize}&fromDate=${data.fromDate}&toDate=${data.toDate}`);
     }
     return totalPagesCount;
 };
 
 const handlePaginationChange = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,{ activePage }:any) =>{
  
-   return router.push(`${url}/?page=${activePage}&size=${data.pageSize}&startDate=${data.fromDate}&endDate=${data.toDate}`);
+   return router.push(`${url}/?page=${activePage}&size=${data.pageSize}&fromDate=${data.fromDate}&toDate=${data.toDate}`);
 
 };  
 

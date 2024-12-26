@@ -3,13 +3,11 @@ import React from 'react';
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
 import * as XLSX from 'xlsx';
-import { attendanceReports } from '@/utils/publicApi';
+import { hrMonthlyReports } from '@/utils/publicApi';
 import { useSearchParams } from 'next/navigation';
-import {  reportAttendenceFormValue } from '@/utils/types';
+import { MonthlyReportsByHr } from '@/utils/types';
 
-
-const ExportExcel = ({param}:any) => {
-
+const ExportExcel = ({ param }: any) => {
   const searchParams = useSearchParams();
   let dateStr = searchParams.get('month');
 
@@ -23,62 +21,44 @@ const ExportExcel = ({param}:any) => {
 
   const handleExportToExcel = async () => {
     try {
-      const attendence: reportAttendenceFormValue = {
-        departmentId: param.departmentId,
-        month: param.month,
-        year: param.year,
-        pageNo: param.pageNo,
-        pageSize: param.pageSize,
-        searchValue: param.searchValue,
-        teamAdminId: param.teamAdminId,
-        date:param.date
+      const attendance: MonthlyReportsByHr = {
+        Month: Number(month),
+        Year: Number(year),
+        DepartmentId: param.DepartmentId,
+        TeamAdminId: param.TeamAdminId,
+        PageNumber: 0, // For full export
+        PageSize: 0, // For full export
+        SearchValue: '',
+        date: ''
       };
 
-     
-      const response = await attendanceReports(attendence);
+      // Fetch data from the API
+      const response = await hrMonthlyReports(attendance);
 
-      // Check for successful response
-      if (response.results != null) {
-        const daysInMonth = new Date(Number(year), Number(month), 0).getDate();
+      if (response?.results?.length > 0) {
+        // Extract relevant fields for Excel
+        const data = response.results.map((employee: any) => ({
+          Name: employee.employeeName,
+          Present: employee.present,
+          Absent: employee.absent,
+          Leaves: employee.leaves,
+          "Half Days": employee.halfDay,
+        }));
 
-        // Prepare header row
-        const headers = [
-          'Employee Name',
-          'Employee Number',
-          ...Array.from({ length: daysInMonth }, (_, i) => `Day ${i + 1}`)
-        ];
+        // Convert JSON to worksheet
+        const worksheet = XLSX.utils.json_to_sheet(data);
 
-        // Transform the data
-        const transformedData = response.results.map((employee: any) => {
-          // Create an array for the row data
-          const rowData = Array(daysInMonth).fill(''); // Initialize with empty strings for each day
-
-          // Fill in attendance data
-          employee.attendanceReports.forEach((report: any) => {
-            const dayIndex = report.day - 1; // Convert day to zero-based index
-            if (report.attendanceStatus) {
-              rowData[dayIndex] = `${report.attendanceStatus} - ${report.dayHours}`;
-            } else {
-              rowData[dayIndex] = `${report.dayHours}`;
-            }
-          });
-
-          return [employee.employeeName, employee.employeeNumber, ...rowData];
-        });
-
-        // Add header to the data
-        const finalData = [headers, ...transformedData];
-        const worksheet = XLSX.utils.aoa_to_sheet(finalData); // Use aoa_to_sheet for array of arrays
+        // Create a workbook and append the worksheet
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-        XLSX.writeFile(workbook, 'DataSheet.xlsx');
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Monthly Report');
 
-        // Display success message
-        toastr.success('File downloaded successfully', '', {
-          timeOut: 1000,
-        });
+        // Trigger file download
+        XLSX.writeFile(workbook, 'Monthly_Report.xlsx');
+
+        // Success notification
+        toastr.success('File downloaded successfully', '', { timeOut: 1000 });
       } else {
-        toastr.error('Failed to download file', '', { timeOut: 1000 });
+        toastr.error('No data available to export', '', { timeOut: 1000 });
       }
     } catch (error) {
       console.error('Error exporting to Excel:', error);

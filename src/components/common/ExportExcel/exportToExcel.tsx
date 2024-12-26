@@ -10,7 +10,7 @@ const ExportExcel = () => {
         try {
        
             // Fetch data from API
-            const response = await apiService.get('/Client/GetAllClientsDetail', {
+            const response = await apiService.get('/Client/GetAllClients', {
                 responseType: 'blob'
             });
 

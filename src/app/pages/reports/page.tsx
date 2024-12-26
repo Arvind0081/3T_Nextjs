@@ -24,6 +24,7 @@ import {
   monthlyHoursReport,
   managerList,
   departments,
+  hrMonthlyReports,
 } from '@/utils/publicApi';
 import {
   ProjectsReport,
@@ -39,6 +40,8 @@ import {
   MonthlyReportByManagerReq,
   ClientReqParam,
   DepartmentModel,
+  AttendenceFormValue,
+  MonthlyReportsByHr,
 } from '@/utils/types';
 import getUser from '@/utils/getUserServerSide';
 import SelectTabs from '@/components/reports/selectTabs';
@@ -51,14 +54,21 @@ import PaymentPending from '@/components/reports/paymentPending';
 import ClientReport from '@/components/reports/clientReport';
 import WorkInHand from '@/components/reports/workInHand';
 import FullReport from '@/components/reports/fullReport';
+import MonthlyReports from '@/components/hrReports/monthlyReports';
 
 const Reports = async ({ searchParams }: any) => {
   let user: any = getUser();
   let today = new Date();
+  
   let startDateFrom = format(
     new Date(today.setDate(today.getDate() - 6)),
     'yyyy-MM-dd'
   );
+
+  
+
+
+  
   let endDateTo = format(new Date(), 'yyyy-MM-dd');
   let getManagerList: any;
   let departmentData: DepartmentModel[] = [];
@@ -103,6 +113,7 @@ const Reports = async ({ searchParams }: any) => {
   let projectsHiringFilters: any;
   let projectStatusFilter: any;
   let monthlyReportRes: any;
+  let monthlyReports: any;
   let reportsAttendencePayload: reportAttendenceFormValue = {
     departmentId: 0,
     month: 0,
@@ -113,6 +124,21 @@ const Reports = async ({ searchParams }: any) => {
     teamAdminId: '',
     date: '',
   };
+
+  let monthlyReportsPayload: MonthlyReportsByHr = {
+    Month: 0,
+    Year: 0,
+    DepartmentId: 0,
+    TeamAdminId: '',
+    PageNumber: 0,
+    PageSize: 0,
+    SearchValue: '',
+    date: ''
+  };
+
+
+
+
 
   const pageNumber = searchParams?.pageNumber ?? 1;
   const pageSize = searchParams?.pageSize ?? 10;
@@ -126,6 +152,9 @@ const Reports = async ({ searchParams }: any) => {
     dateStr = `${year}-${month}`;
   }
   let [year, month] = dateStr.split('-');
+
+
+  
 
   try {
     if (user.role === 'HOD') {
@@ -170,7 +199,26 @@ const Reports = async ({ searchParams }: any) => {
       attendanceReportList = await attendanceReports(reportsAttendencePayload);
     }
 
-   
+    if (user.role === 'HR') {
+      reportsAttendencePayload = {
+        departmentId:Number(departmentID) ,
+        month: Number(month),
+        year: Number(year),
+        pageNo: Number(pageNumber),
+        pageSize: Number(pageSize),
+        searchValue: searchQuery,
+        teamAdminId:
+          teamAdminId === 'null' ||
+          teamAdminId === '' ||
+          teamAdminId === undefined ||
+          teamAdminId === 'undefined'
+            ? ''
+            : teamAdminId,
+        date: dateStr,
+      };
+
+      attendanceReportList = await attendanceReports(reportsAttendencePayload);
+    }
 
     
     
@@ -213,8 +261,8 @@ const Reports = async ({ searchParams }: any) => {
     teamLeadId: '',
     month: Number(month),
     year: Number(year),
-    departmentId: Number(user.departmentId),
-    teamAdminId: user?.id,
+    departmentId:  (user.role === 'Admin' || user.role==='HR') ? Number(departmentID) : Number(user?.departmentId),
+    teamAdminId: (user.role === 'Admin' || user.role==='HR')? (teamAdminId === 'null' || teamAdminId === '' || teamAdminId === undefined || teamAdminId === 'undefined')? '': teamAdminId: user?.id,
     empID: '',
   };
   try {
@@ -245,7 +293,7 @@ const Reports = async ({ searchParams }: any) => {
   const empReportReq: EmployeesAttendanceReport = {
     PageNumber: pageNumber,
     PageSize: pageSize,
-    DepartmentId: (user.role === 'Admin' || user.role === 'HR') ? Number(departmentID)  : Number(user?.departmentId) ,
+    DepartmentId: (user.role === 'Admin' || user.role === 'HR') ? Number(departmentID) : Number(user?.departmentId) ,
     SearchValue: searchQuery ?? '',
     TeamAdminId:
       teamAdminId === 'null' ||
@@ -260,6 +308,7 @@ const Reports = async ({ searchParams }: any) => {
   try {
     empsReport = await employeesAttendanceReport(empReportReq);
   } catch (error) {}
+
 
   const paymentPendingReportReq: PaymentPendingReport = {
     teamAdminId:
@@ -352,8 +401,8 @@ const Reports = async ({ searchParams }: any) => {
   } catch (error) {}
 
   let reqParams: SettingEmpReqParams = {
-    departmentID: user.departmentId,
-    teamAdminId: teamAdminId ?? '',
+    departmentID: user.role === 'Admin' ? Number(departmentID) :  user.departmentId,
+    teamAdminId: (teamAdminId === 'null' || teamAdminId === '' || teamAdminId === undefined || teamAdminId === 'undefined')? '': teamAdminId,
   };
   try {
     employeeList = await settingsEmployeeList(reqParams);
@@ -374,6 +423,7 @@ const Reports = async ({ searchParams }: any) => {
   try {
     bioMetricAttendance = await scrumTeamBioMetric(payLoad);
   } catch (error) {}
+
 
   try {
     hiringStatus = await projectsHiring();
@@ -402,6 +452,33 @@ const Reports = async ({ searchParams }: any) => {
   try {
     departmentData = await departments();
   } catch (error) {}
+
+
+
+
+
+  const attendence: MonthlyReportsByHr = {
+    Month: Number(month),
+    Year: Number(year),
+    DepartmentId: Number(departmentID),
+    PageNumber: pageNumber,
+    PageSize: pageSize,
+    SearchValue: searchQuery,
+    TeamAdminId: teamAdminId === 'null' ||
+      teamAdminId === '' ||
+      teamAdminId === undefined ||
+      teamAdminId === 'undefined'
+      ? ''
+      : teamAdminId,
+    date: dateStr
+  };
+
+
+try {
+  monthlyReports = await hrMonthlyReports(attendence);
+ 
+} catch (error) {}
+
 
   return (
     <>
@@ -453,6 +530,14 @@ const Reports = async ({ searchParams }: any) => {
                             <EmployeesReport
                               employeesReport={empsReport}
                               param={empReportReq}
+                            />
+                          )}
+
+                        {activeTab == 'Monthly Report' && (
+                            <MonthlyReports
+                            monthlyReports={monthlyReports}
+                            param={attendence}
+                         
                             />
                           )}
 

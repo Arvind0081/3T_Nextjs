@@ -3,13 +3,12 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import React from 'react';
 import { Pagination } from 'semantic-ui-react';
 
-const AttendanceReportPagination = ({ totalRecords, data }: any) => {
-
+const MonthlyReportPagination = ({ totalRecords, data }: any) => {
   //Initialize hook
   const router = useRouter();
   const url = usePathname();
   const searchParams = useSearchParams();
-  let totalPagesCountCheck = totalRecords / data?.pageSize;
+  let totalPagesCountCheck = totalRecords / data?.PageSize;
 
   const state = {
     showEllipsis: true,
@@ -19,16 +18,15 @@ const AttendanceReportPagination = ({ totalRecords, data }: any) => {
 
   // Declare Params
   const activeTab = searchParams.get('tab') || '1';
- 
+
   const totalPages = () => {
-    let totalPagesCount = totalRecords / data?.pageSize;
+    let totalPagesCount = totalRecords / data?.PageSize;
     totalPagesCount =
       totalPagesCount % 1 === 0 ? totalPagesCount : Math.ceil(totalPagesCount);
 
-    if (data?.pageNo > totalPagesCount) {
-     
+    if (data?.PageNumber > totalPagesCount) {
       router.replace(
-        `${url}/?tab=${activeTab}&pageNumber=${data?.pageNo > totalPagesCountCheck ? data.pageNo - 1 : data?.pageNo}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}&teamAdminId=${data.teamAdminId}&departmentId=${data.departmentId}`
+        `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? data.PageNumber - 1 : data?.PageNumber}&pageSize=${data.PageSize}&search=${data.SearchValue}&teamAdminId=${data.TeamAdminId}&departmentId=${data.DepartmentId}`
       );
     }
     return totalPagesCount;
@@ -38,21 +36,20 @@ const AttendanceReportPagination = ({ totalRecords, data }: any) => {
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     { activePage }: any
   ) => {
-    
-    if (data?.pageNo > totalPagesCountCheck) {
+    if (data?.PageNumber > totalPagesCountCheck) {
       router.replace(
-        `${url}/?tab=${activeTab}&pageNumber=${data?.pageNo > totalPagesCountCheck ? 1 : data?.pageNo}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}&teamAdminId=${data.teamAdminId}&departmentId=${data.departmentId}`
+        `${url}/?tab=${activeTab}&pageNumber=${data?.PageNumber > totalPagesCountCheck ? 1 : data?.PageNumber}&pageSize=${data.PageSize}&search=${data.SearchValue}&teamAdminId=${data.TeamAdminId}&departmentId=${data.DepartmentId}`
       );
     } else {
       return router.push(
-        `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.pageSize}&month=${data.date}&search=${data.searchValue}&teamAdminId=${data.teamAdminId}&departmentId=${data.departmentId}`
+        `${url}/?tab=${activeTab}&pageNumber=${activePage}&pageSize=${data.PageSize}&search=${data.SearchValue}&teamAdminId=${data.TeamAdminId}&departmentId=${data.DepartmentId}`
       );
     }
   };
 
   return (
     <Pagination
-      activePage={data?.pageNo}
+      activePage={data?.PageNumber}
       onPageChange={handlePaginationChange}
       size='mini'
       totalPages={totalPages()}
@@ -65,4 +62,4 @@ const AttendanceReportPagination = ({ totalRecords, data }: any) => {
   );
 };
 
-export default AttendanceReportPagination;
+export default MonthlyReportPagination;

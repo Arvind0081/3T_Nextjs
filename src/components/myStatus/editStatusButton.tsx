@@ -6,6 +6,7 @@ const EditStatus = ({
   item,
   projectsListFromDb,
   upwokProfileListFromDb,
+  profileDetails,
 }: any) => {
   const [show, setShow] = useState(false);
   const [selectedStatus, setSelectedStatus] =
@@ -38,6 +39,7 @@ const EditStatus = ({
         upwokProfileListFromDb={upwokProfileListFromDb}
         selectedStatus={selectedStatus}
         setSelectedStatus={setSelectedStatus}
+        profileDetails={profileDetails}
       />
     </div>
   );

@@ -5,7 +5,7 @@ import getUser from '@/utils/getUserServerSide';
 import { UpworkProfile, allDepartments, ProfileList, departments } from '@/utils/publicApi';
 import CreateProfile from '@/components/upwork/createProfile';
 import Footer from '@/components/common/Footer/footer';
-// import ProfileTable from '@/components/upwork/profileTable';
+ import ProfileTable from '@/components/upwork/profileTable';
 
 const upworkProfile = async ({ searchParams }: any) => {
 
@@ -17,6 +17,7 @@ const upworkProfile = async ({ searchParams }: any) => {
   } catch (error) {}
 
   const getDepartment: DepartmentModel[] = await allDepartments();
+
   let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
 
   let pageSize = searchParams?.size ?? 10;
@@ -37,6 +38,7 @@ const upworkProfile = async ({ searchParams }: any) => {
     teamAdminId: teamAdminId,
     profileType: 0,
   };
+ 
   const upworkprofilerecords = await UpworkProfile(reqParams);
 
   const totalCount = upworkprofilerecords?.model?.totalCount || 0;

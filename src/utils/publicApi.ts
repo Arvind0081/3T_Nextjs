@@ -13,7 +13,7 @@ import {
   settingsEmpByDepId,
   updateEmp,
   updatePayment,
-} from '@/components/common/constant';
+} from "@/components/common/constant";
 import {
   BillingTypeModel,
   ClientModel,
@@ -106,16 +106,18 @@ import {
   ProjectBillingDetailsModel,
   ProjectEmployeeDetailsModel,
   ClientReqParam,
-} from '@/utils/types';
+  MonthlyReportsByHr,
+  ProjectListParam,
+} from "@/utils/types";
 
-import apiService from '@/services/apiService';
+import apiService from "@/services/apiService";
 // import { cookies } from'next/headers';
 import {
   DesignationModel,
   DepartmentModel,
   StatusModel,
   GetAllProjectsParamsModel,
-} from '@/utils/types';
+} from "@/utils/types";
 
 export const designations = async (id: number): Promise<DesignationModel[]> => {
   const response = await apiService.get(
@@ -125,27 +127,26 @@ export const designations = async (id: number): Promise<DesignationModel[]> => {
 };
 
 export const departments = async (): Promise<DepartmentModel[]> => {
-  const response = await apiService.get('/Employee/GetDepartmentsList');
+  const response = await apiService.get("/Employee/GetDepartmentsList");
 
   if (response?.model && Array.isArray(response.model)) {
     return response.model.filter(
-      (department:any) => department.name !== 'Admin'
+      (department: any) => department.name !== "Admin"
     );
   }
 
   return [];
 };
 
-
 export const projectDetail = async (): Promise<ProjectModel[]> => {
   const response = await apiService.get(
-    '/EmployeeStatus/GetProjectsListByDepartment'
+    "/EmployeeStatus/ProjectsListByDepartmentId"
   );
   return response?.model;
 };
 
 export const technologyList = async (): Promise<Technology[]> => {
-  const response = await apiService.get('/UserProfile/GetTechnologyList');
+  const response = await apiService.get("/UserProfile/GetTechnologyList");
   return response?.model;
 };
 
@@ -157,31 +158,31 @@ export const managerList = async (id: number): Promise<Managers[]> => {
 };
 
 export const projectsStatus = async (): Promise<StatusModel[]> => {
-  const response = await apiService.get('/Project/GeProjectStatusFilter');
+  const response = await apiService.get("/Project/GeProjectStatusFilter");
   return response.model;
 };
 export const individualProjectStatus = async (): Promise<StatusModel[]> => {
-  const response = await apiService.get('/Project/GetProjectStatusList');
+  const response = await apiService.get("/Project/GetProjectStatusList");
   return response.model;
 };
 
 export const projectsHiring = async (): Promise<HiringModel[]> => {
-  const response = await apiService.get('/Project/GetHiringStatusList');
+  const response = await apiService.get("/Project/GetHiringStatusList");
   return response.model;
 };
 export const projectsHiringFilter = async (): Promise<HiringModel[]> => {
-  const response = await apiService.get('/Project/GetHiringTypeFilter');
+  const response = await apiService.get("/Project/GetHiringTypeFilter");
   return response.model;
 };
 
 export const projectsBillingType = async (): Promise<BillingTypeModel[]> => {
-  const response = await apiService.get('/Project/GetBillingTypeList');
+  const response = await apiService.get("/Project/GetBillingTypeList");
   return response.model;
 };
 export const projectsBillingTypeFilter = async (): Promise<
   BillingTypeModel[]
 > => {
-  const response = await apiService.get('/Project/GetBilingTypeFilter');
+  const response = await apiService.get("/Project/GetBilingTypeFilter");
   return response.model;
 };
 
@@ -189,7 +190,7 @@ export const projectsClientList = async (
   id: number
 ): Promise<ClientModel[]> => {
   const response = await apiService.get(
-    `/Client/GetAllClientsDetail?DepartmentId=${id}`
+    `/Client/GetAllClients?DepartmentId=${id}`
   );
   return response?.model?.results;
 };
@@ -201,7 +202,7 @@ export const projects = async (
 > => {
   try {
     const response = await apiService.get(
-      `/Project/GetAllProjects?ProjectStatus=${params.projectStatus}&StartDate=${params.startDate}&EndDate=${params.endDate}&BilingType=${params.bilingType}&HiringStatus=${params.hiringStatus}&DepartmentId=${params.departmentId}&PageNumber=${params.pageNumber}&PageSize=${params.pageSize}&SearchValue=${params.searchValue}&SortColumn=${params.sortColumn}&SortOrder=${params.sortOrder}&TeamAdminId=${params.teamAdminId}`
+      `/Project/GetAllProjects?ProjectStatus=${params.projectStatus}&StartDate=${params.startDate}&EndDate=${params.endDate}&BilingType=${params.bilingType}&HiringStatus=${params.hiringStatus}&DepartmentId=${params.departmentId}&PageNumber=${params.pageNumber}&PageSize=${params.pageSize}&SearchValue=${params.searchValue}&SortColumn=${params.sortColumn}&SortOrder=${params.sortOrder}&EmployeeId=${params.teamAdminId}`
     );
 
     return {
@@ -225,7 +226,7 @@ export const getEmployeeStatus = async () => {
     const response = await apiService.get(`${getEmpStatus}`);
     return response;
   } catch (error) {
-    console.error('Error fetching Employee Status:', error);
+    console.error("Error fetching Employee Status:", error);
 
     return null;
   }
@@ -248,7 +249,7 @@ export const getEmployeesById = async (
         employeeModels: response.model.employeeModels,
       };
     } else {
-      console.error('Invalid response structure:', response);
+      console.error("Invalid response structure:", response);
       return null;
     }
   } catch (error) {
@@ -303,12 +304,12 @@ export const projectAssignedToEmployee = async (
 };
 
 export const projectModulesStatus = async (): Promise<ModuleStatusModel[]> => {
-  const response = await apiService.get('/ProjectModule/GetModuleStatusList');
+  const response = await apiService.get("/ProjectModule/GetModuleStatusList");
   return response.model;
 };
 
 export const projectPaymentStatus = async (): Promise<ModuleStatusModel[]> => {
-  const response = await apiService.get('/ProjectModule/GetPaymentStatusList');
+  const response = await apiService.get("/ProjectModule/GetPaymentStatusList");
   return response.model;
 };
 
@@ -331,7 +332,7 @@ export const employeeStatus = async () => {
     const response = await apiService.get(`${getEmpStatusList}`);
     return response;
   } catch (error) {
-    console.error('Error fetching Employee Status:', error);
+    console.error("Error fetching Employee Status:", error);
 
     return null;
   }
@@ -341,7 +342,6 @@ export const employeesById = async (
   reqParams: EmpReqParams
 ): Promise<EmployeeResponse | null> => {
   try {
-   
     const response = await apiService.get(
       `/Employee/GetAllEmployees?DepartmentId=${reqParams.departmentID}&PageNumber=${reqParams.pagenumber}&Designation=${reqParams.designation}&PageSize=${reqParams.pageSize}&SearchValue=${reqParams.searchValue}&isActive=${reqParams.isActive}&TeamAdminId=${reqParams.TeamAdminId}&SortColumn=${reqParams.SortColumn}&SortOrder=${reqParams.SortOrder}`
     );
@@ -355,7 +355,7 @@ export const employeesById = async (
         employeeModels: response.model.results,
       };
     } else {
-      console.error('Invalid response structure:', response);
+      console.error("Invalid response structure:", response);
       return null;
     }
   } catch (error) {
@@ -372,7 +372,7 @@ export const updateEmployee = async (data: UpdateEmpReq) => {
     );
     return response;
   } catch (error) {
-    console.error('Error fetching Employee Status:', error);
+    console.error("Error fetching Employee Status:", error);
 
     return null;
   }
@@ -395,7 +395,7 @@ export const clientsById = async (
         clientModels: response.model.results,
       };
     } else {
-      console.error('Invalid response structure:', response);
+      console.error("Invalid response structure:", response);
       return null;
     }
   } catch (error) {
@@ -421,7 +421,7 @@ export const UpworkProfile = async (
         employeeModels: response.model.results,
       };
     } else {
-      console.error('Invalid response structure:', response);
+      console.error("Invalid response structure:", response);
       return null;
     }
   } catch (error) {
@@ -438,7 +438,7 @@ export const addUpworkPrf = async (upworkProfileParams: UpworkBodyParams) => {
     );
     return response;
   } catch (error) {
-    console.error('Error fetching Employee Status:', error);
+    console.error("Error fetching Employee Status:", error);
     return null;
   }
 };
@@ -454,7 +454,7 @@ export const EmpProfileDetailsById = async (
     if (response && response.model && response.model) {
       return response.model;
     } else {
-      console.error('Invalid response structure:', response);
+      console.error("Invalid response structure:", response);
       return response;
     }
   } catch (error) {
@@ -468,7 +468,7 @@ export const userProfileDetails = async (): Promise<MyProfileResponse> => {
     const response = await apiService.get(`${UserProfileDetail}`);
     return response;
   } catch (error) {
-    console.error('Error fetching profile Details:', error);
+    console.error("Error fetching profile Details:", error);
 
     throw error;
   }
@@ -482,7 +482,7 @@ export const UpdateEmployeeByStatus = async (data: UpdateEmployeeReq) => {
     );
     return response.model?.results;
   } catch (error) {
-    console.error('Error fetching Employee Status:', error);
+    console.error("Error fetching Employee Status:", error);
 
     return null;
   }
@@ -496,7 +496,7 @@ export const UpdateEmployeeByManager = async (data: UpdateManagerReq) => {
     );
     return response;
   } catch (error) {
-    console.error('Error fetching Employee Status:', error);
+    console.error("Error fetching Employee Status:", error);
 
     return null;
   }
@@ -513,7 +513,7 @@ export const individualProjectModule = async (
 };
 
 export const ProfileList = async (): Promise<any> => {
-  const response = await apiService.get('/UpworkProfile/GetProfileTypeList');
+  const response = await apiService.get("/UpworkProfile/GetProfileTypes");
   return response?.model;
 };
 export const teamLeadAndBDM = async (
@@ -521,7 +521,7 @@ export const teamLeadAndBDM = async (
 ): Promise<any[]> => {
   const queryString = departmentId
     .map((id: number) => `departmentId=${id}`)
-    .join('&');
+    .join("&");
   const response = await apiService.get(
     `/Employee/GetProjectManagerOrTeamLeadOrBDMListByDepartments?${queryString}`
   );
@@ -530,7 +530,7 @@ export const teamLeadAndBDM = async (
 
 export const updateProjectMembers = async (data: any): Promise<any> => {
   const response = await apiService.post(
-    '/Setting/AddTeamMembersInProject',
+    "/Setting/AddTeamMembersInProject",
     data
   );
   return response?.model;
@@ -544,7 +544,7 @@ export const displayProjectDocument = async (id: number): Promise<any> => {
 };
 
 export const uploadProjectDocument = async (data: any): Promise<any> => {
-  const response = await apiService.post('/Project/UploadDocument', data);
+  const response = await apiService.post("/Project/UploadDocument", data);
   return response?.model;
 };
 
@@ -576,7 +576,7 @@ export const SettingGetTeamLeadAndBDMList = async (
 
 export const EmployeeDashboard = async (attendance: AttendenceEmp) => {
   const response = await apiService.get(
-    `/EmployeeDashboard/GetEmployeeDashboardDetails?month=${attendance.Month}&year=${attendance.Year}`
+    `/EmployeeDashboard/Details?month=${attendance.Month}&year=${attendance.Year}`
   );
   return response?.model;
 };
@@ -585,7 +585,7 @@ export const EmployeeStatusProjectList = async (): Promise<
   EmployeeStatusProjectListModel[]
 > => {
   const response = await apiService.get(
-    '/EmployeeStatus/GetProjectsListByDepartment'
+    "/EmployeeStatus/ProjectsListByDepartmentId"
   );
   return response?.model;
 };
@@ -593,9 +593,7 @@ export const EmployeeStatusProjectList = async (): Promise<
 export const EmployeeStatusUpworkProfileList = async (): Promise<
   EmployeeStatusUpworkProfileListModel[]
 > => {
-  const response = await apiService.get(
-    '/EmployeeStatus/GetUpworkProfilesListByDepartment'
-  );
+  const response = await apiService.get("/EmployeeStatus/UpworkProfilesList");
   return response?.model;
 };
 
@@ -603,7 +601,7 @@ export const EmployeeStatusProjectModulesList = async (
   param: ModulesListModelParams
 ): Promise<EmployeeStatusProjectModulesListModel[]> => {
   const response = await apiService.get(
-    `/EmployeeStatus/GetProjectModulesListByProject?projectId=${param.id}`
+    `/EmployeeStatus/ProjectModulesListByProjectId?projectId=${param.id}`
   );
   return response?.model;
 };
@@ -612,41 +610,43 @@ export const EmployeeStatusList = async (
   data: GetEmployeeStatusParamsModel
 ): Promise<any> => {
   const response = await apiService.get(
-    `/EmployeeStatus/GetEmployeeStatus?FromDate=${data.fromDate}&PageNumber=${data.pageNumber}&PageSize=${data.pageSize}&UserProfileId=${data.userProfileId}&ToDate=${data.toDate}`
+    `/EmployeeStatus/GetAll?FromDate=${data.fromDate}&PageNumber=${data.pageNumber}&PageSize=${data.pageSize}&UserProfileId=${data.userProfileId}&ToDate=${data.toDate}`
   );
   return response?.model;
 };
 
-export const projectsList = async (): Promise<ProjectListModel[]> => {
-  const response = await apiService.get(
-    '/EmployeeStatus/GetProjectsListByDepartment'
-  );
-  return response?.model;
+export const projectsList = async (
+  data: ProjectListParam
+): Promise<ProjectListModel[]> => {
+  try {
+    const response = await apiService.get(
+      `/EmployeeStatus/ProjectsListByDepartmentId?departmentId=${data.DepartmentId}`
+    );
+    return response?.model || []; // Ensure it returns an empty array if `model` is undefined
+  } catch (error) {
+    console.error("Error fetching project list:", error);
+    throw error; // Rethrow to handle errors at the call site
+  }
 };
 
 export const moduleList = async (
   id: number
 ): Promise<ProjectModuleListModel[]> => {
   const response = await apiService.get(
-    `/EmployeeStatus/GetProjectModulesListByProject?projectId=${id}`
+    `/EmployeeStatus/ProjectModulesListByProjectId?projectId=${id}`
   );
   return response?.model;
 };
 
 export const upwokProfileList = async (): Promise<UpworkProfileListModel[]> => {
-  const response = await apiService.get(
-    '/EmployeeStatus/GetUpworkProfilesListByDepartment'
-  );
+  const response = await apiService.get("/EmployeeStatus/UpworkProfilesList");
   return response?.model;
 };
 
 export const addEmployeeStatus = async (
   payload: AddEmployeeStatusModel[]
 ): Promise<any> => {
-  const response = await apiService.post(
-    '/EmployeeStatus/AddEmployeeStatus',
-    payload
-  );
+  const response = await apiService.post("/EmployeeStatus/AddStatus", payload);
   return response?.model;
 };
 
@@ -668,7 +668,7 @@ export const updateEmployeeStatus = async (
   payload: AddEmployeeStatusModel
 ): Promise<any> => {
   const response = await apiService.put(
-    '/EmployeeStatus/UpdateEmployeeStatus',
+    "/EmployeeStatus/UpdateStatus",
     payload
   );
   return response?.model;
@@ -676,7 +676,7 @@ export const updateEmployeeStatus = async (
 
 export const deleteEmployeeStatus = async (id: number): Promise<any> => {
   const response = await apiService.delete(
-    `/EmployeeStatus/DeleteEmployeeStatusbyId?id=${id}`
+    `/EmployeeStatus/DeleteStatusById?id=${id}`
   );
   return response?.model;
 };
@@ -698,16 +698,24 @@ export const teamListByDepartment = async (
   payload: HRPayLoad
 ): Promise<TeamListByDepartment> => {
   const response = await apiService.get(
-    '/HRDashboard/GetALLTeamListByDepartment',
+    "/HRDashboard/GetALLTeamsList",
     payload
   );
   return response?.model;
 };
 
-export const hrMonthlyReports = async (attendance: AttendenceFormValue) => {
+// export const hrMonthlyReports = async (attendance: MonthlyReportsByHr) => {
+//   const response = await apiService.get(
+//     `/Reports/GetEmployeesMonthlyLeaveReportByHR?Month=${attendance.Month}&Year=${attendance.Year}&departmentId=${attendance.DepartmentId}&TeamAdminId=${attendance.TeamAdminId}&PageNumber=${attendance.PageNumber}&PageSize=${attendance.PageSize}&SearchValue=${attendance.SearchValue}`,
+//     { responseType: 'blob' }
+//   );
+//   return response?.model;
+// };
+
+export const hrMonthlyReports = async (param: any) => {
   const response = await apiService.get(
-    `/Reports/GetEmployeesMonthlyLeaveReportByHR?month=${attendance.Month}&year=${attendance.Year}&departmentId=${attendance.DepartmentId}&PageNumber=${attendance.PageNumber}&PageSize=${attendance.PageSize}&SearchValue=${attendance.SearchValue}&IsActive=${attendance.IsActive}&Designation=${attendance.designations}`,
-    { responseType: 'blob' }
+    `/Reports/GetEmployeesMonthlyLeaveReportByHR?Month=${param.Month}&Year=${param.Year}&departmentId=${param.DepartmentId}&TeamAdminId=${param.TeamAdminId}&PageNumber=${param.PageNumber}&PageSize=${param.PageSize}&SearchValue=${param.SearchValue}`,
+    { responseType: "blob" }
   );
   return response?.model;
 };
@@ -715,21 +723,21 @@ export const hrMonthlyReports = async (attendance: AttendenceFormValue) => {
 export const hrReports = async (attendance: AttendenceFormValue) => {
   const response = await apiService.get(
     `/Reports/GetEmployeesAttendanceReport?Month=${attendance.Month}&Year=${attendance.Year}&departmentId=${attendance.DepartmentId}&PageNumber=${attendance.PageNumber}&PageSize=${attendance.PageSize}&SearchValue=${attendance.SearchValue}&IsActive=${attendance.IsActive}&Designation=${attendance.designations}&TeamAdminId=${attendance.TeamAdminId}`,
-    { responseType: 'blob' }
+    { responseType: "blob" }
   );
 
   return response?.model;
 };
 
 export const userProjects = async () => {
-  const response = await apiService.get('/UserProfile/GetUserProjects', {
-    responseType: 'blob',
+  const response = await apiService.get("/UserProfile/GetUserProjects", {
+    responseType: "blob",
   });
   return response?.model;
 };
 export const userTools = async () => {
-  const response = await apiService.get('/UserProfile/GetUserTools', {
-    responseType: 'blob',
+  const response = await apiService.get("/UserProfile/GetUserTools", {
+    responseType: "blob",
   });
   return response?.model;
 };
@@ -759,7 +767,7 @@ export const teamAttendance = async (param: ProductivityParams) => {
   return response?.model;
 };
 export const traineeList = async () => {
-  const response = await apiService.get('/TeamLeadDashboard/GetTraineeList');
+  const response = await apiService.get("/TeamLeadDashboard/GetTraineeList");
   return response?.model;
 };
 
@@ -773,7 +781,7 @@ export const monthlyTraineeFeedback = async (
 };
 
 export const performanceList = async (): Promise<Perfornmance[]> => {
-  const response = await apiService.get('Employee/GetPerformanceList');
+  const response = await apiService.get("Employee/GetPerformanceList");
   return response?.model;
 };
 
@@ -781,7 +789,7 @@ export const sendWarningMail = async (
   payload: WarningEmailModel
 ): Promise<any> => {
   const response = await apiService.post(
-    '/TeamStatus/SendWarningMailToEmployees',
+    "/TeamStatus/SendWarningMailToEmployees",
     payload
   );
   return response?.model;
@@ -791,7 +799,7 @@ export const teamProductivitySummaryByManager = async (
   payload: ManagerDashBoardModel
 ): Promise<TeamProductivityResponseModel[]> => {
   const response = await apiService.get(
-    `/ManagerDashboard/GetTeamsProductivitySummaryByManager?TeamAdminId=${payload.teamAdminId}&DepartmentId=${payload.departmentId}&Month=${payload.month}&Year=${payload.year}`
+    `/ManagerDashboard/GetTeamsProductivitySummary?TeamAdminId=${payload.teamAdminId}&DepartmentId=${payload.departmentId}&Month=${payload.month}&Year=${payload.year}`
   );
   return response?.model;
 };
@@ -800,7 +808,7 @@ export const projectsSummaryByManager = async (
   payload: ManagerDashBoardModel
 ): Promise<ProjectSummaryResponseModel> => {
   const response = await apiService.get(
-    `/ManagerDashboard/GetProjectsSummaryByManager?teamAdminId=${payload.teamAdminId}&departmentId=${payload.departmentId}`
+    `/ManagerDashboard/GetProjectsSummary?teamAdminId=${payload.teamAdminId}&departmentId=${payload.departmentId}`
   );
   return response?.model;
 };
@@ -809,7 +817,7 @@ export const teamSummaryByManager = async (
   payload: ManagerDashBoardModel
 ): Promise<TeamSummaryResponseModel[]> => {
   const response = await apiService.get(
-    `/ManagerDashboard/GetTeamsSummaryByManager?teamAdminId=${payload.teamAdminId}&departmentId=${payload.departmentId}`
+    `/ManagerDashboard/GetTeamsSummary?teamAdminId=${payload.teamAdminId}&departmentId=${payload.departmentId}`
   );
   return response?.model;
 };
@@ -817,7 +825,7 @@ export const teamSummaryByManager = async (
 export const projectsReport = async (reqProjectReport: ProjectsReport) => {
   const response = await apiService.get(
     `/Reports/GetProjectsReport?PageNumber=${reqProjectReport.PageNumber}&PageSize=${reqProjectReport.PageSize}&StartDate=${reqProjectReport.StartDate}&HoursFrom=${reqProjectReport.From}&HoursTo=${reqProjectReport.To}&DepartmentId=${reqProjectReport.DepartmentId}&SearchValue=${reqProjectReport.SearchValue}&TeamAdminId=${reqProjectReport.TeamAdminId}&SortColumn=${reqProjectReport.SortColumn}&SortOrder=${reqProjectReport.SortOrder}`,
-    { responseType: 'blob' }
+    { responseType: "blob" }
   );
   return response?.model;
 };
@@ -827,7 +835,7 @@ export const developersReport = async (
 ) => {
   const response = await apiService.get(
     `/Reports/GetDevelopersReport?From=${reqDevelopersReport.From}&To=${reqDevelopersReport.To}&DepartmentId=${reqDevelopersReport.DepartmentId}&PageNumber=${reqDevelopersReport.PageNumber}&PageSize=${reqDevelopersReport.PageSize}&SearchValue=${reqDevelopersReport.SearchValue}&TeamAdminId=${reqDevelopersReport.TeamAdminId}&SortColumn=${reqDevelopersReport.SortColumn}&SortOrder=${reqDevelopersReport.SortOrder}`,
-    { responseType: 'blob' }
+    { responseType: "blob" }
   );
   return response?.model;
 };
@@ -835,7 +843,7 @@ export const developersReport = async (
 export const teamReport = async (reqteamReport: TeamsReport) => {
   const response = await apiService.get(
     `/Reports/GetTeamReport?From=${reqteamReport.From}&To=${reqteamReport.To}&DepartmentId=${reqteamReport.DepartmentId}&SearchValue=${reqteamReport.SearchValue}&TeamAdminId=${reqteamReport.TeamAdminId}`,
-    { responseType: 'blob' }
+    { responseType: "blob" }
   );
   return response?.model;
 };
@@ -844,13 +852,13 @@ export const projectBillingReport = async (
 ) => {
   const response = await apiService.get(
     `/Reports/GetDeveloperProjectBillingReport?EmployeeId=${reqProjectBillingReport.EmployeeId}&From=${reqProjectBillingReport.From}&To=${reqProjectBillingReport.To}`,
-    { responseType: 'blob' }
+    { responseType: "blob" }
   );
   return response?.model;
 };
 
 export const newMemberRequestList = async (): Promise<any> => {
-  const response = await apiService.get('/Employee/GetListOfNewRequest');
+  const response = await apiService.get("/Employee/GetListOfNewRequest");
   return response?.model;
 };
 
@@ -858,7 +866,7 @@ export const approveMemberByManager = async (
   payload: ApproveMemberModel
 ): Promise<any> => {
   const response = await apiService.put(
-    '/Employee/UpdateEmployeeManagerAndStatus',
+    "/Employee/UpdateEmployeeManagerAndStatus",
     payload
   );
   return response?.model;
@@ -874,12 +882,12 @@ export const teamsToDo = async (data: todoParam): Promise<TeamToDoModel[]> => {
 export const addToDoList = async (
   payload: AddToDoPayloadModel
 ): Promise<any> => {
-  const response = await apiService.post('/Common/AddToDo', payload);
+  const response = await apiService.post("/Common/AddToDo", payload);
   return response?.model;
 };
 
 export const individualToDo = async (): Promise<any> => {
-  const response = await apiService.get('/Common/GetToDoListByEmployee');
+  const response = await apiService.get("/Common/GetToDoListByEmployee");
   return response?.model;
 };
 
@@ -887,7 +895,7 @@ export const updateTeamberAttendance = async (
   payload: UpdateTeamAttendancePayLoadModel
 ): Promise<any> => {
   const response = await apiService.put(
-    '/TeamStatus/UpdateAttendanceStatus',
+    "/TeamStatus/UpdateAttendanceStatus",
     payload
   );
   return response?.model;
@@ -896,7 +904,7 @@ export const updateTeamberAttendance = async (
 export const attendanceListFromDB = async (): Promise<
   AttendanceListModel[]
 > => {
-  const response = await apiService.get('/TeamStatus/GetAttendanceStatusList');
+  const response = await apiService.get("/TeamStatus/GetAttendanceStatusList");
   return response?.model;
 };
 
@@ -983,7 +991,7 @@ export const workReport = async (params: EmployeesAttendanceReport) => {
 };
 
 export const forgotPassword = async (payload: ForgotPasswordPayloadModel) => {
-  const response = await apiService.post('/Account/ForgotPassword', payload);
+  const response = await apiService.post("/Account/password/forgot", payload);
   return response?.model;
 };
 
@@ -1019,7 +1027,9 @@ export const TeamProductivitySummary = async (
   return response?.model;
 };
 
-export const projectProductivity = async (data: ProjectProductivityPayloadModel) => {
+export const projectProductivity = async (
+  data: ProjectProductivityPayloadModel
+) => {
   const response = await apiService.get(
     `/Project/GetProjectProductivity?projectId=${data.id}&departmentId=${data.departmentId}`
   );
@@ -1057,7 +1067,7 @@ export const monthlyHoursReport = async (
 
 export const AssignBadges = async (payload: AssignBagesModel) => {
   const response = await apiService.post(
-    '/Setting/AssignBadgeToEmployees',
+    "/Setting/AssignBadgeToEmployees",
     payload
   );
   return response?.model;
@@ -1091,7 +1101,7 @@ export const GetAllTeamAttendanceSummary = async (
 };
 
 export const clientList = async (): Promise<CLientModel[]> => {
-  const response = await apiService.get('/Reports/GetClientListForFullReport');
+  const response = await apiService.get("/Reports/GetClientListForFullReport");
   return response.model;
 };
 
@@ -1106,15 +1116,13 @@ export const invoicePaymentStatus = async (): Promise<
   InvoicePaymentModel[]
 > => {
   const response = await apiService.get(
-    '/Invoice/GetPaymentStatusInvoiceStatusFilter'
+    "/Invoice/GetInvoicePaymentStatusFilter"
   );
   return response.model;
 };
 
 export const invoicePayment = async (): Promise<InvoicePaymentModel[]> => {
-  const response = await apiService.get(
-    '/Invoice/GetPaymentStatusInvoiceStatus'
-  );
+  const response = await apiService.get("/Invoice/GetPaymentStatuses");
   return response.model;
 };
 
@@ -1133,7 +1141,7 @@ export const updatePaymentStatus = async (data: UpdatePaymentReq) => {
     );
     return response;
   } catch (error) {
-    console.error('Error fetching Update Payment Status:', error);
+    console.error("Error fetching Update Payment Status:", error);
 
     return null;
   }
@@ -1147,19 +1155,23 @@ export const updateLockStatus = async (data: LockStatus) => {
     );
     return response;
   } catch (error) {
-    console.error('Error fetching Update Payment Status:', error);
+    console.error("Error fetching Update Payment Status:", error);
 
     return null;
   }
 };
 
 export const teamLeadBadges = async () => {
-  const response = await apiService.get('/TeamLeadDashboard/GetTeamLeadBadges');
+  const response = await apiService.get("/TeamLeadDashboard/GetTeamLeadBadges");
   return response?.model;
 };
 
-export const getCLients = async (data:ClientReqParam): Promise<ClientTypeModel[]> => {
-  const response = await apiService.get(`/Client/GetClientListByDepartment?departmentId=${data.departmentID}`);
+export const getCLients = async (
+  data: ClientReqParam
+): Promise<ClientTypeModel[]> => {
+  const response = await apiService.get(
+    `/Client/GetClientListByDepartment?departmentId=${data.departmentID}`
+  );
   return response.model;
 };
 
@@ -1181,7 +1193,7 @@ export const DepartmentOverallDetails = async (
 
 export const DepartmentWiseOverallDetails = async () => {
   const response = await apiService.get(
-    '/SuperAdminDashboard/GetDepartmentWiseOverallDetails'
+    "/SuperAdminDashboard/GetDepartmentWiseOverallDetails"
   );
   return response.model;
 };
@@ -1195,7 +1207,7 @@ export const scrumTeamAttendance = async (param: ScrumPayLoadModel) => {
 
 export const scrumTeamBioMetric = async (param: any) => {
   const response = await apiService.get(
-    `/Common/GetBioMatricAttendanceLogs?EmployeeId=${param.empID}&TeamAdminId=${param.teamAdminId}&DepartmentId=${param.departmentId}&TeamLeadId=${param.teamLeadId}&Month=${param.month}&Year=${param.year}`
+    `/Common/attendance/biometric?EmployeeId=${param.empID}&TeamAdminId=${param.teamAdminId}&DepartmentId=${param.departmentId}&TeamLeadId=${param.teamLeadId}&Month=${param.month}&Year=${param.year}`
   );
   return response?.model;
 };
@@ -1208,7 +1220,7 @@ export const attendanceReports = async (param: any) => {
 };
 
 export const performanceBadges = async () => {
-  const response = await apiService.get('/Employee/GetAwardsList');
+  const response = await apiService.get("/Employee/GetAwardsList");
   return response?.model;
 };
 
@@ -1221,7 +1233,7 @@ export const projectBillingHistoryDetails = async (
   return response.model;
 };
 
-export const getApplicationDomain=async ()=>{
-  const response = await apiService.get('/Project/GetApplicationDomain');
+export const getApplicationDomain = async () => {
+  const response = await apiService.get("/Project/GetApplicationDomains");
   return response?.model;
 };

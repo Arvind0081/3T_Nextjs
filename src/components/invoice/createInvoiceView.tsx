@@ -168,7 +168,7 @@ const CreateInvoiceView = ({ getCllientList, show, setShow,loadInitialInvoices}:
       const newData = response.model || { projectsDetails: [] };
       setEditableData(newData);
       const clientResponse = await apiService.get(
-        `/Client/GetClientDetailById?clientId=${selectedClient}`
+        `/Client/GetClientById?clientId=${selectedClient}`
       );
       const clientDetails = clientResponse.model || {};
 

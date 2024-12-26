@@ -17,10 +17,7 @@ const DateFilter = ({param}:any) => {
           );
     };
     useEffect(() => {
-        // const date = new Date();
-        // const year = date.getFullYear();
-        // const month = String(date.getMonth() + 1).padStart(2, '0');
-        // setCurrentMonth(`${year}-${month}`);
+       
         setCurrentMonth(param.date);
     }, [param.date]);
     return (
@@ -34,9 +31,7 @@ const DateFilter = ({param}:any) => {
                         value={currentMonth}
                         onChange={handleMonthChange}
                     />
-                    {/* <div className="input-group-text">
-                        <i className="ri-calendar-line"></i>
-                    </div> */}
+                  
                 </div>
             </div>
         </>

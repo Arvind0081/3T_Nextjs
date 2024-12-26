@@ -6,35 +6,47 @@ import {
   getEmployeeStatus,
   managerList,
   newMemberRequestList,
-} from '@/utils/publicApi';
-import SearchInput from '@/components/common/Search/search';
+} from "@/utils/publicApi";
+import SearchInput from "@/components/common/Search/search";
 import {
   DepartmentModel,
   DesignationsParam,
   EmpReqParams,
   newRequestModel,
-} from '@/utils/types';
-import Designation from '@/components/employees/designation';
-import EmployeeStatus from '@/components/employees/employeeStatus';
-import Header from '@/components/common/Header/header';
-import SideNav from '@/components/common/SideBar/sidebar';
-import getUser from '@/utils/getUserServerSide';
-import Image from 'next/image';
-import Footer from '@/components/common/Footer/footer';
-import ActionButtons from '@/components/employees/actionButtons';
-import TeamMember from '@/components/employees/teamMemberTable';
-import PageSizeHandler from '@/components/employees/pazeSizeHandler';
+} from "@/utils/types";
+import Designation from "@/components/employees/designation";
+import EmployeeStatus from "@/components/employees/employeeStatus";
+import Header from "@/components/common/Header/header";
+import SideNav from "@/components/common/SideBar/sidebar";
+import getUser from "@/utils/getUserServerSide";
+import Image from "next/image";
+import Footer from "@/components/common/Footer/footer";
+import ActionButtons from "@/components/employees/actionButtons";
+import TeamMember from "@/components/employees/teamMemberTable";
+import PageSizeHandler from "@/components/employees/pazeSizeHandler";
 
 const EmployeeComponent = async ({ searchParams }: any) => {
   let user: any = getUser();
-  let departmentID: string = searchParams.departmentId==='null' || searchParams.departmentId==='' || searchParams.departmentId===undefined ||searchParams.departmentId==='undefined' ? '':searchParams.departmentId;
-  let searchQuery = searchParams?.searchValue ?? '';
-  const selectedDesignation = searchParams?.designation ?? '';
+  let departmentID: string =
+    searchParams.departmentId === "null" ||
+    searchParams.departmentId === "" ||
+    searchParams.departmentId === undefined ||
+    searchParams.departmentId === "undefined"
+      ? ""
+      : searchParams.departmentId;
+  let searchQuery = searchParams?.searchValue ?? "";
+  const selectedDesignation = searchParams?.designation ?? "";
   const selectedEmpStatus = searchParams?.empStatus ?? 1;
 
   let pageSize = searchParams?.size ?? 10;
   let currentPage = searchParams?.page ?? 1;
-  let teamAdminId: string = searchParams.teamAdminId==='null' || searchParams.teamAdminId==='' || searchParams.teamAdminId===undefined || searchParams.teamAdminId==='undefined' ? '': searchParams.teamAdminId ;
+  let teamAdminId: string =
+    searchParams.teamAdminId === "null" ||
+    searchParams.teamAdminId === "" ||
+    searchParams.teamAdminId === undefined ||
+    searchParams.teamAdminId === "undefined"
+      ? ""
+      : searchParams.teamAdminId;
   let sortColumn: any = searchParams?.sortColumn;
   let sortOrder: any = searchParams?.sortOrder;
   const empStatusList = await employeeStatus();
@@ -54,7 +66,10 @@ const EmployeeComponent = async ({ searchParams }: any) => {
   let newRequest: newRequestModel[] = [];
 
   let reqParams: EmpReqParams = {
-    departmentID: (user.role === 'Admin' || user.role === 'HR') ? departmentID : user?.departmentId,
+    departmentID:
+      user.role === "Admin" || user.role === "HR"
+        ? departmentID
+        : user?.departmentId,
     searchValue: searchQuery,
     pageSize: pageSize,
     pagenumber: currentPage,
@@ -62,11 +77,9 @@ const EmployeeComponent = async ({ searchParams }: any) => {
     designation: selectedDesignation,
     isActive: selectedEmpStatus,
     TeamAdminId: teamAdminId,
-    SortColumn: sortColumn??'',
-    SortOrder: sortOrder??'',
+    SortColumn: sortColumn ?? "",
+    SortOrder: sortOrder ?? "",
   };
-
- 
 
   let initialEmployees = await employeesById(reqParams);
 
@@ -75,7 +88,10 @@ const EmployeeComponent = async ({ searchParams }: any) => {
     totalCount < pageSize * currentPage ? totalCount : pageSize * currentPage;
 
   const params: DesignationsParam = {
-    departmentID: (user.role === 'Admin' || user.role === 'HR') ? departmentID : user?.departmentId,
+    departmentID:
+      user.role === "Admin" || user.role === "HR"
+        ? departmentID
+        : user?.departmentId,
   };
 
   const designations = await allDesignations(params);
@@ -84,56 +100,50 @@ const EmployeeComponent = async ({ searchParams }: any) => {
     const { results } = await newMemberRequestList();
     newRequest = results;
   } catch (error) {}
-  
 
   return (
-    <div className='app sidebar-mini ltr light-mode'>
-      <div className='page'>
-        <div className='page-main'>
-        <Header
+    <div className="app sidebar-mini ltr light-mode">
+      <div className="page">
+        <div className="page-main">
+          <Header
             getManagerList={getManagerList}
             departmentData={departmentData}
           />
           <SideNav />
-          <div className='main-content app-content mt-0'>
-            <div className='side-app'>
-              <div className='main-container container-fluid'>
-                <div className='row'>
-                  <div className='col-xl-9'>
-                    <div className='card custom-card'>
-                      <div className='card-header justify-content-between'>
-                        <div className='card-title'>Team Members</div>
-                        
-                        <div className='filter-right d-flex gap-x-2'>
-                        <div className='selectbox select_designation'>
+          <div className="main-content app-content mt-0">
+            <div className="side-app">
+              <div className="main-container container-fluid">
+                <div className="row">
+                  <div className="col-xl-9">
+                    <div className="card custom-card">
+                      <div className="card-header justify-content-between">
+                        <div className="card-title">Team Members</div>
 
-                           <PageSizeHandler
-                            payload={reqParams}
-                           />
-
-
+                        <div className="filter-right d-flex gap-x-2">
+                          <div className="selectbox select_designation">
+                            <PageSizeHandler payload={reqParams} />
                           </div>
-                          <div className='selectbox select_designation'>
+                          <div className="selectbox select_designation">
                             <Designation
                               desg={designations}
                               payload={reqParams}
                             />
                           </div>
 
-                          <div className='selectbox'>
+                          <div className="selectbox">
                             <EmployeeStatus
                               empStatusList={empStatusList}
                               payload={reqParams}
                             />
                           </div>
 
-                          <div className='search_box'>
-                            <i className='ri-search-line' />
+                          <div className="search_box">
+                            <i className="ri-search-line" />
                             <SearchInput payload={reqParams} />
                           </div>
                         </div>
                       </div>
-                      <div className='card-body'>
+                      <div className="card-body">
                         <TeamMember
                           initialEmployees={initialEmployees}
                           reqParams={reqParams}
@@ -143,14 +153,14 @@ const EmployeeComponent = async ({ searchParams }: any) => {
                       </div>
                     </div>
                   </div>
-                  <div className='col-xl-3'>
-                    <div className='card custom-card'>
-                      <div className='card-header justify-content-between'>
-                        <div className='card-title'>New Member Requests.</div>
+                  <div className="col-xl-3">
+                    <div className="card custom-card">
+                      <div className="card-header justify-content-between">
+                        <div className="card-title">New Member Requests.</div>
                       </div>
-                      <div className='card-body'>
-                        <div className='table-responsive theme_table'>
-                          <table className='table text-nowrap table-hover  '>
+                      <div className="card-body">
+                        <div className="table-responsive theme_table">
+                          <table className="table text-nowrap table-hover  ">
                             <thead>
                               <tr>
                                 {/* <th scope='col'>User Name</th> */}
@@ -164,22 +174,22 @@ const EmployeeComponent = async ({ searchParams }: any) => {
                                 newRequest.map((item: newRequestModel) => (
                                   <tr key={item.employeeID}>
                                     <td>
-                                      <div className='d-flex align-items-center fw-semibold user-with-img'>
-                                        <span className='avatar avatar-sm me-2 avatar-rounded'>
+                                      <div className="d-flex align-items-center fw-semibold user-with-img">
+                                        <span className="avatar avatar-sm me-2 avatar-rounded">
                                           {item.profileImage ? (
                                             <Image
                                               src={`https://3t-api.csdevhub.com/images/${item.profileImage}`}
-                                              alt='img'
+                                              alt="img"
                                               height={50}
                                               width={50}
                                             />
                                           ) : (
                                             item.employeeUserName
-                                              .split(' ')
+                                              .split(" ")
                                               .map((name: any) =>
                                                 name[0]?.toUpperCase()
                                               )
-                                              .join('')
+                                              .join("")
                                           )}
                                         </span>
                                         {item.employeeUserName}

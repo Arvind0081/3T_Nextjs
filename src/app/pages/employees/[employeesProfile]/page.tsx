@@ -1,7 +1,7 @@
-'use server';
-import React from 'react';
-import Header from '@/components/common/Header/header';
-import SideNav from '@/components/common/SideBar/sidebar';
+"use server";
+import React from "react";
+import Header from "@/components/common/Header/header";
+import SideNav from "@/components/common/SideBar/sidebar";
 import {
   EmpProfileDetailsById,
   allDepartments,
@@ -10,30 +10,31 @@ import {
   getEmployeeStatus,
   managerList,
   technologyList,
-} from '@/utils/publicApi';
+} from "@/utils/publicApi";
 import {
   DesignationsParam,
   EmployeeProjectStatusParam,
   EmpProfileReqParams,
   Technology,
-} from '@/utils/types';
-import EditButton from '@/components/employees/profile/editprofileButton';
-import QuickAction from '@/components/employees/profile/quickAction';
-import Image from 'next/image';
-import Footer from '@/components/common/Footer/footer';
-import getUser from '@/utils/getUserServerSide';
-import AddAwards from '@/components/employees/profile/addAwards';
-import EmployeeStatus from '@/components/employees/profile/employeeStatus';
-import Link from 'next/link';
+} from "@/utils/types";
+import EditButton from "@/components/employees/profile/editprofileButton";
+import QuickAction from "@/components/employees/profile/quickAction";
+import Image from "next/image";
+import Footer from "@/components/common/Footer/footer";
+import getUser from "@/utils/getUserServerSide";
+import AddAwards from "@/components/employees/profile/addAwards";
+import EmployeeStatus from "@/components/employees/profile/employeeStatus";
+import Link from "next/link";
 
 const EmployeeProfie = async ({ params, searchParams }: any) => {
   const date = new Date();
   let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, '0');
+  let month = String(date.getMonth() + 1).padStart(2, "0");
   const selectedMonth = searchParams.month ?? `${year}-${month}`;
-  [year, month] = selectedMonth.split('-');
+  [year, month] = selectedMonth.split("-");
 
   let user: any = getUser();
+  let data: any;
 
   let projectStatusList: any[] = [];
   let technologies: Technology[] = [];
@@ -51,7 +52,9 @@ const EmployeeProfie = async ({ params, searchParams }: any) => {
     departmentID: user.departmentId,
   };
 
-  const data = await EmpProfileDetailsById(reqParams);
+  try {
+    data = await EmpProfileDetailsById(reqParams);
+  } catch (error) {}
 
   const getManagerList = await managerList(Number(data?.departmentId));
   let department = await allDepartments();
@@ -88,64 +91,85 @@ const EmployeeProfie = async ({ params, searchParams }: any) => {
     ? `https://3t-api.csdevhub.com/images/${data?.profileImage}`
     : null;
   const initials =
-    data.firstName && data.lastName
-      ? `${data.firstName.substring(0, 1).toUpperCase()}${data.lastName.substring(0, 1).toUpperCase()}`
-      : '';
+    data?.firstName && data.lastName
+      ? `${data.firstName.substring(0, 1).toUpperCase()}${data.lastName
+          .substring(0, 1)
+          .toUpperCase()}`
+      : "";
 
   const calculateCombinedExperience = (
-    joiningDate: string,
+    joiningDate: string | null,
     experienceInMonths: number
   ): string => {
+    if (
+      !joiningDate ||
+      joiningDate === "0" ||
+      isNaN(new Date(joiningDate).getTime())
+    ) {
+      return "N/A";
+    }
+
     const joining = new Date(joiningDate);
     const today = new Date();
+
     const yearsElapsed = today.getFullYear() - joining.getFullYear();
     const monthsElapsed = today.getMonth() - joining.getMonth();
+
     let totalMonths = yearsElapsed * 12 + monthsElapsed;
     totalMonths += experienceInMonths;
+
+    if (totalMonths < 0) {
+      return "N/A";
+    }
+
     const totalYears = Math.floor(totalMonths / 12);
     const remainingMonths = totalMonths % 12;
 
-    return `${totalYears}${totalYears !== 1 ? '' : ''}.${remainingMonths} ${remainingMonths !== 1 ? 'Years' : ''}`;
+    return `${totalYears} ${totalYears !== 1 ? "Years" : "Year"} ${
+      remainingMonths > 0
+        ? `${remainingMonths} ${remainingMonths !== 1 ? "Months" : "Month"}`
+        : ""
+    }`;
   };
 
   return (
     <>
       {/* PAGE */}
-      <div className='app sidebar-mini ltr light-mode'>
-        <div className='page'>
-          <div className='page-main'>
+      <div className="app sidebar-mini ltr light-mode">
+        <div className="page">
+          <div className="page-main">
             <Header />
             <SideNav />
 
-            <div className='main-content app-content mt-0'>
-              <div className='side-app'>
-                <div className='card-body p-0'>
-                  <div className='main-container container-fluid profile-page'>
-                    <div className='row'>
-                      <div className='col-xxl-4 col-xl-12'>
-                        <div className='card custom-card overflow-hidden'>
-                          <div className='card-body p-0'>
-                            <div className='d-sm-flex align-items-top p-4 border-bottom-0 main-profile-cover'>
+            <div className="main-content app-content mt-0">
+              <div className="side-app">
+                <div className="card-body p-0">
+                  <div className="main-container container-fluid profile-page">
+                    <div className="row">
+                      <div className="col-xxl-4 col-xl-12">
+                        <div className="card custom-card overflow-hidden">
+                          <div className="card-body p-0">
+                            <div className="d-sm-flex align-items-top p-4 border-bottom-0 main-profile-cover">
                               <div>
-                                <span className='avatar avatar-xxl avatar-rounded online me-3'>
+                                <span className="avatar avatar-xxl avatar-rounded online me-3">
                                   {profileImageSrc ? (
                                     <Image
                                       src={profileImageSrc}
                                       width={120}
                                       height={120}
-                                      alt='profile image'
+                                      alt="profile image"
                                     />
                                   ) : (
                                     <div
                                       style={{
                                         width: 80,
                                         height: 80,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '2rem',
-                                        backgroundColor: '#6f42c1',
-                                        borderRadius: '50%',
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        fontSize: "2rem",
+                                        backgroundColor: "#6f42c1",
+                                        borderRadius: "50%",
                                       }}
                                     >
                                       {initials}
@@ -154,16 +178,17 @@ const EmployeeProfie = async ({ params, searchParams }: any) => {
                                 </span>
                               </div>
 
-                              <div className='flex-fill main-profile-info'>
-                                <div className='d-flex align-items-center justify-content-between'>
-                                  <h6 className='fw-semibold mb-1 text-fixed-white'>
-                                    {data.firstName}
+                              <div className="flex-fill main-profile-info">
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <h6 className="fw-semibold mb-1 text-fixed-white">
+                                    {data?.firstName}
                                     &nbsp;
-                                    {data.lastName}
+                                    {data?.lastName}
                                   </h6>
 
-                                  {(user.role == 'Project Manager' ||
-                                    user.role == 'HOD') && (
+                                  {(user.role == "Project Manager" ||
+                                    user.role == "Admin" ||
+                                    user.role == "HOD") && (
                                     <EditButton
                                       id={data.employeeID}
                                       department={department}
@@ -174,39 +199,40 @@ const EmployeeProfie = async ({ params, searchParams }: any) => {
                                     />
                                   )}
                                 </div>
-                                <p className='mb-1 text-fixed-white op-8'>
-                                  {data.employeeNumber}
+                                <p className="mb-1 text-fixed-white op-8">
+                                  {data?.employeeNumber}
                                 </p>
-                                <p className='mb-1 text-fixed-white op-8'>
-                                  {data.designation} ({data.department})
+                                <p className="mb-1 text-fixed-white op-8">
+                                  {data?.designation} ({data?.department})
                                 </p>
-                                <p className='fs-12 mb-1 op-8 text-fixed-white'>
-                                  <span className='me-3'>
-                                    Date of Joining:{' '}
-                                    {data.joiningDate
+                                <p className="fs-12 mb-1 op-8 text-fixed-white">
+                                  <span className="me-3">
+                                    Date of Joining:{" "}
+                                    {data?.joiningDate
                                       ? new Date(
                                           data.joiningDate
                                         ).toLocaleDateString()
-                                      : 'N/A'}
+                                      : "N/A"}
                                   </span>
                                 </p>
-                                <p className='fs-12 text-fixed-white op-8'>
-                                  <span className='me-3'>
-                                    Experience:{' '}
-                                    {data.joiningDate &&
-                                    data.experience !== null &&
-                                    data.experience !== undefined
+                                <p className="fs-12 text-fixed-white op-8">
+                                  <span className="me-3">
+                                    Experience:{" "}
+                                    {data?.joiningDate &&
+                                    data?.joiningDate !== "0" &&
+                                    new Date(data.joiningDate).toString() !==
+                                      "Invalid Date"
                                       ? calculateCombinedExperience(
                                           data.joiningDate,
-                                          parseInt(data.experience)
+                                          data.experienceOnJoining ?? 0 // Treat null or undefined as 0
                                         )
-                                      : 'N/A'}
+                                      : "N/A"}
                                   </span>
                                 </p>
                                 &nbsp;
-                                <div className='d-flex mb-0 profile-awards assign-awards'>
+                                <div className="d-flex mb-0 profile-awards assign-awards">
                                   {uniqueBadges.map((badge, index) => (
-                                    <div key={index} className='mr-3 relative'>
+                                    <div key={index} className="mr-3 relative">
                                       <Image
                                         src={`data:image/jpeg;base64, ${badge.badgeImage}`}
                                         width={150}
@@ -214,7 +240,7 @@ const EmployeeProfie = async ({ params, searchParams }: any) => {
                                         alt={`award_${index}`}
                                       />
                                       {badge.count > 1 && (
-                                        <div className='absolute top-[-8px] right-[-6px] bg-red-600 text-white text-xs px-1 py-0.9 rounded'>
+                                        <div className="absolute top-[-8px] right-[-6px] bg-red-600 text-white text-xs px-1 py-0.9 rounded">
                                           {badge.count}
                                         </div>
                                       )}
@@ -224,133 +250,137 @@ const EmployeeProfie = async ({ params, searchParams }: any) => {
                                 &nbsp;
                                 <div>
                                   <Link
-                                    href={`/employeesProfile/${data.employeeID}`}
+                                    href={`/employeesProfile/${data?.employeeID}`}
                                   >
-                                    <div className='btn btn-white btn-wave'>
-                                      <i className='bi bi-file-bar-graph'></i>
-                                      Performance Report{' '}
+                                    <div className="btn btn-white btn-wave">
+                                      <i className="bi bi-file-bar-graph"></i>
+                                      Performance Report{" "}
                                     </div>
                                   </Link>
                                 </div>
                               </div>
                             </div>
-                            <div className='p-4 border-bottom border-block-end-dashed'>
+                            <div className="p-4 border-bottom border-block-end-dashed">
                               <div>
-                                <p className='fs-15 mb-2 fw-semibold'>
+                                <p className="fs-15 mb-2 fw-semibold">
                                   Quick Action
                                 </p>
                                 <QuickAction
                                   data={data}
-                                  id={data.employeeID}
+                                  id={data?.employeeID}
                                   getManagerList={getManagerList}
                                   empstatus={empStatus}
                                 />
                               </div>
                             </div>
-
-                            <AddAwards
+                            {/* <AddAwards
                               designation={designation}
                               department={department}
                               data={data}
-                            />
-
-                            <div className='p-4 border-bottom border-block-end-dashed'>
-                              <p className='fs-15 mb-2 me-4 fw-semibold'>
+                            /> */}
+                            <div className="p-4 border-bottom border-block-end-dashed">
+                              <p className="fs-15 mb-2 me-4 fw-semibold">
                                 Contact Information
                               </p>
-                              <div className='text-muted'>
-                                <p className='align-items-center d-flex mb-2'>
-                                  <span className='avatar avatar-sm avatar-rounded me-2 bg-light text-muted'>
-                                    <i className='bi bi-envelope-fill'></i>
+                              <div className="text-muted">
+                                <p className="align-items-center d-flex mb-2">
+                                  <span className="avatar avatar-sm avatar-rounded me-2 bg-light text-muted">
+                                    <i className="bi bi-envelope-fill"></i>
                                   </span>
-                                  {data.email}
+                                  {data?.email}
                                 </p>
-                                <p className='align-items-center d-flex mb-2'>
-                                  <span className='avatar avatar-sm avatar-rounded me-2 bg-light text-muted'>
-                                    <i className='bi bi-telephone-fill'></i>
-                                  </span>{' '}
-                                  {data.phoneNumber}
+                                <p className="align-items-center d-flex mb-2">
+                                  <span className="avatar avatar-sm avatar-rounded me-2 bg-light text-muted">
+                                    <i className="bi bi-telephone-fill"></i>
+                                  </span>{" "}
+                                  {data?.phoneNumber}
                                 </p>
-                                <p className='align-items-center d-flex mb-2'>
-                                  <span className='avatar avatar-sm avatar-rounded me-2 bg-light text-muted'>
-                                    <i className='bi bi-geo-alt'></i>
+                                <p className="align-items-center d-flex mb-2">
+                                  <span className="avatar avatar-sm avatar-rounded me-2 bg-light text-muted">
+                                    <i className="bi bi-geo-alt"></i>
                                   </span>
-                                  {data.address}
+                                  {data?.address}
                                 </p>
                               </div>
                             </div>
-                            <div className='p-4 border-bottom border-block-end-dashed'>
-                              <p className='fs-15 mb-2 me-4 fw-semibold'>
+                            <div className="p-4 border-bottom border-block-end-dashed">
+                              <p className="fs-15 mb-2 me-4 fw-semibold">
                                 Skills:
                               </p>
                               <div>
-                                {data.skills?.split(',').map((skill, index) => (
-                                  <a key={index}>
-                                    <span className='badge bg-primary m-1'>
-                                      {skill.trim()}
-                                    </span>
-                                  </a>
-                                ))}
+                                {data?.skills
+                                  ?.split(",")
+                                  .map((skill: any, index: any) => (
+                                    <a key={index}>
+                                      <span className="badge bg-primary m-1">
+                                        {skill.trim()}
+                                      </span>
+                                    </a>
+                                  ))}
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className='col-xxl-8 col-xl-12'>
-                        <div className='row'>
-                          <div className='col-xl-12 col-xl-'>
-                            <div className='card custom-card'>
-                              <div className='card-header justify-content-between'>
-                                <div className='card-title'>Project Detail</div>
+                      <div className="col-xxl-8 col-xl-12">
+                        <div className="row">
+                          <div className="col-xl-12 col-xl-">
+                            <div className="card custom-card">
+                              <div className="card-header justify-content-between">
+                                <div className="card-title">Project Detail</div>
                               </div>
-                              <div className='card-body'>
-                                <ul className='list-group'>
-                                  {data.projects?.length > 0 ? (
-                                    data.projects.map((project, index) => (
-                                      <li
-                                        key={index}
-                                        className='d-flex gap-2 justify-content-between list-group-item'
-                                      >
-                                        <div>
-                                          <div className='d-flex align-items-start line-text'>
-                                            <div className='me-2 fw-semibold nowrap'>
-                                              Project:
+                              <div className="card-body">
+                                <ul className="list-group">
+                                  {data?.projects?.length > 0 ? (
+                                    data?.projects.map(
+                                      (project: any, index: any) => (
+                                        <li
+                                          key={index}
+                                          className="d-flex gap-2 justify-content-between list-group-item"
+                                        >
+                                          <div>
+                                            <div className="d-flex align-items-start line-text">
+                                              <div className="me-2 fw-semibold nowrap">
+                                                Project:
+                                              </div>
+                                              <span>{project.projectName}</span>
                                             </div>
-                                            <span>{project.projectName}</span>
-                                          </div>
-                                          <div className='d-flex align-items-start line-text'>
-                                            <div className='me-2 fw-semibold nowrap'>
-                                              Technology:
+                                            <div className="d-flex align-items-start line-text">
+                                              <div className="me-2 fw-semibold nowrap">
+                                                Technology:
+                                              </div>
+                                              <span>
+                                                {
+                                                  technologies.filter(
+                                                    (item) =>
+                                                      item.id ==
+                                                      Number(project.technology)
+                                                  )[0]?.name
+                                                }
+                                              </span>
                                             </div>
-                                            <span>
-                                              {
-                                                technologies.filter(
-                                                  (item) =>
-                                                    item.id ==
-                                                    Number(project.technology)
-                                                )[0]?.name
-                                              }
-                                            </span>
-                                          </div>
-                                          <div className='d-flex align-items-start line-text'>
-                                            <div className='me-2 fw-semibold nowrap'>
-                                              Description:
+                                            <div className="d-flex align-items-start line-text">
+                                              <div className="me-2 fw-semibold nowrap">
+                                                Description:
+                                              </div>
+                                              <span>{project.description}</span>
                                             </div>
-                                            <span>{project.description}</span>
-                                          </div>
-                                          <div className='d-flex align-items-start line-text'>
-                                            <div className='me-2 fw-semibold nowrap'>
-                                              Production Url:
+                                            <div className="d-flex align-items-start line-text">
+                                              <div className="me-2 fw-semibold nowrap">
+                                                Production Url:
+                                              </div>
+                                              <span>
+                                                {project.productionURL}
+                                              </span>
                                             </div>
-                                            <span>{project.productionURL}</span>
                                           </div>
-                                        </div>
-                                      </li>
-                                    ))
+                                        </li>
+                                      )
+                                    )
                                   ) : (
                                     <li
-                                      className='list-group-item d-flex justify-content-center align-items-center'
-                                      style={{ height: '100px' }}
+                                      className="list-group-item d-flex justify-content-center align-items-center"
+                                      style={{ height: "100px" }}
                                     >
                                       No records found
                                     </li>

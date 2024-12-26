@@ -37,7 +37,7 @@ const ResetPassword: FC = () => {
         const payLoad: ValidatePasswordPayloadModel = {
           token: verifyToken,
         };
-        await apiService.post('/Account/ValidateToken', payLoad);
+        await apiService.post('/Account/token/validate', payLoad);
         return true;
       } catch (error) {
         return false;
@@ -54,7 +54,7 @@ const ResetPassword: FC = () => {
           password: data.password,
         };
         try {
-          await apiService.post('/Account/ResetPassword', payLoad);
+          await apiService.post('/Account/password/reset', payLoad);
           router.push('/');
           reset();
         } catch (error) {}

@@ -14,6 +14,7 @@ const Reports = ({
   bioMetricAttendance,
   param,
   payLoad,
+  searchParams
 }: any) => {
   const [activeTab, setActiveTab] = useState<boolean>(true);
   const [show, setShow] = useState(false);
@@ -25,6 +26,13 @@ const Reports = ({
     setActiveTab(true);
     router.push(`/hrReports?departmentId=${payLoad.departmentId}`);
   };
+
+  const date = new Date();
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, '0');
+  const selectedMonth = searchParams.month ?? `${year}-${month}`;
+  [year, month] = selectedMonth.split('-');
+  
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
@@ -142,7 +150,7 @@ const Reports = ({
                       <div className='filter-right d-flex gap-x-2'>
                         <DateFilter param={param} />
                         <div className='btn-list mt-md-0 mt-2'>
-                          <ExportExcel />
+                          <ExportExcel  />
                         </div>
                       </div>
                     </div>

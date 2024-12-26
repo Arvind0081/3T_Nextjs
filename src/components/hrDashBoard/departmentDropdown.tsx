@@ -11,15 +11,18 @@ const Department = ({ getDepartment, getManagerList, isUpworkProfile }: any) => 
 
   const departmentCookieValue =
     currentParams.get('departmentId') ?? getCookie('departmentId')?.toString();
+ 
   const managerCookieValue =
     currentParams.get('teamAdminId') ?? getCookie('manager')?.toString();
 
-  const [selectedDepartment, setSelectedDepartment] = useState(
-    departmentCookieValue ?? '1'
-  );
-  const [selectedManager, setSelectedManager] = useState(
-    managerCookieValue ?? ''
-  );
+  const [selectedDepartment, setSelectedDepartment] = useState<string>();
+  const [selectedManager, setSelectedManager] = useState<string>();
+
+  useEffect(()=>{
+    setSelectedDepartment(departmentCookieValue ?? '1');
+    setSelectedManager( managerCookieValue ?? '');
+
+  },[]);
 
   useEffect(() => {
     handleDepartmentChange(selectedDepartment);
@@ -32,10 +35,11 @@ const Department = ({ getDepartment, getManagerList, isUpworkProfile }: any) => 
   }, [selectedManager]);
 
   const handleDepartmentChange = (value: any) => {
+   
     if (value) {
-      setCookie('departmentId', selectedDepartment);
+      setCookie('departmentId', value);
       setSelectedDepartment(value);
-      currentParams.set('departmentId', selectedDepartment);
+      currentParams.set('departmentId', value);
       currentParams.delete('teamAdminId');
       deleteCookie('manager');
       setSelectedManager('');
@@ -50,9 +54,9 @@ const Department = ({ getDepartment, getManagerList, isUpworkProfile }: any) => 
 
   const handleManagerChange = (value: any) => {
     if (value) {
-      setCookie('manager', selectedManager);
+      setCookie('manager', value);
       setSelectedManager(value);
-      currentParams.set('teamAdminId', selectedManager);
+      currentParams.set('teamAdminId', value);
     } else {
       deleteCookie('manager');
       currentParams.delete('teamAdminId');

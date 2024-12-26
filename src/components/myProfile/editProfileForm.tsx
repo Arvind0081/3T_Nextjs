@@ -58,7 +58,6 @@ const EditProfileForm = ({
   }));
 
   const handleRegisteration = async (data: MyProfileDetails) => {
-
     const formData = new FormData();
     formData.append('id', data.id);
     formData.append('FirstName', data.firstName);

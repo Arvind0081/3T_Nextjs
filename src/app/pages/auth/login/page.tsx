@@ -58,7 +58,7 @@ const Login: FC = () => {
 
   const handleLogin = async (data: LoginFormValues) => {
     //if(acceptTerms){
-    const response = await apiService.post('/Account/Login', data);
+    const response = await apiService.post('/Account/login', data);
     if (response.model) {
       setCookie('user', response?.model);
       const user: any = getUser();

@@ -37,7 +37,7 @@ const UpdateInvoiceViewButton = ({
           data.invoiceHtml = decryptedText;
         }
         const clientResponse = await apiService.get(
-          `/Client/GetClientDetailById?clientId=${clientId}`
+          `/Client/GetClientById?clientId=${clientId}`
         );
         const clientDetails = clientResponse.model || {};
 

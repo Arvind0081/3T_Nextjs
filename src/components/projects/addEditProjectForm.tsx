@@ -1,5 +1,5 @@
-'use client';
-import apiService from '@/services/apiService';
+"use client";
+import apiService from "@/services/apiService";
 import {
   BillingTypeModel,
   ClientModel,
@@ -8,15 +8,19 @@ import {
   Technology,
   addEditProjectFormValue,
   applicationDomainModel,
-} from '@/utils/types';
-import React, {useState, useEffect } from 'react';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import { useForm,Controller  } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import getUser from '@/utils/getUserClientSide';
-import { Dropdown } from 'semantic-ui-react';
-import { departments, salesPersonList, teamLeadAndBDM } from '@/utils/publicApi';
-import toastr from 'toastr';
+} from "@/utils/types";
+import React, { useState, useEffect } from "react";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import getUser from "@/utils/getUserClientSide";
+import { Dropdown } from "semantic-ui-react";
+import {
+  departments,
+  salesPersonList,
+  teamLeadAndBDM,
+} from "@/utils/publicApi";
+import toastr from "toastr";
 
 const ProjectAddEditForm = ({
   addEdit,
@@ -26,7 +30,9 @@ const ProjectAddEditForm = ({
   hiringType,
   clientList,
   projectStatusData,
-  billingType,applicationDomain,technologies
+  billingType,
+  applicationDomain,
+  technologies,
 }: any | null) => {
   const router = useRouter();
   const token: any = getUser();
@@ -36,189 +42,213 @@ const ProjectAddEditForm = ({
     register,
     handleSubmit,
     formState: { errors },
-    reset,watch,setValue 
+    reset,
+    watch,
+    setValue,
   } = useForm<addEditProjectFormValue>({
     defaultValues: {
-     
-      departmentIds:[Number(token?.departmentId)],
-    
-    }
+      departmentIds: [Number(token?.departmentId)],
+    },
   });
 
-  const [departmentOptions,setDepartmentOptions]=useState<any[]>([]);
-  const [salesPerson,setSalesPerson]=useState<any[]>([]);
-  const [members,setMembers]=useState<any[]>([]);
-  const [showMore,setShowMore]=useState(false);
-  const [combinedDomains,setCombinedDomains]=useState<applicationDomainModel[]>([]);
-  const [combinedTechnologies,setCombinedTechnologies]=useState<Technology[]>([]);
+  const [departmentOptions, setDepartmentOptions] = useState<any[]>([]);
+  const [salesPerson, setSalesPerson] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
+  const [showMore, setShowMore] = useState(false);
+  const [combinedDomains, setCombinedDomains] = useState<
+    applicationDomainModel[]
+  >([]);
+  const [combinedTechnologies, setCombinedTechnologies] = useState<
+    Technology[]
+  >([]);
 
-const departmentIDs=watch('departmentIds');
-const interDepartmentStatus=watch('interDepartment');
-const sortedClientList = clientList.sort((a: any, b: any) =>
-  a.name.localeCompare(b.name)
-);
+  const departmentIDs = watch("departmentIds");
+  const interDepartmentStatus = watch("interDepartment");
+  const sortedClientList = clientList?.sort((a: any, b: any) =>
+    a.name.localeCompare(b.name)
+  );
 
+  useEffect(() => {
+    // if (departmentIDs.length === 0) {
+    //   setValue('interDepartment', false);
+    // }
+    if (departmentIDs && departmentIDs.length === 1) {
+      setValue("interDepartment", false);
+    }
+    if (departmentIDs && departmentIDs.length > 1) {
+      setValue("interDepartment", true);
+    }
+  }, [departmentIDs, setValue]);
 
-useEffect(() => {
- 
-  // if (departmentIDs.length === 0) {
-  //   setValue('interDepartment', false);
-  // }
-  if (departmentIDs && departmentIDs.length === 1) {
-    setValue('interDepartment', false);
-  }
-  if (departmentIDs && departmentIDs.length > 1) {
-    setValue('interDepartment', true);
-  }
- 
-}, [departmentIDs, setValue]);
+  useEffect(() => {
+    if (!interDepartmentStatus) {
+      setValue("departmentIds", [Number(token.departmentId)]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [interDepartmentStatus, setValue]);
 
-useEffect(() => {
-  if (!interDepartmentStatus) {
-    setValue('departmentIds',[Number(token.departmentId)]);
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [interDepartmentStatus, setValue]);
-
-const getSalesPersons=async(id:number)=>{
-  const response:any = await salesPersonList(id);
-  const filteredResponse= showMore?response:response.filter((item:any)=>item.departmentId===token.departmentId);
- const options= filteredResponse?.flatMap((department:any) => [
-  { key: department.departmentId, text: department.departmentName, value: department.departmentId, disabled: true }, // Department as a disabled option
-  ...department.salesPersons.map((person:any) => ({
-    key: person.id,
-    text: person.name,
-    value: person.id,
-  }))
-])
- const showMoreOption=!showMore?[{
-  key: 'Show More',
-  text: 'Show More',
-  value: 'Show More',
-}]:[];
-
-let selectedOption=[];
-if(selectedProject && !showMore){
-  const selectedSalesPerson= response.filter((item:any)=>item.departmentId===token.departmentId)?.flatMap((department:any) => [
-    // { key: department.departmentId, text: department.departmentName, value: department.departmentId, disabled: true }, // Department as a disabled option
-    ...department.salesPersons.filter((person:any) => person.id===selectedProject.salesPerson)
-  ]);
-
-  if(selectedSalesPerson.length>0){
-    selectedOption=[];
-  }
-  else{
-    const selectedSalesPersonFromAnotherDept= response.filter((item:any)=>item.departmentId!==token.departmentId)?.flatMap((department:any) => [
-      // { key: department.departmentId, text: department.departmentName, value: department.departmentId, disabled: true }, // Department as a disabled option
-      ...department.salesPersons.filter((person:any) => person.id===selectedProject.salesPerson)
+  const getSalesPersons = async (id: number) => {
+    const response: any = await salesPersonList(id);
+    const filteredResponse = showMore
+      ? response
+      : response.filter(
+          (item: any) => item.departmentId === token.departmentId
+        );
+    const options = filteredResponse?.flatMap((department: any) => [
+      {
+        key: department.departmentId,
+        text: department.departmentName,
+        value: department.departmentId,
+        disabled: true,
+      }, // Department as a disabled option
+      ...department.salesPersons.map((person: any) => ({
+        key: person.id,
+        text: person.name,
+        value: person.id,
+      })),
     ]);
+    const showMoreOption = !showMore
+      ? [
+          {
+            key: "Show More",
+            text: "Show More",
+            value: "Show More",
+          },
+        ]
+      : [];
 
-    selectedOption=selectedSalesPersonFromAnotherDept.map((person:any) => ({
-      key: person.id,
-      text: person.name,
-      value: person.id,
-    }));
-  }
-  
-}
-  setSalesPerson([...selectedOption,...options,...showMoreOption]);
-};
+    let selectedOption = [];
+    if (selectedProject && !showMore) {
+      const selectedSalesPerson = response
+        .filter((item: any) => item.departmentId === token.departmentId)
+        ?.flatMap((department: any) => [
+          // { key: department.departmentId, text: department.departmentName, value: department.departmentId, disabled: true }, // Department as a disabled option
+          ...department.salesPersons.filter(
+            (person: any) => person.id === selectedProject.salesPerson
+          ),
+        ]);
 
-useEffect(()=>{
-getSalesPersons(0);
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[showMore,selectedProject]);
+      if (selectedSalesPerson.length > 0) {
+        selectedOption = [];
+      } else {
+        const selectedSalesPersonFromAnotherDept = response
+          .filter((item: any) => item.departmentId !== token.departmentId)
+          ?.flatMap((department: any) => [
+            // { key: department.departmentId, text: department.departmentName, value: department.departmentId, disabled: true }, // Department as a disabled option
+            ...department.salesPersons.filter(
+              (person: any) => person.id === selectedProject.salesPerson
+            ),
+          ]);
 
-useEffect(()=>{
-  if (selectedProject?.applicationDomains) {
-    const existingDomains = selectedProject.applicationDomains.split(', ');
-    const additionalDomains = existingDomains
-        .filter((domain :any)=> !applicationDomain.some((item:any) => item.domainType === domain))
-        .map((domain:any) => ({ id: domain, name: domain }));
-        setCombinedDomains([...applicationDomain, ...additionalDomains]);
-} else {
-  setCombinedDomains(applicationDomain);
-}
- 
-},[selectedProject,applicationDomain]);
+        selectedOption = selectedSalesPersonFromAnotherDept.map(
+          (person: any) => ({
+            key: person.id,
+            text: person.name,
+            value: person.id,
+          })
+        );
+      }
+    }
+    setSalesPerson([...selectedOption, ...options, ...showMoreOption]);
+  };
 
-const applicationDomainOption =combinedDomains?.map((item:applicationDomainModel) => ({
-  key: item.id,
-  text: item.domainType,
-  value: item.domainType,
-}));
+  useEffect(() => {
+    getSalesPersons(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showMore, selectedProject]);
 
-useEffect(() => {
-  // Combine technologies with skills from selectedProject
-  if (selectedProject?.skills) {
-      const existingSkills = selectedProject.skills.split(',');
+  useEffect(() => {
+    if (selectedProject?.applicationDomains) {
+      const existingDomains = selectedProject.applicationDomains.split(", ");
+      const additionalDomains = existingDomains
+        .filter(
+          (domain: any) =>
+            !applicationDomain.some((item: any) => item.domainType === domain)
+        )
+        .map((domain: any) => ({ id: domain, name: domain }));
+      setCombinedDomains([...applicationDomain, ...additionalDomains]);
+    } else {
+      setCombinedDomains(applicationDomain);
+    }
+  }, [selectedProject, applicationDomain]);
+
+  const applicationDomainOption = combinedDomains?.map(
+    (item: applicationDomainModel) => ({
+      key: item.id,
+      text: item.domainType,
+      value: item.domainType,
+    })
+  );
+
+  useEffect(() => {
+    // Combine technologies with skills from selectedProject
+    if (selectedProject?.skills) {
+      const existingSkills = selectedProject.skills.split(",");
       const additionalTechnologies = existingSkills
-          .filter((skill :any)=> !technologies.some((tech:any) => tech.name === skill))
-          .map((skill:any) => ({ id: skill, name: skill }));
+        .filter(
+          (skill: any) => !technologies.some((tech: any) => tech.name === skill)
+        )
+        .map((skill: any) => ({ id: skill, name: skill }));
       setCombinedTechnologies([...technologies, ...additionalTechnologies]);
-  } else {
+    } else {
       setCombinedTechnologies(technologies);
-  }
-}, [selectedProject, technologies]);
-
+    }
+  }, [selectedProject, technologies]);
 
   const technologyOption = combinedTechnologies?.map((member: Technology) => ({
     key: member.id,
     text: member.name,
-    value: member.name
-}));
+    value: member.name,
+  }));
 
-
-const getMembers=async()=>{
- 
-  const response:any = await teamLeadAndBDM(departmentIDs);
-if (response) {
-setMembers(response);
-}
-};
-
-useEffect(()=>{
-  getMembers();
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[departmentIDs]);
-
-const handleMoreSalesPerson=()=>{
-  setShowMore(true);
- // getSalesPersons(0);
-};
-
-const selectedOption = watch('salesPerson');
-
-useEffect(()=>{
-  if(selectedOption==='Show More'){
-    handleMoreSalesPerson();
-  }
- // eslint-disable-next-line react-hooks/exhaustive-deps
-},[selectedOption]);
-
-  const getDepartments=async()=>{
-
-    const response=await departments();
-    const options = response?.map((item:any) => ({
-      key: item.id,
-      text: item.name,
-      value: item.id
-    }));
-    setDepartmentOptions(options);
-        
+  const getMembers = async () => {
+    const response: any = await teamLeadAndBDM(departmentIDs);
+    if (response) {
+      setMembers(response);
+    }
   };
 
-  useEffect(()=>{
-      getDepartments();
-  },[]);
+  useEffect(() => {
+    getMembers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [departmentIDs]);
+
+  const handleMoreSalesPerson = () => {
+    setShowMore(true);
+    // getSalesPersons(0);
+  };
+
+  const selectedOption = watch("salesPerson");
 
   useEffect(() => {
-  
+    if (selectedOption === "Show More") {
+      handleMoreSalesPerson();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedOption]);
+
+  const getDepartments = async () => {
+    const response = await departments();
+    const options = response?.map((item: any) => ({
+      key: item.id,
+      text: item.name,
+      value: item.id,
+    }));
+    setDepartmentOptions(options);
+  };
+
+  useEffect(() => {
+    getDepartments();
+  }, []);
+
+  useEffect(() => {
     if (selectedProject) {
       const updatedSelectedProject = {
         ...selectedProject,
-        skills: selectedProject.skills ? selectedProject.skills.split(',') : [],
-        applicationDomains:selectedProject.applicationDomains ? selectedProject.applicationDomains.split(', ') : [],
+        skills: selectedProject.skills ? selectedProject.skills.split(",") : [],
+        applicationDomains: selectedProject.applicationDomains
+          ? selectedProject.applicationDomains.split(", ")
+          : [],
       };
       reset(updatedSelectedProject);
     }
@@ -226,7 +256,6 @@ useEffect(()=>{
   }, [selectedProject]);
 
   const handleAddEditProject = async (data: addEditProjectFormValue) => {
-  
     const payLoad = {
       ...data,
       id: selectedProject ? selectedProject?.id : 0,
@@ -235,7 +264,7 @@ useEffect(()=>{
       //   (client: ClientModel) => client.id === Number(data.clientId)
       // )[0].name,
       createdBy: selectedProject ? selectedProject.createdBy : token.id,
-      updatedBy: selectedProject ? token.id : '',
+      updatedBy: selectedProject ? token.id : "",
       createdTime: selectedProject ? selectedProject?.createdTime : new Date(),
       isBilling: Number(data.isBilling),
       hiringStatus: Number(data.hiringStatus),
@@ -243,19 +272,21 @@ useEffect(()=>{
       projectStatus: Number(data.projectStatus),
       invoiceProjectID: selectedProject
         ? selectedProject?.invoiceProjectID
-        : '',
-        departmentId: Number(token.departmentId),
-       // salesPerson:data.salesPerson,
-      skills: data.skills ? data.skills.join(',') : '',
-      applicationDomains: data.applicationDomains ? data.applicationDomains.join(',') : '',
+        : "",
+      departmentId: Number(token.departmentId),
+      // salesPerson:data.salesPerson,
+      skills: data.skills ? data.skills.join(",") : "",
+      applicationDomains: data.applicationDomains
+        ? data.applicationDomains.join(",")
+        : "",
     };
 
     if (data?.id) {
-      await apiService.put('/Project/UpdateProject', payLoad);
+      await apiService.put("/Project/UpdateProject", payLoad);
       router.refresh();
       handleHideCanvas();
     } else {
-      await apiService.post('/Project/AddProject', payLoad);
+      await apiService.post("/Project/AddProject", payLoad);
       router.refresh();
       handleHideCanvas();
     }
@@ -268,277 +299,278 @@ useEffect(()=>{
     setShowMore(false);
   };
 
-   // Options for the dropdown
-  const memberOptions:any[] = members.flatMap((member:any) => {
-    const departmentOptions:any[] = [];
-  
+  // Options for the dropdown
+  const memberOptions: any[] = members.flatMap((member: any) => {
+    const departmentOptions: any[] = [];
+
     // Department Header
     departmentOptions.push({
       key: `${member.department}-header`,
       text: member.department,
       value: null,
-      disabled: true
+      disabled: true,
     });
-    
 
-     // Manager Header
-     departmentOptions.push({
+    // Manager Header
+    departmentOptions.push({
       key: `${member.department}-manager-heading`,
-      text: 'Managers:',
+      text: "Managers:",
       value: null,
-      disabled: true
+      disabled: true,
     });
-  
+
     // Manager
     departmentOptions.push(
-      ...member.manager.map((item:any) => ({
+      ...member.manager.map((item: any) => ({
         key: item.id,
         text: item.name,
-        value: item.id
+        value: item.id,
       }))
     );
-  
+
     // Team Leads Header
     departmentOptions.push({
       key: `${member.department}-team-leads-heading`,
-      text: 'Team Leads:',
+      text: "Team Leads:",
       value: null,
-      disabled: true
+      disabled: true,
     });
-  
+
     // Team Leads
     departmentOptions.push(
-      ...member.teamLead.map((lead:any) => ({
+      ...member.teamLead.map((lead: any) => ({
         key: lead.id,
         text: lead.name,
-        value: lead.id
+        value: lead.id,
       }))
     );
-  
+
     // BDMs Header
     departmentOptions.push({
       key: `${member.department}-bdm-heading`,
-      text: 'BDMs:',
+      text: "BDMs:",
       value: null,
-      disabled: true
+      disabled: true,
     });
-  
+
     // BDMs
     departmentOptions.push(
-      ...member.bdm.map((bdm:any) => ({
+      ...member.bdm.map((bdm: any) => ({
         key: bdm.id,
         text: bdm.name,
-        value: bdm.id
+        value: bdm.id,
       }))
     );
-  
+
     return departmentOptions;
   });
 
   return (
-    <Offcanvas show={addEdit} onHide={() => handleHideCanvas()} placement='end'>
+    <Offcanvas show={addEdit} onHide={() => handleHideCanvas()} placement="end">
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>
-          {selectedProject ? 'Update Project' : 'Add New Project'}
+          {selectedProject ? "Update Project" : "Add New Project"}
         </Offcanvas.Title>
         <button
-          type='button'
-          className='btn-close text-reset text-right'
+          type="button"
+          className="btn-close text-reset text-right"
           onClick={() => handleHideCanvas()}
         >
-          <i className='fe fe-x fs-18'></i>
+          <i className="fe fe-x fs-18"></i>
         </button>
       </Offcanvas.Header>
       <Offcanvas.Body>
         <form
-          className='status-repeat-box row m-0'
+          className="status-repeat-box row m-0"
           onSubmit={handleSubmit(handleAddEditProject)}
         >
-          <div className='col-md-12 form-group'>
-            <label htmlFor='name'>Project Name</label>
+          <div className="col-md-12 form-group">
+            <label htmlFor="name">Project Name</label>
             <input
-              id='projectName'
-              type='text'
-              className='form-control'
-              {...register('name', {
-                required: 'Project Name is required',
+              id="projectName"
+              type="text"
+              className="form-control"
+              {...register("name", {
+                required: "Project Name is required",
               })}
             />
             {errors.name && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.name.message}</span>
+              <div className="validation_error">
+                <span role="alert">{errors.name.message}</span>
               </div>
             )}
           </div>
-         { selectedProject &&  <div className='col-md-6 form-group'>
-            <label htmlFor='invoiceProjectID'>Project Invoice ID</label>
-            <input
-              id='invoiceProjectID'
-              type='text'
-              className='form-control'
-              {...register('invoiceProjectID', {
-                required: 'Invoice ID is required',
-              })}
-            />
-            {errors.invoiceProjectID && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.invoiceProjectID.message}</span>
-              </div>
-            )}
-          </div>}
-          <div className='col-md-6 form-group'>
-            <label htmlFor='hiringStatus'>Hiring Status</label>
+          {selectedProject && (
+            <div className="col-md-6 form-group">
+              <label htmlFor="invoiceProjectID">Project Invoice ID</label>
+              <input
+                id="invoiceProjectID"
+                type="text"
+                className="form-control"
+                {...register("invoiceProjectID", {
+                  required: "Invoice ID is required",
+                })}
+              />
+              {errors.invoiceProjectID && (
+                <div className="validation_error">
+                  <span role="alert">{errors.invoiceProjectID.message}</span>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="col-md-6 form-group">
+            <label htmlFor="hiringStatus">Hiring Status</label>
             <select
-              id='hiringStatus'
-              className='form-control'
-              {...register('hiringStatus', {
-                required: 'Hiring Status is required',
+              id="hiringStatus"
+              className="form-control"
+              {...register("hiringStatus", {
+                required: "Hiring Status is required",
               })}
             >
-              <option value=''> Select</option>
+              <option value=""> Select</option>
               {hiringType?.map((item: HiringModel) => (
                 <option key={item.value} value={item.value}>
-                  {' '}
+                  {" "}
                   {item.text}
                 </option>
               ))}
             </select>
             {errors.hiringStatus && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.hiringStatus.message}</span>
+              <div className="validation_error">
+                <span role="alert">{errors.hiringStatus.message}</span>
               </div>
             )}
           </div>
-          <div className='col-md-6 form-group'>
-            <label htmlFor='clientId'>Client Name</label>
+          <div className="col-md-6 form-group">
+            <label htmlFor="clientId">Client Name</label>
             <select
-              id='clientId'
-              className='form-control'
-              {...register('clientId', {
-                required: 'Client Name is required',
+              id="clientId"
+              className="form-control"
+              {...register("clientId", {
+                required: "Client Name is required",
               })}
             >
-              <option value=''> Select</option>
+              <option value=""> Select</option>
               {sortedClientList?.map((item: ClientModel) => (
                 <option key={item.id} value={item.id}>
-                  {' '}
+                  {" "}
                   {item.name}
                 </option>
               ))}
             </select>
             {errors.clientId && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.clientId.message}</span>
+              <div className="validation_error">
+                <span role="alert">{errors.clientId.message}</span>
               </div>
             )}
           </div>
-          <div className='col-md-6 form-group'>
-            <label htmlFor='projectStatus'>Status</label>
+          <div className="col-md-6 form-group">
+            <label htmlFor="projectStatus">Status</label>
             <select
-              id='projectStatus'
-              className='form-control'
-              {...register('projectStatus', {
-                required: 'Status is required',
+              id="projectStatus"
+              className="form-control"
+              {...register("projectStatus", {
+                required: "Status is required",
               })}
             >
-              <option value=''> Select</option>
+              <option value=""> Select</option>
               {projectStatusData?.map((item: StatusModel) => (
                 <option key={item.value} value={item.value}>
-                  {' '}
+                  {" "}
                   {item.text}
                 </option>
               ))}
             </select>
             {errors.projectStatus && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.projectStatus.message}</span>
+              <div className="validation_error">
+                <span role="alert">{errors.projectStatus.message}</span>
               </div>
             )}
           </div>
-          <div className='col-md-6 form-group'>
-            <label htmlFor='isBilling'>Billing Type</label>
+          <div className="col-md-6 form-group">
+            <label htmlFor="isBilling">Billing Type</label>
             <select
-              id='isBilling'
-              className='form-control'
-              {...register('isBilling', {
-                required: 'Billing Type is required',
+              id="isBilling"
+              className="form-control"
+              {...register("isBilling", {
+                required: "Billing Type is required",
               })}
             >
-              <option value=''> Select</option>
+              <option value=""> Select</option>
               {billingType?.map((item: BillingTypeModel) => (
                 <option key={item.value} value={item.value}>
-                  {' '}
+                  {" "}
                   {item.text}
                 </option>
               ))}
             </select>
             {errors.isBilling && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.isBilling.message}</span>
+              <div className="validation_error">
+                <span role="alert">{errors.isBilling.message}</span>
               </div>
             )}
           </div>
-          <div className='col-md-6 form-group'>
-            <label htmlFor='productionUrl'>Production Url</label>
+          <div className="col-md-6 form-group">
+            <label htmlFor="productionUrl">Production Url</label>
             <input
-              id='productionUrl'
-              type='text'
-              className='form-control'
-              {...register('productionUrl')}
+              id="productionUrl"
+              type="text"
+              className="form-control"
+              {...register("productionUrl")}
             />
           </div>
-          <div className='col-md-6 form-group' >
-  <label htmlFor='salesPerson'>Sale Person</label>
-  <Controller
-    name="salesPerson"
-    control={control}
-    rules={{ required: 'Sales Person is required' }}
-    render={({ field }) => (
-      <Dropdown
-        id='salesPerson'
-        placeholder='Select'
-        fluid
-        selection
-        options={salesPerson} 
-        onChange={(e, { value }) => field.onChange(value)}
-        value={field.value || ''}
-      />
-    )}
-  />
-  {errors.salesPerson && (
-    <div className='validation_error'>
-      <span role='alert'>{errors.salesPerson.message}</span>
-    </div>
-  )}
-</div>
-          <div className='col-md-6 form-group'>
-            <label htmlFor='stageUrl'>Dev/Stage Url</label>
-            <input
-              id='stageUrl'
-              type='text'
-              className='form-control'
-              {...register('stageUrl')}
-            />
-          </div>
-          <div className='col-md-12 form-group'>
-            <label htmlFor='employeeList'>Project Assign List </label>
+          <div className="col-md-6 form-group">
+            <label htmlFor="salesPerson">Sale Person</label>
             <Controller
-          name="employeeList"
-          control={control}
-         // rules={{ required: 'Member is required' }}
-          render={({ field }) => (
-            <Dropdown
-              id='employeeList'
-              placeholder='Select members'
-              fluid
-              multiple
-              selection
-              options={memberOptions}
-              onChange={(e, { value }) => field.onChange(value)}
-              value={field.value || []}
+              name="salesPerson"
+              control={control}
+              rules={{ required: "Sales Person is required" }}
+              render={({ field }) => (
+                <Dropdown
+                  id="salesPerson"
+                  placeholder="Select"
+                  fluid
+                  selection
+                  options={salesPerson}
+                  onChange={(e, { value }) => field.onChange(value)}
+                  value={field.value || ""}
+                />
+              )}
             />
-          )}
-        />
+            {errors.salesPerson && (
+              <div className="validation_error">
+                <span role="alert">{errors.salesPerson.message}</span>
+              </div>
+            )}
+          </div>
+          <div className="col-md-6 form-group">
+            <label htmlFor="stageUrl">Dev/Stage Url</label>
+            <input
+              id="stageUrl"
+              type="text"
+              className="form-control"
+              {...register("stageUrl")}
+            />
+          </div>
+          <div className="col-md-12 form-group">
+            <label htmlFor="employeeList">Project Assign List </label>
+            <Controller
+              name="employeeList"
+              control={control}
+              // rules={{ required: 'Member is required' }}
+              render={({ field }) => (
+                <Dropdown
+                  id="employeeList"
+                  placeholder="Select members"
+                  fluid
+                  multiple
+                  selection
+                  options={memberOptions}
+                  onChange={(e, { value }) => field.onChange(value)}
+                  value={field.value || []}
+                />
+              )}
+            />
             {/* {errors.employeeList && (
               <div className='validation_error'>
                 <span role='alert'>{errors.employeeList.message}</span>
@@ -546,71 +578,78 @@ useEffect(()=>{
             )} */}
           </div>
 
-          <div className='col-md-6 form-group' >
-  <label htmlFor='skills'>Technology Set</label>
-  <Controller
-    name="skills"
-    control={control}
-    rules={{ required: 'Minimum 3 skills are required',
-      validate: (value) => value.length >= 3 || 'You must select at least 3 skills',
-     }}
-    render={({ field }) => (
-      <Dropdown
-        id='skills'
-        placeholder='Select'
-        fluid
-        selection
-        search
-        multiple
-        options={technologyOption} 
-        onChange={(e, { value }) => field.onChange(value)}
-        value={field.value || []} // Ensure value is always an array
-        allowAdditions
-        onAddItem={(e, { value }) => {
-            setCombinedTechnologies((prev:any) => [...prev, { id: value, name: value }]);
-        }}
-      />
-    )}
-  />
-  {errors.skills && (
-    <div className='validation_error'>
-      <span role='alert'>{errors.skills.message}</span>
-    </div>
-  )}
-</div>
+          <div className="col-md-6 form-group">
+            <label htmlFor="skills">Technology Set</label>
+            <Controller
+              name="skills"
+              control={control}
+              rules={{
+                required: "Minimum 3 skills are required",
+                validate: (value) =>
+                  value.length >= 3 || "You must select at least 3 skills",
+              }}
+              render={({ field }) => (
+                <Dropdown
+                  id="skills"
+                  placeholder="Select"
+                  fluid
+                  selection
+                  search
+                  multiple
+                  options={technologyOption}
+                  onChange={(e, { value }) => field.onChange(value)}
+                  value={field.value || []} // Ensure value is always an array
+                  allowAdditions
+                  onAddItem={(e, { value }) => {
+                    setCombinedTechnologies((prev: any) => [
+                      ...prev,
+                      { id: value, name: value },
+                    ]);
+                  }}
+                />
+              )}
+            />
+            {errors.skills && (
+              <div className="validation_error">
+                <span role="alert">{errors.skills.message}</span>
+              </div>
+            )}
+          </div>
 
-          <div className='col-md-6 form-group' >
-  <label htmlFor='applicationDomains'>Application Domains</label>
-  <Controller
-    name="applicationDomains"
-    control={control}
-    rules={{ required: 'Domain is required' }}
-    render={({ field }) => (
-      <Dropdown
-        id='applicationDomains'
-        placeholder='Select'
-        fluid
-        selection
-        search
-        multiple
-        options={applicationDomainOption} 
-        onChange={(e, { value }) => field.onChange(value)}
-        value={field.value || ''}
-        allowAdditions
-        onAddItem={(e, { value }) => {
-            setCombinedDomains((prev:any) => [...prev, { id: value, name: value }]);
-        }}
-      />
-    )}
-  />
-  {errors.applicationDomains && (
-    <div className='validation_error'>
-      <span role='alert'>{errors.applicationDomains.message}</span>
-    </div>
-  )}
-</div>
-          
-     
+          <div className="col-md-6 form-group">
+            <label htmlFor="applicationDomains">Application Domains</label>
+            <Controller
+              name="applicationDomains"
+              control={control}
+              rules={{ required: "Domain is required" }}
+              render={({ field }) => (
+                <Dropdown
+                  id="applicationDomains"
+                  placeholder="Select"
+                  fluid
+                  selection
+                  search
+                  multiple
+                  options={applicationDomainOption}
+                  onChange={(e, { value }) => field.onChange(value)}
+                  value={field.value || ""}
+                  allowAdditions
+                  onAddItem={(e, { value }) => {
+                    setCombinedDomains((prev: any) => [
+                      ...prev,
+                      { id: value, name: value },
+                    ]);
+                  }}
+                />
+              )}
+            />
+            {errors.applicationDomains && (
+              <div className="validation_error">
+                <span role="alert">{errors.applicationDomains.message}</span>
+              </div>
+            )}
+          </div>
+
           {/* <div className='col-md-6 form-group'>
             <label htmlFor='salesPerson'>Assign Sale Person</label>
             <select
@@ -638,82 +677,91 @@ useEffect(()=>{
               </div>
             )}
           </div> */}
-         
-          <div className="col-md-12 form-group">
-            <label htmlFor='interDepartment' className="custom-control custom-checkbox mb-0">                                     
-            <input
-              id='interDepartment'
-              type="checkbox"
-              className='custom-control-input'
-              {...register('interDepartment')}
-            />
-            <span className="custom-control-label">Inter Departmental</span>
-                                        </label>
-                                    </div>
-            <div className='col-md-12 form-group'>
-            <label htmlFor='departmentIds'>Department List </label>
-            <Controller
-          name="departmentIds"
-          control={control}
-          rules={{ required: 'Department is required'}}
-          render={({ field }) => (
-            <Dropdown
-              id='departmentIds'
-              placeholder='Select department'
-              fluid
-              multiple
-              selection
-              disabled={!interDepartmentStatus}
-              options={departmentOptions}
-               //onChange={(e, { value }) => field.onChange(value)}
-              onChange={(e, { value }) => {
-                // Ensure `value` is always an array
-                const newValue = Array.isArray(value) ? value : [value];
-                if(!newValue?.includes(Number(token.departmentId))){
-                  toastr.error('Default Department cannot be removed', '', { timeOut: 1000 });
-                }
 
-                const updatedValue = newValue?.includes(Number(token.departmentId)) ? newValue : [Number(token.departmentId),...newValue];
-                field.onChange(updatedValue);
-              }}
-              value={field.value || []}
+          <div className="col-md-12 form-group">
+            <label
+              htmlFor="interDepartment"
+              className="custom-control custom-checkbox mb-0"
+            >
+              <input
+                id="interDepartment"
+                type="checkbox"
+                className="custom-control-input"
+                {...register("interDepartment")}
+              />
+              <span className="custom-control-label">Inter Departmental</span>
+            </label>
+          </div>
+          <div className="col-md-12 form-group">
+            <label htmlFor="departmentIds">Department List </label>
+            <Controller
+              name="departmentIds"
+              control={control}
+              rules={{ required: "Department is required" }}
+              render={({ field }) => (
+                <Dropdown
+                  id="departmentIds"
+                  placeholder="Select department"
+                  fluid
+                  multiple
+                  selection
+                  disabled={!interDepartmentStatus}
+                  options={departmentOptions}
+                  //onChange={(e, { value }) => field.onChange(value)}
+                  onChange={(e, { value }) => {
+                    // Ensure `value` is always an array
+                    const newValue = Array.isArray(value) ? value : [value];
+                    if (!newValue?.includes(Number(token.departmentId))) {
+                      toastr.error("Default Department cannot be removed", "", {
+                        timeOut: 1000,
+                      });
+                    }
+
+                    const updatedValue = newValue?.includes(
+                      Number(token.departmentId)
+                    )
+                      ? newValue
+                      : [Number(token.departmentId), ...newValue];
+                    field.onChange(updatedValue);
+                  }}
+                  value={field.value || []}
+                />
+              )}
             />
-          )}
-        />
             {errors.departmentIds && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.departmentIds.message}</span>
+              <div className="validation_error">
+                <span role="alert">{errors.departmentIds.message}</span>
               </div>
             )}
           </div>
-          <div className='col-md-12 form-group'>
-            <label htmlFor='description'>Description </label>
+          <div className="col-md-12 form-group">
+            <label htmlFor="description">Description </label>
             <textarea
-              id='description'
-              className='form-control h50'
-              {...register('description', {
-                required: 'Description is required',
+              id="description"
+              className="form-control h50"
+              {...register("description", {
+                required: "Description is required",
               })}
             ></textarea>
             {errors.description && (
-              <div className='validation_error'>
-                <span role='alert'>{errors.description.message}</span>
+              <div className="validation_error">
+                <span role="alert">{errors.description.message}</span>
               </div>
             )}
           </div>
-          <div className='col-md-12 form-group'>
-            <label htmlFor='notes'>Important Notes </label>
+          <div className="col-md-12 form-group">
+            <label htmlFor="notes">Important Notes </label>
             <textarea
-              id='notes'
-              className='form-control h100'
-              {...register('notes')}
+              id="notes"
+              className="form-control h100"
+              {...register("notes")}
             ></textarea>
           </div>
-          <div className='offcanvas-footer text-right'>
+          <div className="offcanvas-footer text-right">
             <input
-              type='submit'
-              value={selectedProject ? ' Update' : 'Add Project'}
-              className='btn btn-primary'
+              type="submit"
+              value={selectedProject ? " Update" : "Add Project"}
+              className="btn btn-primary"
             />
           </div>
         </form>

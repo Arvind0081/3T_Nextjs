@@ -12,14 +12,16 @@ const DateFilter = ({param}:any) => {
         
         const month = e.target.value;
         setCurrentMonth(e.target.value);
-        router.push(`${url}?tab=${activeTab}&month=${month}&departmentId=${param.DepartmentId}&managerId=${param.TeamAdminId}`);
+         router.push(
+            `${url}/?tab=${activeTab}&month=${month}&departmentId=${param.DepartmentId}&pageNumber=${1}&pageSize=${param.PageSize}&search=${param.SearchValue}&teamAdminId=${param.TeamAdminId}`
+          );
     };
+
+        
     useEffect(() => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        setCurrentMonth(`${year}-${month}`);
-    }, []);
+       
+        setCurrentMonth(param.date);
+    }, [param.date]);
     return (
         <>
             <div className="align-items-end d-flex gap-x-2 selectbox">
@@ -31,9 +33,7 @@ const DateFilter = ({param}:any) => {
                         value={currentMonth}
                         onChange={handleMonthChange}
                     />
-                    {/* <div className="input-group-text">
-                        <i className="ri-calendar-line"></i>
-                    </div> */}
+                  
                 </div>
             </div>
         </>

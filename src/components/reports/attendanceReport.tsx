@@ -16,6 +16,7 @@ const AttendanceReport = ({
   param,
   bioMetricAttendance,
 }: any) => {
+
   const [show, setShow] = useState(false);
   const [bioMetric, setBioMetric] = useState<any>({});
   const [individualEmp, setIndividualEmp] = useState<any>({});
@@ -49,13 +50,14 @@ const AttendanceReport = ({
       })
     );
 
-    setAttendance(attendanceReportList?.results);
+    return attendanceReportList?.results;
   };
 
   useEffect(() => {
-    attendanceFormat();
+   const results= attendanceFormat();
+    setAttendance(results);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param.year, param.month, param.pageNo]);
+  }, [param.year, param.month, param.pageNo,attendanceReportList]);
 
   const numberToTimeConversion = (decimalTime: any) => {
     const hours = Math.floor(decimalTime);
@@ -67,15 +69,6 @@ const AttendanceReport = ({
     return formattedTime;
   };
 
-  // Extract the time in HH:MM format
-  //   const extractTime=(time:string)=>{
-  //     const date = new Date(time);
-
-  // const hours = date.getHours().toString().padStart(2, '0');
-  // const minutes = date.getMinutes().toString().padStart(2, '0');
-
-  // return `${hours}:${minutes}`;
-  //   };
 
   const handleBiometric = (biometricObj: any, empObj: any) => {
     setShow(true);
@@ -85,18 +78,14 @@ const AttendanceReport = ({
 
   const dateTimeFormat = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
-
-    // Format the date as YYYY-MM-DD
     const formattedDate = date.toLocaleDateString('en-CA'); // 'en-CA' gives 'YYYY-MM-DD' format
 
-    // Format the time as HH:MM AM/PM
     const formattedTime = date.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
     });
 
-    // Combine date and time
     return `${formattedDate} ${formattedTime}`;
   };
 
@@ -249,7 +238,6 @@ const AttendanceReport = ({
                                         item,
                                         index
                                       )}
-                                      {/* {bioMetricAttendance?.filter((emp:any)=>emp.employeeCode===item.employeeNumber)[index]?.statusCode==='A'?'Ab':bioMetricAttendance?.filter((emp:any)=>emp.employeeCode===item.employeeNumber)[index]?.statusCode} */}
                                     </span>
                                     <span className="attendance_time threeT-time">
                                       {/* {bioMetricAttendance?.filter((emp:any)=>emp.employeeCode===item.employeeNumber)[index]?.inTime ? <span>{extractTime(bioMetricAttendance?.filter((emp:any)=>emp.employeeCode===item.employeeNumber)[index]?.inTime)} to {extractTime(bioMetricAttendance?.filter((emp:any)=>emp.employeeCode===item.employeeNumber)[index]?.outTime)}</span>:'--'}  */}
@@ -257,7 +245,7 @@ const AttendanceReport = ({
                                         (emp: any) =>
                                           emp.employeeCode ===
                                           item.employeeNumber
-                                      )[index]?.duration ? (
+                                      )[index]?.duration >= 0 ? (
                                         <span>
                                           {convertMinutesToTime(
                                             bioMetricAttendance?.filter(
@@ -284,17 +272,17 @@ const AttendanceReport = ({
               </table>
               <div className="card-footer">
                 <div className="d-flex align-items-center pagination_layout">
-                  <div>
+                  {attendance && <div>
                     Showing {showingRecordCount().pageStart} to{' '}
                     {showingRecordCount().pageEnd} of{' '}
                     {showingRecordCount().totalCount} Entries
-                  </div>
+                  </div>}
                   <div className="ms-auto">
                     <nav>
-                      <AttendanceReportPagination
+                     {attendance &&  <AttendanceReportPagination
                         totalRecords={attendanceReportList?.totalCount}
                         data={param}
-                      />
+                      />}
                     </nav>
                   </div>
                 </div>

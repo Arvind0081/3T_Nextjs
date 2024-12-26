@@ -24,7 +24,7 @@ const DeleteButton = ({ id, item, userId }: any) => {
   };
   const handleDeleteRecord = async () => {
     await apiService.delete(
-      `/EmployeeStatus/DeleteEmployeeStatus?UserProfileId=${userId}&ToDate=${selectedItem}`
+      `/EmployeeStatus/DeleteStatusByDate?UserProfileId=${userId}&ToDate=${selectedItem}`
     );
     router.refresh();
     handleClose();

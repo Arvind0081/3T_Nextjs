@@ -4,9 +4,9 @@ import getUser from '@/utils/getUserServerSide';
 // utils/rolePaths.js
 export const rolePaths: any = {
   'Project Manager': ['/dashBoard','/dashBoard/:id','/assignTeam', '/reports', '/employees/:id', '/projects','/projects/:id' ,'/clients', '/profile', '/helpvideos', '/checklist','/teamToDo', '/upworkprofile','/assignBadge','/employeesProfile/:id','/invoices','/allUsers','/managerToDo'],
-  'Employee': ['/employeeDashBoard', '/myStatus', '/employees/:id', '/checklist', '/profile', '/helpvideos','/profile/:id','/allUsers'],
+  'Employee': ['/employeeDashBoard', '/myStatus', '/employees/:id', '/checklist', '/profile', '/helpvideos','/profile/:id','/allUsers','/employeesProfile/:id'],
   'Team Lead': ['/teamLeadDashBoard',  '/teamLeadDashBoard/:id' , '/employees/:id', '/myStatus', '/teamStatus', '/projects','/projects/:id', '/teamMembers', '/teamToDo', '/profile', '/checklist', '/helpvideos','/profile/:id','/employeesProfile/:id','/allUsers'],
-  'BDM': ['/employeeDashBoard', '/myStatus', '/projects','/projects/:id', '/clients', '/profile', '/helpvideos', '/checklist', '/upworkprofile','/profile/:id','/allUsers'],
+  'BDM': ['/employeeDashBoard', '/myStatus', '/projects','/projects/:id', '/clients', '/profile', '/helpvideos', '/checklist', '/upworkprofile','/profile/:id','/allUsers','/employees/:id','/employeesProfile/:id'],
   'HR': ['/hrDashBoard', '/reports', '/hrEmployeesBoard', '/employees/:id','/employeesProfile/:id', '/profile','/profile/:id','/allUsers'],
   'HOD': ['/dashBoard','/dashBoard/:id','/assignTeam', '/reports', '/employees/:id','/teamToDo', '/projects','/projects/:id' ,'/clients', '/profile', '/helpvideos', '/checklist', '/upworkprofile','/assignBadge','/employeesProfile/:id','/invoices','/allUsers','/managerToDo'],
   'Admin': ['/adminDepartment','/dashBoard','/managerToDo','/allUsers','/employees/:id','/dashBoard/:id','/projects','/projects/:id','/employeesProfile/:id','/assignTeam','/reports','/upworkprofile','/assignTeam','/clients','/invoices','/profile','/checklist','/helpvideos','/assignBadge'],

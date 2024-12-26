@@ -93,7 +93,7 @@ const AddStatusForm = ({ setShow, empProjectList, empProfileList }: any) => {
             
          
             await apiService.post(
-              '/EmployeeStatus/AddEmployeeStatus',
+              '/EmployeeStatus/AddStatus',
               pushToArray
             );
             router.refresh();
@@ -108,7 +108,7 @@ const AddStatusForm = ({ setShow, empProjectList, empProfileList }: any) => {
             };
             pushToArray.push(leaveData);
             await apiService.post(
-              '/EmployeeStatus/AddEmployeeStatus',
+              '/EmployeeStatus/AddStatus',
               pushToArray
             );
             router.refresh();
